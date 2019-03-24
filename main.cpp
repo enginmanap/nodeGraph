@@ -12,17 +12,16 @@
 #include <algorithm>
 #include <stdint.h>
 
+#include "NodeEditor/Node.h"
+#include "NodeEditor/Connection.h"
+#include "NodeEditor/DragNode.h"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define sizeof_array(t) (sizeof(t) / sizeof(t[0]))
-const float NODE_SLOT_RADIUS = 5.0f;
 const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
-#define MAX_CONNECTION_COUNT 32
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x+rhs.x, lhs.y+rhs.y); }
-static inline ImVec2 operator-(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x-rhs.x, lhs.y-rhs.y); }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,231 +29,6 @@ static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error %d: %s\n", error, description);
 }
-
-static uint32_t s_id = 0;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-enum ConnectionType
-{
-    ConnectionType_Color,
-    ConnectionType_Vec3,
-    ConnectionType_Float,
-    ConnectionType_Int,
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct ConnectionDesc
-{
-    const char* name;
-    ConnectionType type;
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct NodeType
-{
-    const char* name;
-    ConnectionDesc inputConnections[MAX_CONNECTION_COUNT];
-    ConnectionDesc outputConnections[MAX_CONNECTION_COUNT];
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct Connection
-{
-    ImVec2 pos;
-    ConnectionDesc desc;
-
-    inline Connection()
-    {
-        pos.x = pos.y = 0.0f;
-        input = 0;
-    }
-
-    union {
-        float v3[3];
-        float v;
-        int i;
-    };
-
-    struct Connection* input;
-    std::vector<Connection*> output;
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Node types
-
-static struct NodeType s_nodeTypes[] =
-        {
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                // Math
-
-                {
-                        "Multiply",
-                        // Input connections
-                        {
-                                { "Input1", ConnectionType_Float },
-                                { "Input2", ConnectionType_Float },
-                        },
-                        // Output
-                        {
-                                { "Out", ConnectionType_Float },
-                        },
-                },
-
-                {
-                        "Add",
-                        // Input connections
-                        {
-                                { "Input1", ConnectionType_Float },
-                                { "Input2", ConnectionType_Float },
-                        },
-                        // Output
-                        {
-                                { "Out", ConnectionType_Float },
-                        },
-                },
-        };
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct Node
-{
-    ImVec2 pos;
-    ImVec2 size;
-    int id;
-    const char* name;
-    std::vector<Connection*> inputConnections;
-    std::vector<Connection*> outputConnections;
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static void setupConnections(std::vector<Connection*>& connections, ConnectionDesc* connectionDescs)
-{
-    for (int i = 0; i < MAX_CONNECTION_COUNT; ++i)
-    {
-        const ConnectionDesc& desc = connectionDescs[i];
-
-        if (!desc.name)
-            break;
-
-        Connection* con = new Connection;
-        con->desc = desc;
-
-        connections.push_back(con);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static Node* createNodeFromType(ImVec2 pos, NodeType* nodeType)
-{
-    Node* node = new Node;
-    node->id = s_id++;
-    node->name = nodeType->name;
-
-    ImVec2 titleSize = ImGui::CalcTextSize(node->name);
-
-    titleSize.y *= 3;
-
-    setupConnections(node->inputConnections, nodeType->inputConnections);
-    setupConnections(node->outputConnections, nodeType->outputConnections);
-
-    // Calculate the size needed for the whole box
-
-    ImVec2 inputTextSize(0.0f, 0.0f);
-    ImVec2 outputText(0.0f, 0.0f);
-
-    for (Connection* c : node->inputConnections)
-    {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
-        inputTextSize.x = std::max<float>(textSize.x, inputTextSize.x);
-
-        c->pos = ImVec2(0.0f, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
-
-        inputTextSize.y += textSize.y;
-        inputTextSize.y += 4.0f;		// size between text entries
-    }
-
-    inputTextSize.x += 40.0f;
-
-    // max text size + 40 pixels in between
-
-    float xStart = inputTextSize.x;
-
-    // Calculate for the outputs
-
-    for (Connection* c : node->outputConnections)
-    {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
-        inputTextSize.x = std::max<float>(xStart + textSize.x, inputTextSize.x);
-    }
-
-    node->pos = pos;
-    node->size.x = inputTextSize.x;
-    node->size.y = inputTextSize.y + titleSize.y;
-
-    inputTextSize.y = 0.0f;
-
-    // set the positions for the output nodes when we know where the place them
-
-    for (Connection* c : node->outputConnections)
-    {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
-
-        c->pos = ImVec2(node->size.x, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
-
-        inputTextSize.y += textSize.y;
-        inputTextSize.y += 4.0f;		// size between text entries
-    }
-
-    // calculate the size of the node depending on nuber of connections
-
-    return node;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-Node* createNodeFromName(ImVec2 pos, const char* name)
-{
-    for (int i = 0; i < (int)sizeof_array(s_nodeTypes); ++i)
-    {
-        if (!strcmp(s_nodeTypes[i].name, name))
-            return createNodeFromType(pos, &s_nodeTypes[i]);
-    }
-
-    return 0;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-enum DragState
-{
-    DragState_Default,
-    DragState_Hover,
-    DragState_BeginDrag,
-    DragState_Draging,
-    DragState_Connect,
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct DragNode
-{
-    ImVec2 pos;
-    Connection* con;
-};
-
-static DragNode s_dragNode;
-static DragState s_dragState = DragState_Default;
-
-static std::vector<Node*> s_nodes;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /*
 static void saveNodes(const char* filename)
 {
@@ -293,50 +67,6 @@ void drawHermite(ImDrawList* drawList, ImVec2 p1, ImVec2 p2, int STEPS)
     }
 
     drawList->PathStroke(ImColor(200,200,100), false, 3.0f);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static bool isConnectorHovered(Connection* c, ImVec2 offset)
-{
-    ImVec2 mousePos = ImGui::GetIO().MousePos;
-    ImVec2 conPos = offset + c->pos;
-
-    float xd = mousePos.x - conPos.x;
-    float yd = mousePos.y - conPos.y;
-
-    return ((xd * xd) + (yd *yd)) < (NODE_SLOT_RADIUS * NODE_SLOT_RADIUS);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static Connection* getHoverCon(ImVec2 offset, ImVec2* pos)
-{
-    for (Node* node : s_nodes)
-    {
-        ImVec2 nodePos = node->pos + offset;
-
-        for (Connection* con : node->inputConnections)
-        {
-            if (isConnectorHovered(con, nodePos))
-            {
-                *pos = nodePos + con->pos;
-                return con;
-            }
-        }
-
-        for (Connection* con : node->outputConnections)
-        {
-            if (isConnectorHovered(con, nodePos))
-            {
-                *pos = nodePos + con->pos;
-                return con;
-            }
-        }
-    }
-
-    s_dragNode.con = 0;
-    return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -546,27 +276,7 @@ static void displayNode(ImDrawList* drawList, ImVec2 offset, Node* node, int& no
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: Ugly fix: me
 
-Node* findNodeByCon(Connection* findCon)
-{
-    for (Node* node : s_nodes)
-    {
-        for (Connection* con : node->inputConnections)
-        {
-            if (con == findCon)
-                return node;
-        }
-
-        for (Connection* con : node->outputConnections)
-        {
-            if (con == findCon)
-                return node;
-        }
-    }
-
-    return 0;
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -609,7 +319,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
 
     static int node_selected = -1;
     static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
-    
+
     ImGui::SameLine();
     ImGui::BeginGroup();
 

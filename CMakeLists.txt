@@ -3,6 +3,9 @@ project(sil_nodetest)
 
 set(CMAKE_CXX_STANDARD 14)
 
+add_definitions(-DMAX_CONNECTION_COUNT=32)
+
+
 set(IMGUI_SOURCES
         "ImGui/imgui.cpp"
         "ImGui/imgui_demo.cpp"
@@ -41,6 +44,6 @@ if (NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif (NOT OPENGL_FOUND)
 
-add_executable(sil_nodetest main.cpp)
+add_executable(sil_nodetest NodeEditor/Common.h NodeEditor/Connection.cpp NodeEditor/Connection.h main.cpp NodeEditor/Node.cpp NodeEditor/Node.h NodeEditor/DragNode.cpp NodeEditor/DragNode.h)
 
 TARGET_LINK_LIBRARIES(sil_nodetest ImGui  ${GLEW_LIBRARIES}  ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES})

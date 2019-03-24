@@ -4,15 +4,13 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include <stdio.h>
-#include <GL/glew.h> // Initialize with gl3wInit()
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <math.h>
 #include <string.h>
 #include <vector>
 #include <algorithm>
 #include <stdint.h>
-//#include <jansson.h>
-//#include "dialogs.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -611,43 +609,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
 
     static int node_selected = -1;
     static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
-
-#if 0
-
-    static ImVector<Node> nodes;
-    static ImVector<NodeLink> links;
-    static bool inited = false;
-    static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
-    static int node_selected = -1;
-    if (!inited)
-    {
-        nodes.push_back(Node(0, "MainTex",  ImVec2(40,50), 0.5f, 1, 1));
-        nodes.push_back(Node(1, "BumpMap",  ImVec2(40,150), 0.42f, 1, 1));
-        nodes.push_back(Node(2, "Combine", ImVec2(270,80), 1.0f, 2, 2));
-        links.push_back(NodeLink(0, 0, 2, 0));
-        links.push_back(NodeLink(1, 0, 2, 1));
-        inited = true;
-    }
-
-    // Draw a list of nodes on the left side
-    ImGui::BeginChild("node_list", ImVec2(100,0));
-    ImGui::Text("Nodes");
-    ImGui::Separator();
-    for (int node_idx = 0; node_idx < nodes.Size; node_idx++)
-    {
-        Node* node = &nodes[node_idx];
-        ImGui::PushID(node->ID);
-        if (ImGui::Selectable(node->Name, node->ID == node_selected))
-            node_selected = node->ID;
-        if (ImGui::IsItemHovered())
-        {
-            node_hovered_in_list = node->ID;
-            open_context_menu |= ImGui::IsMouseClicked(1);
-        }
-        ImGui::PopID();
-    }
-    ImGui::EndChild();
-#endif
+    
     ImGui::SameLine();
     ImGui::BeginGroup();
 

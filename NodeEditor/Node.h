@@ -11,8 +11,11 @@
 #include "../imgui/imgui.h"
 #include "Connection.h"
 #include "Common.h"
+#include "DragNode.h"
 
 #define sizeof_array(t) (sizeof(t) / sizeof(t[0]))
+const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
+extern DragNode s_dragNode;
 
 
 struct NodeType{
@@ -72,6 +75,11 @@ Node* createNodeFromName(ImVec2 pos, const char* name);
 
 // TODO: Ugly fix: me
 Node* findNodeByCon(Connection* findCon);
+
+
+void displayNode(ImDrawList* drawList, ImVec2 offset, Node* node, int& node_selected);
+void renderLines(ImDrawList* drawList, ImVec2 offset);
+
 
 
 #endif //SIL_NODETEST_NODE_H

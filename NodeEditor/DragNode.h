@@ -29,4 +29,7 @@ struct DragNode
 extern DragNode s_dragNode;
 extern DragState s_dragState;
 
+
+void updateDraging(ImVec2 offset);
+
 #endif //SIL_NODETEST_DRAGNODE_H

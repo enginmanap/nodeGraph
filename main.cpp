@@ -175,66 +175,6 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
     ImGui::End();
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-int mainOld(int, char**)
-{
-    // Setup window
-    glfwSetErrorCallback(error_callback);
-    if (!glfwInit())
-        exit(1);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#if __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui OpenGL3 example", NULL, NULL);
-    glfwMakeContextCurrent(window);
-    glewInit();
-
-    // Setup ImGui binding
-
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    const char* glsl_version = "#version 130";
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
-
-    /*
-    s_emitter = createNodeFromName(ImVec2(500.0f, 100.0f), "Emitter");
-    s_emittable = createNodeFromName(ImVec2(500.0f, 300.0f), "Emittable");
-    s_quad = createNodeFromName(ImVec2(500.0f, 600.0f), "Quad");
-    */
-
-    bool show_test_window = true;
-    //bool show_another_window = false;
-    ImVec4 clear_color = ImColor(114, 144, 154);
-
-    // Main loop
-    while (!glfwWindowShouldClose(window))
-    {
-        ImGuiIO& io = ImGui::GetIO();
-        glfwPollEvents();
-        ImGui_ImplGlfw_NewFrame();
-
-        ShowExampleAppCustomNodeGraph(&show_test_window);
-
-        // Rendering
-        glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ImGui::Render();
-        glfwSwapBuffers(window);
-    }
-
-    // Cleanup
-    ImGui_ImplGlfw_Shutdown();
-    glfwTerminate();
-
-    return 0;
-}
-
 // About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually.
 // Helper libraries are often used for this purpose! Here we are supporting a few common ones: gl3w, glew, glad.
 // You may use another loader/header of your choice (glext, glLoadGen, etc.), or chose to manually implement your own.
@@ -358,46 +298,7 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-/*
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
-
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
-
-*/
         bool show_test_window = true;
         ShowExampleAppCustomNodeGraph(&show_test_window);
 

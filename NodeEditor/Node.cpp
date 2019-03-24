@@ -4,10 +4,10 @@
 
 #include "Node.h"
 
-std::vector<Node*> s_nodes;
+std::vector<Node *> s_nodes;
 uint32_t s_id = 0;
 
-Node::Node(ImVec2 pos, NodeType* nodeType){
+Node::Node(ImVec2 pos, NodeType *nodeType) {
     initialize(pos, nodeType);
 
 }
@@ -28,15 +28,14 @@ void Node::initialize(const ImVec2 &pos, const NodeType *nodeType) {
     ImVec2 inputTextSize(0.0f, 0.0f);
     ImVec2 outputText(0.0f, 0.0f);
 
-    for (Connection* c : inputConnections)
-    {
+    for (Connection *c : inputConnections) {
         ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
         inputTextSize.x = std::max<float>(textSize.x, inputTextSize.x);
 
         c->pos = ImVec2(0.0f, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
 
         inputTextSize.y += textSize.y;
-        inputTextSize.y += 4.0f;		// size between text entries
+        inputTextSize.y += 4.0f;        // size between text entries
     }
 
     inputTextSize.x += 40.0f;
@@ -47,8 +46,7 @@ void Node::initialize(const ImVec2 &pos, const NodeType *nodeType) {
 
     // Calculate for the outputs
 
-    for (Connection* c : outputConnections)
-    {
+    for (Connection *c : outputConnections) {
         ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
         inputTextSize.x = std::max<float>(xStart + textSize.x, inputTextSize.x);
     }
@@ -61,21 +59,20 @@ void Node::initialize(const ImVec2 &pos, const NodeType *nodeType) {
 
     // set the positions for the output nodes when we know where the place them
 
-    for (Connection* c : outputConnections)
-    {
+    for (Connection *c : outputConnections) {
         ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
 
         c->pos = ImVec2(size.x, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
 
         inputTextSize.y += textSize.y;
-        inputTextSize.y += 4.0f;		// size between text entries
+        inputTextSize.y += 4.0f;        // size between text entries
     }
 
     // calculate the size of the node depending on nuber of connections
 }
 
 Node::Node(ImVec2 pos, const char *name, uint32_t &error) {
-    for (int i = 0; i < (int)sizeof_array(s_nodeTypes); ++i) {
+    for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
         if (!strcmp(s_nodeTypes[i].name, name)) {
             initialize(pos, &s_nodeTypes[i]);
             error = 0;
@@ -84,18 +81,14 @@ Node::Node(ImVec2 pos, const char *name, uint32_t &error) {
     error = 1;
 }
 
-Node* findNodeByCon(Connection* findCon)
-{
-    for (Node* node : s_nodes)
-    {
-        for (Connection* con : node->inputConnections)
-        {
+Node *findNodeByCon(Connection *findCon) {
+    for (Node *node : s_nodes) {
+        for (Connection *con : node->inputConnections) {
             if (con == findCon)
                 return node;
         }
 
-        for (Connection* con : node->outputConnections)
-        {
+        for (Connection *con : node->outputConnections) {
             if (con == findCon)
                 return node;
         }
@@ -105,8 +98,7 @@ Node* findNodeByCon(Connection* findCon)
 }
 
 
-void Node::display(ImDrawList* drawList, ImVec2 offset, int& node_selected)
-{
+void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected) {
     int node_hovered_in_scene = -1;
     bool open_context_menu = false;
 
@@ -142,8 +134,7 @@ void Node::display(ImDrawList* drawList, ImVec2 offset, int& node_selected)
     ImGui::SetCursorScreenPos(node_rect_min);
     ImGui::InvisibleButton("node", size);
 
-    if (ImGui::IsItemHovered())
-    {
+    if (ImGui::IsItemHovered()) {
         node_hovered_in_scene = id;
         open_context_menu |= ImGui::IsMouseClicked(1);
     }
@@ -153,15 +144,15 @@ void Node::display(ImDrawList* drawList, ImVec2 offset, int& node_selected)
     if (ImGui::IsItemActive() && !s_dragNode.con)
         node_moving_active = true;
 
-    ImU32 node_bg_color = node_hovered_in_scene == id ? ImColor(75,75,75) : ImColor(60,60,60);
+    ImU32 node_bg_color = node_hovered_in_scene == id ? ImColor(75, 75, 75) : ImColor(60, 60, 60);
     drawList->AddRectFilled(node_rect_min, node_rect_max, node_bg_color, 4.0f);
 
     ImVec2 titleArea = node_rect_max;
     titleArea.y = node_rect_min.y + 30.0f;
 
     // Draw text bg area
-    drawList->AddRectFilled(node_rect_min + ImVec2(1,1), titleArea, ImColor(100,0,0), 4.0f);
-    drawList->AddRect(node_rect_min, node_rect_max, ImColor(100,100,100), 4.0f);
+    drawList->AddRectFilled(node_rect_min + ImVec2(1, 1), titleArea, ImColor(100, 0, 0), 4.0f);
+    drawList->AddRect(node_rect_min, node_rect_max, ImColor(100, 100, 100), 4.0f);
 
     ImVec2 off;
 
@@ -172,8 +163,7 @@ void Node::display(ImDrawList* drawList, ImVec2 offset, int& node_selected)
     off.x = node_rect_min.x;
     off.y = node_rect_min.y;
 
-    for (Connection* con : inputConnections)
-    {
+    for (Connection *con : inputConnections) {
         ImGui::SetCursorScreenPos(offset + ImVec2(10.0f, 0));
         ImGui::Text("%s", con->desc.name);
 
@@ -190,8 +180,7 @@ void Node::display(ImDrawList* drawList, ImVec2 offset, int& node_selected)
     offset = node_rect_min;
     offset.y += 40.0f;
 
-    for (Connection* con : outputConnections)
-    {
+    for (Connection *con : outputConnections) {
         textSize = ImGui::CalcTextSize(con->desc.name);
 
         ImGui::SetCursorScreenPos(offset + ImVec2(con->pos.x - (textSize.x + 10.0f), 0));
@@ -223,16 +212,13 @@ void Node::display(ImDrawList* drawList, ImVec2 offset, int& node_selected)
 }
 
 
-void renderLines(ImDrawList* drawList, ImVec2 offset)
-{
-    for (Node* node : s_nodes)
-    {
-        for (Connection* con : node->inputConnections)
-        {
+void renderLines(ImDrawList *drawList, ImVec2 offset) {
+    for (Node *node : s_nodes) {
+        for (Connection *con : node->inputConnections) {
             if (!con->input)
                 continue;
 
-            Node* targetNode = findNodeByCon(con->input);
+            Node *targetNode = findNodeByCon(con->input);
 
             if (!targetNode)
                 continue;

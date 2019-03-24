@@ -46,4 +46,4 @@ endif (NOT OPENGL_FOUND)
 
 add_executable(sil_nodetest NodeEditor/Common.h NodeEditor/Connection.cpp NodeEditor/Connection.h main.cpp NodeEditor/Node.cpp NodeEditor/Node.h NodeEditor/DragNode.cpp NodeEditor/DragNode.h NodeEditor/Common.cpp)
 
-TARGET_LINK_LIBRARIES(sil_nodetest ImGui  ${GLEW_LIBRARIES}  ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES})
+TARGET_LINK_LIBRARIES(sil_nodetest ImGui ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES})

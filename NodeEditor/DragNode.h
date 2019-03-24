@@ -9,8 +9,7 @@
 #include "../imgui/imgui.h"
 #include "Connection.h"
 
-enum DragState
-{
+enum DragState {
     DragState_Default,
     DragState_Hover,
     DragState_BeginDrag,
@@ -20,10 +19,9 @@ enum DragState
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct DragNode
-{
+struct DragNode {
     ImVec2 pos;
-    Connection* con;
+    Connection *con;
 };
 
 extern DragNode s_dragNode;

@@ -7,17 +7,13 @@
 DragNode s_dragNode;
 DragState s_dragState = DragState_Default;
 
-void updateDraging(ImVec2 offset)
-{
-    switch (s_dragState)
-    {
-        case DragState_Default:
-        {
+void updateDraging(ImVec2 offset) {
+    switch (s_dragState) {
+        case DragState_Default: {
             ImVec2 pos;
-            Connection* con = getHoverCon(offset, &pos);
+            Connection *con = getHoverCon(offset, &pos);
 
-            if (con)
-            {
+            if (con) {
                 s_dragNode.con = con;
                 s_dragNode.pos = pos;
                 s_dragState = DragState_Hover;
@@ -27,15 +23,13 @@ void updateDraging(ImVec2 offset)
             break;
         }
 
-        case DragState_Hover:
-        {
+        case DragState_Hover: {
             ImVec2 pos;
-            Connection* con = getHoverCon(offset, &pos);
+            Connection *con = getHoverCon(offset, &pos);
 
             // Make sure we are still hovering the same node
 
-            if (con != s_dragNode.con)
-            {
+            if (con != s_dragNode.con) {
                 s_dragNode.con = 0;
                 s_dragState = DragState_Default;
                 return;
@@ -47,28 +41,24 @@ void updateDraging(ImVec2 offset)
             break;
         }
 
-        case DragState_BeginDrag:
-        {
+        case DragState_BeginDrag: {
             break;
         }
 
-        case DragState_Draging:
-        {
-            ImDrawList* drawList = ImGui::GetWindowDrawList();
+        case DragState_Draging: {
+            ImDrawList *drawList = ImGui::GetWindowDrawList();
 
             drawList->ChannelsSetCurrent(0); // Background
 
             drawHermite(drawList, s_dragNode.pos, ImGui::GetIO().MousePos, 12);
 
-            if (!ImGui::IsMouseDown(0))
-            {
+            if (!ImGui::IsMouseDown(0)) {
                 ImVec2 pos;
-                Connection* con = getHoverCon(offset, &pos);
+                Connection *con = getHoverCon(offset, &pos);
 
                 // Make sure we are still hovering the same node
 
-                if (con == s_dragNode.con)
-                {
+                if (con == s_dragNode.con) {
                     s_dragNode.con = 0;
                     s_dragState = DragState_Default;
                     return;
@@ -85,8 +75,7 @@ void updateDraging(ImVec2 offset)
             break;
         }
 
-        case DragState_Connect:
-        {
+        case DragState_Connect: {
             break;
         }
     }

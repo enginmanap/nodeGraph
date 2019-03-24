@@ -6,15 +6,9 @@
 #include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <math.h>
-#include <string.h>
 #include <vector>
-#include <algorithm>
-#include <stdint.h>
 
 #include "NodeEditor/Node.h"
-#include "NodeEditor/Connection.h"
-#include "NodeEditor/DragNode.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,8 +18,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static void error_callback(int error, const char* description)
-{
+static void error_callback(int error, const char *description) {
     fprintf(stderr, "Error %d: %s\n", error, description);
 }
 /*
@@ -50,11 +43,9 @@ static void saveNodes(const char* filename)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static void ShowExampleAppCustomNodeGraph(bool* opened)
-{
-    ImGui::SetNextWindowSize(ImVec2(700,600), ImGuiSetCond_FirstUseEver);
-    if (!ImGui::Begin("Example: Custom Node Graph", opened))
-    {
+static void ShowExampleAppCustomNodeGraph(bool *opened) {
+    ImGui::SetNextWindowSize(ImVec2(700, 600), ImGuiSetCond_FirstUseEver);
+    if (!ImGui::Begin("Example: Custom Node Graph", opened)) {
         ImGui::End();
         return;
     }
@@ -71,21 +62,21 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
 
     // Create our child canvas
     //ImGui::Text("Hold middle mouse button to scroll (%.2f,%.2f)", scrolling.x, scrolling.y);
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1,1));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0,0));
-    ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImVec4(40,40,40,200));
-    ImGui::BeginChild("scrolling_region", ImVec2(0,0), true, ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoMove);
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImVec4(40, 40, 40, 200));
+    ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove);
     ImGui::PushItemWidth(120.0f);
 
 
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    ImDrawList *draw_list = ImGui::GetWindowDrawList();
     draw_list->ChannelsSplit(2);
     //ImVec2 offset = ImGui::GetCursorScreenPos() - scrolling;
 
     //displayNode(draw_list, scrolling, s_emittable, node_selected);
     //displayNode(draw_list, scrolling, s_emitter, node_selected);
 
-    for (Node* node : s_nodes)
+    for (Node *node : s_nodes)
         node->display(draw_list, scrolling, node_selected);
 
     updateDraging(scrolling);
@@ -94,13 +85,11 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
     draw_list->ChannelsMerge();
 
     // Open context menu
-    if (!ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1))
-    {
+    if (!ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1)) {
         node_selected = node_hovered_in_list = node_hovered_in_scene = -1;
         open_context_menu = true;
     }
-    if (open_context_menu)
-    {
+    if (open_context_menu) {
         ImGui::OpenPopup("context_menu");
         if (node_hovered_in_list != -1)
             node_selected = node_hovered_in_list;
@@ -109,11 +98,9 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
     }
 
     // Draw context menu
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8,8));
-    if (ImGui::BeginPopup("context_menu"))
-    {
-        if (ImGui::MenuItem("Load graph..."))
-        {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
+    if (ImGui::BeginPopup("context_menu")) {
+        if (ImGui::MenuItem("Load graph...")) {
             /*
             char path[1024];
             if (Dialog_open(path))
@@ -123,8 +110,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
             */
         }
 
-        if (ImGui::MenuItem("Save graph..."))
-        {
+        if (ImGui::MenuItem("Save graph...")) {
             /*
             char path[1024];
             if (Dialog_save(path))
@@ -149,11 +135,9 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
         */
         //else
 
-        for (int i = 0; i < (int)sizeof_array(s_nodeTypes); ++i)
-        {
-            if (ImGui::MenuItem(s_nodeTypes[i].name))
-            {
-                Node* node = new Node(ImGui::GetIO().MousePos, &s_nodeTypes[i]);
+        for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
+            if (ImGui::MenuItem(s_nodeTypes[i].name)) {
+                Node *node = new Node(ImGui::GetIO().MousePos, &s_nodeTypes[i]);
                 s_nodes.push_back(node);
             }
         }
@@ -181,7 +165,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
 #include <GL/gl3w.h>    // Initialize with gl3wInit()
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLEW)
-#include <GL/glew.h>    // Initialize with glewInit()
+
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLAD)
 #include <glad/glad.h>  // Initialize with gladLoadGL()
 #else
@@ -189,7 +173,6 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
 #endif
 
 // Include glfw3.h after our OpenGL definitions
-#include <GLFW/glfw3.h>
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -198,13 +181,11 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-static void glfw_error_callback(int error, const char* description)
-{
+static void glfw_error_callback(int error, const char *description) {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
-int main(int, char**)
-{
+int main(int, char **) {
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
@@ -220,7 +201,7 @@ int main(int, char**)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
 #else
     // GL 3.0 + GLSL 130
-    const char* glsl_version = "#version 130";
+    const char *glsl_version = "#version 130";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
@@ -228,7 +209,7 @@ int main(int, char**)
 #endif
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
         return 1;
     glfwMakeContextCurrent(window);
@@ -244,8 +225,7 @@ int main(int, char**)
 #else
     bool err = false; // If you use IMGUI_IMPL_OPENGL_LOADER_CUSTOM, your loader is likely to requires some form of initialization.
 #endif
-    if (err)
-    {
+    if (err) {
         fprintf(stderr, "Failed to initialize OpenGL loader!\n");
         return 1;
     }
@@ -253,7 +233,8 @@ int main(int, char**)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void) io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
 
@@ -285,8 +266,7 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)) {
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.

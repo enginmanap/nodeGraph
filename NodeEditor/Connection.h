@@ -12,49 +12,44 @@
 
 const float NODE_SLOT_RADIUS = 5.0f;
 
-enum ConnectionType
-{
+enum ConnectionType {
     ConnectionType_Color,
     ConnectionType_Vec3,
     ConnectionType_Float,
     ConnectionType_Int,
 };
 
-struct ConnectionDesc
-{
-    const char* name;
+struct ConnectionDesc {
+    const char *name;
     ConnectionType type;
 };
 
 struct Connection {
-        ImVec2 pos;
-        ConnectionDesc desc;
+    ImVec2 pos;
+    ConnectionDesc desc;
 
-        inline Connection()
-        {
-            pos.x = pos.y = 0.0f;
-            input = 0;
-        }
+    inline Connection() {
+        pos.x = pos.y = 0.0f;
+        input = 0;
+    }
 
-        union {
-            float v3[3];
-            float v;
-            int i;
-        };
+    union {
+        float v3[3];
+        float v;
+        int i;
+    };
 
-        struct Connection* input;
-        std::vector<Connection*> output;
+    struct Connection *input;
+    std::vector<Connection *> output;
 
     bool isHovered(ImVec2 offset);
 
 };
 
-void setupConnections(std::vector<Connection*>& connections, const ConnectionDesc* connectionDescs);
+void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs);
 
 
-Connection* getHoverCon(ImVec2 offset, ImVec2* pos);
-
-
+Connection *getHoverCon(ImVec2 offset, ImVec2 *pos);
 
 
 #endif //SIL_NODETEST_CONNECTION_H

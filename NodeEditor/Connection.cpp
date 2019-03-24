@@ -35,7 +35,7 @@ Connection* getHoverCon(ImVec2 offset, ImVec2* pos)
     return 0;
 }
 
-void setupConnections(std::vector<Connection*>& connections, ConnectionDesc* connectionDescs)
+void setupConnections(std::vector<Connection*>& connections, const ConnectionDesc* connectionDescs)
 {
     for (int i = 0; i < MAX_CONNECTION_COUNT; ++i)
     {

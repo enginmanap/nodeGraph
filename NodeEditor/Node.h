@@ -57,27 +57,25 @@ static struct NodeType s_nodeTypes[] =
         };
 
 struct Node {
-        ImVec2 pos;
-        ImVec2 size;
-        int id;
-        const char* name;
-        std::vector<Connection*> inputConnections;
-        std::vector<Connection*> outputConnections;
+    ImVec2 pos;
+    ImVec2 size;
+    int id;
+    const char* name;
+    std::vector<Connection*> inputConnections;
+    std::vector<Connection*> outputConnections;
+
+    Node(ImVec2 pos, NodeType* nodeType);
+    Node(ImVec2 pos, const char *name, uint32_t &error);
+    void initialize(const ImVec2 &pos, const NodeType *nodeType);
+
+    void display(ImDrawList* drawList, ImVec2 offset, int& node_selected);
 };
 
 extern std::vector<Node*> s_nodes;
 extern uint32_t s_id;
 
-
-Node* createNodeFromType(ImVec2 pos, NodeType* nodeType);
-
-Node* createNodeFromName(ImVec2 pos, const char* name);
-
 // TODO: Ugly fix: me
 Node* findNodeByCon(Connection* findCon);
-
-
-void displayNode(ImDrawList* drawList, ImVec2 offset, Node* node, int& node_selected);
 void renderLines(ImDrawList* drawList, ImVec2 offset);
 
 

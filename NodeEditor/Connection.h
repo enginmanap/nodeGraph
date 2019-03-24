@@ -47,7 +47,7 @@ struct Connection {
 
 };
 
-void setupConnections(std::vector<Connection*>& connections, ConnectionDesc* connectionDescs);
+void setupConnections(std::vector<Connection*>& connections, const ConnectionDesc* connectionDescs);
 
 bool isConnectorHovered(Connection* c, ImVec2 offset);
 

@@ -86,7 +86,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
     //displayNode(draw_list, scrolling, s_emitter, node_selected);
 
     for (Node* node : s_nodes)
-        displayNode(draw_list, scrolling, node, node_selected);
+        node->display(draw_list, scrolling, node_selected);
 
     updateDraging(scrolling);
     renderLines(draw_list, scrolling);
@@ -153,7 +153,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened)
         {
             if (ImGui::MenuItem(s_nodeTypes[i].name))
             {
-                Node* node = createNodeFromType(ImGui::GetIO().MousePos, &s_nodeTypes[i]);
+                Node* node = new Node(ImGui::GetIO().MousePos, &s_nodeTypes[i]);
                 s_nodes.push_back(node);
             }
         }

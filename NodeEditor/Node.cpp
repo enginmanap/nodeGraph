@@ -179,7 +179,7 @@ void Node::display(ImDrawList* drawList, ImVec2 offset, int& node_selected)
 
         ImColor conColor = ImColor(150, 150, 150);
 
-        if (isConnectorHovered(con, node_rect_min))
+        if (con->isHovered(node_rect_min))
             conColor = ImColor(200, 200, 200);
 
         drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
@@ -199,7 +199,7 @@ void Node::display(ImDrawList* drawList, ImVec2 offset, int& node_selected)
 
         ImColor conColor = ImColor(150, 150, 150);
 
-        if (isConnectorHovered(con, node_rect_min))
+        if (con->isHovered(node_rect_min))
             conColor = ImColor(200, 200, 200);
 
         drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);

@@ -45,11 +45,12 @@ struct Connection {
         struct Connection* input;
         std::vector<Connection*> output;
 
+    bool isHovered(ImVec2 offset);
+
 };
 
 void setupConnections(std::vector<Connection*>& connections, const ConnectionDesc* connectionDescs);
 
-bool isConnectorHovered(Connection* c, ImVec2 offset);
 
 Connection* getHoverCon(ImVec2 offset, ImVec2* pos);
 

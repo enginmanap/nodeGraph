@@ -14,7 +14,7 @@ Connection* getHoverCon(ImVec2 offset, ImVec2* pos)
 
         for (Connection* con : node->inputConnections)
         {
-            if (isConnectorHovered(con, nodePos))
+            if (con->isHovered(nodePos))
             {
                 *pos = nodePos + con->pos;
                 return con;
@@ -23,7 +23,7 @@ Connection* getHoverCon(ImVec2 offset, ImVec2* pos)
 
         for (Connection* con : node->outputConnections)
         {
-            if (isConnectorHovered(con, nodePos))
+            if (con->isHovered(nodePos))
             {
                 *pos = nodePos + con->pos;
                 return con;
@@ -51,10 +51,9 @@ void setupConnections(std::vector<Connection*>& connections, const ConnectionDes
     }
 }
 
-bool isConnectorHovered(Connection* c, ImVec2 offset)
-{
+bool Connection::isHovered(ImVec2 offset){
     ImVec2 mousePos = ImGui::GetIO().MousePos;
-    ImVec2 conPos = offset + c->pos;
+    ImVec2 conPos = offset + this->pos;
 
     float xd = mousePos.x - conPos.x;
     float yd = mousePos.y - conPos.y;

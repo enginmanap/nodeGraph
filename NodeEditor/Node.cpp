@@ -203,3 +203,41 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
 
     ImGui::PopID();
 }
+
+bool Node::hasConnection(Connection *connection) {
+    for (Connection *con : inputConnections) {
+        if (con == connection)
+            return true;
+    }
+
+    for (Connection *con : outputConnections) {
+        if (con == connection)
+            return true;
+    }
+    return false;
+}
+
+Connection *Node::getHoverConnection(ImVec2 offset, ImVec2 *pos) {
+    ImVec2 nodePos = this->pos + offset;
+
+    for (Connection *con : this->inputConnections) {
+        if (con->isHovered(nodePos)) {
+            *pos = nodePos + con->pos;
+            return con;
+        }
+    }
+
+    for (Connection *con : this->outputConnections) {
+        if (con->isHovered(nodePos)) {
+            *pos = nodePos + con->pos;
+            return con;
+        }
+    }
+
+    return nullptr;
+}
+
+bool Node::getLinesToRender(ImVec2 &from, ImVec2 &to) {
+
+    return false;
+}

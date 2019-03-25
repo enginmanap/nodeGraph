@@ -53,7 +53,8 @@ static struct NodeType s_nodeTypes[] =
                 },
         };
 
-struct Node {
+class Node {
+public:
     ImVec2 pos;
     ImVec2 size;
     int id;
@@ -62,8 +63,7 @@ struct Node {
     std::vector<Connection *> outputConnections;
 
     void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs);
-
-
+public:
     Node(uint32_t id, ImVec2 pos, NodeType *nodeType);
 
     Node(uint32_t id, ImVec2 pos, const char *name, uint32_t &error);
@@ -71,6 +71,12 @@ struct Node {
     void initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType);
 
     void display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool dragNodeConnected);
+
+    bool hasConnection(Connection *connection);
+
+    Connection* getHoverConnection(ImVec2 offset, ImVec2 *pos);
+
+    bool getLinesToRender(ImVec2 &from, ImVec2 &to);
 };
 
 

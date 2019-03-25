@@ -34,18 +34,20 @@ void NodeGraph::display() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImVec4(40, 40, 40, 200));
     ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove);
-    ImGui::PushItemWidth(120.0f);
 
+    ImGui::PushItemWidth(120.0f);
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
     draw_list->ChannelsSplit(2);
+    //scrolling.y = -1 *ImGui::GetScrollY();
     //ImVec2 offset = ImGui::GetCursorScreenPos() - scrolling;
 
     //displayNode(draw_list, scrolling, s_emittable, node_selected);
     //displayNode(draw_list, scrolling, s_emitter, node_selected);
 
-    for (Node *node : nodes)
+    for (Node *node : nodes) {
         node->display(draw_list, scrolling, node_selected, dragNode.con != 0);
+    }
 
     updateDragging(scrolling);
     renderLines(draw_list, scrolling);
@@ -59,10 +61,12 @@ void NodeGraph::display() {
     }
     if (open_context_menu) {
         ImGui::OpenPopup("context_menu");
-        if (node_hovered_in_list != -1)
+        if (node_hovered_in_list != -1) {
             node_selected = node_hovered_in_list;
-        if (node_hovered_in_scene != -1)
+        }
+        if (node_hovered_in_scene != -1) {
             node_selected = node_hovered_in_scene;
+        }
     }
 
     // Draw context menu
@@ -126,22 +130,25 @@ void NodeGraph::display() {
 
 Node *NodeGraph::findNodeByCon(Connection *findCon) {
     for (Node *node : nodes) {
-        for (Connection *con : node->inputConnections) {
-            if (con == findCon)
-                return node;
-        }
-
-        for (Connection *con : node->outputConnections) {
-            if (con == findCon)
-                return node;
+        if(node->hasConnection(findCon)) {
+            return node;
         }
     }
-
     return 0;
 }
 
 void NodeGraph::renderLines(ImDrawList *drawList, ImVec2 offset) {
     for (Node *node : nodes) {
+        /*
+        ImVec2 from, to;
+        if(node->getLinesToRender(from, to)) {
+            drawHermite(drawList,
+                        offset + from,
+                        offset + to,
+                        12);
+        }
+         */
+
         for (Connection *con : node->inputConnections) {
             if (!con->input)
                 continue;
@@ -156,30 +163,22 @@ void NodeGraph::renderLines(ImDrawList *drawList, ImVec2 offset) {
                         offset + node->pos + con->pos,
                         12);
         }
+
     }
 }
 
 Connection *NodeGraph::getHoverCon(ImVec2 offset, ImVec2 *pos) {
+    Connection* result = nullptr;
     for (Node *node : nodes) {
-        ImVec2 nodePos = node->pos + offset;
-
-        for (Connection *con : node->inputConnections) {
-            if (con->isHovered(nodePos)) {
-                *pos = nodePos + con->pos;
-                return con;
-            }
-        }
-
-        for (Connection *con : node->outputConnections) {
-            if (con->isHovered(nodePos)) {
-                *pos = nodePos + con->pos;
-                return con;
-            }
+        result = node->getHoverConnection(offset, pos);
+        if(result != nullptr){
+            break;
         }
     }
-
-    dragNode.con = 0;
-    return 0;
+    if(result == nullptr) {
+        dragNode.con = 0;
+    }
+    return result;//return null or found node
 }
 
 void NodeGraph::updateDragging(ImVec2 offset) {

@@ -9,6 +9,7 @@
 #include "Node.h"
 
 class NodeGraph {
+    uint32_t nextNodeID = 0;
 
     enum DragState {
         DragState_Default,

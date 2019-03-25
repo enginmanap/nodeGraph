@@ -4,15 +4,22 @@
 
 #include "Node.h"
 
-uint32_t s_id = 0;
-
-Node::Node(ImVec2 pos, NodeType *nodeType) {
-    initialize(pos, nodeType);
-
+Node::Node(uint32_t id, ImVec2 pos, NodeType *nodeType) {
+    initialize(id, pos, nodeType);
 }
 
-void Node::initialize(const ImVec2 &pos, const NodeType *nodeType) {
-    id = s_id++;
+Node::Node(uint32_t id, ImVec2 pos, const char *name, uint32_t &error) {
+    for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
+        if (!strcmp(s_nodeTypes[i].name, name)) {
+            initialize(id, pos, &s_nodeTypes[i]);
+            error = 0;
+        }
+    }
+    error = 1;
+}
+
+void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) {
+    this->id = id;
     name = nodeType->name;
 
     ImVec2 titleSize = ImGui::CalcTextSize(name);
@@ -69,17 +76,6 @@ void Node::initialize(const ImVec2 &pos, const NodeType *nodeType) {
 
     // calculate the size of the node depending on nuber of connections
 }
-
-Node::Node(ImVec2 pos, const char *name, uint32_t &error) {
-    for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
-        if (!strcmp(s_nodeTypes[i].name, name)) {
-            initialize(pos, &s_nodeTypes[i]);
-            error = 0;
-        }
-    }
-    error = 1;
-}
-
 
 void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool dragNodeConnected) {
     int node_hovered_in_scene = -1;

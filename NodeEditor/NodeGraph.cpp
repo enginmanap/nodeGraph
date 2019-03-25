@@ -89,7 +89,7 @@ void NodeGraph::display() {
 
         for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
             if (ImGui::MenuItem(s_nodeTypes[i].name)) {
-                Node *node = new Node(ImGui::GetIO().MousePos, &s_nodeTypes[i]);
+                Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos, &s_nodeTypes[i]);
                 nodes.push_back(node);
             }
         }

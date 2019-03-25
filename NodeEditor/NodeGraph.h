@@ -9,10 +9,24 @@
 #include "Node.h"
 
 class NodeGraph {
+
+    enum DragState {
+        DragState_Default,
+        DragState_Hover,
+        DragState_BeginDrag,
+        DragState_Draging,
+        DragState_Connect,
+    };
+
+    struct DragNode {
+        ImVec2 pos;
+        Connection *con;
+    };
+
     std::vector<Node *> nodes;
 
     DragState dragState = DragState_Default;
-    DragNode s_dragNode;
+    DragNode dragNode;
 
 public:
     void display();

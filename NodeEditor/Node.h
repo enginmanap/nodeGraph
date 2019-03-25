@@ -11,7 +11,6 @@
 #include "../imgui/imgui.h"
 #include "Connection.h"
 #include "Common.h"
-#include "DragNode.h"
 
 #define sizeof_array(t) (sizeof(t) / sizeof(t[0]))
 const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);

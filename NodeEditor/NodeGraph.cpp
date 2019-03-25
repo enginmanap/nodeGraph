@@ -29,7 +29,7 @@ void NodeGraph::display() {
     //displayNode(draw_list, scrolling, s_emitter, node_selected);
 
     for (Node *node : nodes)
-        node->display(draw_list, scrolling, node_selected, s_dragNode.con != 0);
+        node->display(draw_list, scrolling, node_selected, dragNode.con != 0);
 
     updateDragging(scrolling);
     renderLines(draw_list, scrolling);
@@ -163,7 +163,7 @@ Connection *NodeGraph::getHoverCon(ImVec2 offset, ImVec2 *pos) {
         }
     }
 
-    s_dragNode.con = 0;
+    dragNode.con = 0;
     return 0;
 }
 
@@ -174,8 +174,8 @@ void NodeGraph::updateDragging(ImVec2 offset) {
             Connection *con = getHoverCon(offset, &pos);
 
             if (con) {
-                s_dragNode.con = con;
-                s_dragNode.pos = pos;
+                dragNode.con = con;
+                dragNode.pos = pos;
                 dragState = DragState_Hover;
                 return;
             }
@@ -189,13 +189,13 @@ void NodeGraph::updateDragging(ImVec2 offset) {
 
             // Make sure we are still hovering the same node
 
-            if (con != s_dragNode.con) {
-                s_dragNode.con = 0;
+            if (con != dragNode.con) {
+                dragNode.con = 0;
                 dragState = DragState_Default;
                 return;
             }
 
-            if (ImGui::IsMouseClicked(0) && s_dragNode.con)
+            if (ImGui::IsMouseClicked(0) && dragNode.con)
                 dragState = DragState_Draging;
 
             break;
@@ -210,7 +210,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
 
             drawList->ChannelsSetCurrent(0); // Background
 
-            drawHermite(drawList, s_dragNode.pos, ImGui::GetIO().MousePos, 12);
+            drawHermite(drawList, dragNode.pos, ImGui::GetIO().MousePos, 12);
 
             if (!ImGui::IsMouseDown(0)) {
                 ImVec2 pos;
@@ -218,8 +218,8 @@ void NodeGraph::updateDragging(ImVec2 offset) {
 
                 // Make sure we are still hovering the same node
 
-                if (con == s_dragNode.con) {
-                    s_dragNode.con = 0;
+                if (con == dragNode.con) {
+                    dragNode.con = 0;
                     dragState = DragState_Default;
                     return;
                 }
@@ -227,8 +227,8 @@ void NodeGraph::updateDragging(ImVec2 offset) {
                 // Lets connect the nodes.
                 // TODO: Make sure we connect stuff in the correct way!
 
-                con->input = s_dragNode.con;
-                s_dragNode.con = 0;
+                con->input = dragNode.con;
+                dragNode.con = 0;
                 dragState = DragState_Default;
             }
 

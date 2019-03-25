@@ -18,7 +18,7 @@ public:
 
     Connection *getHoverCon(ImVec2 offset, ImVec2 *pos);
 
-    void updateDraging(ImVec2 offset);
+    void updateDragging(ImVec2 offset);
 
 };
 

@@ -31,7 +31,7 @@ void NodeGraph::display() {
     for (Node *node : s_nodes)
         node->display(draw_list, scrolling, node_selected);
 
-    updateDraging(scrolling);
+    updateDragging(scrolling);
     renderLines(draw_list, scrolling);
 
     draw_list->ChannelsMerge();
@@ -167,7 +167,7 @@ Connection *NodeGraph::getHoverCon(ImVec2 offset, ImVec2 *pos) {
     return 0;
 }
 
-void NodeGraph::updateDraging(ImVec2 offset) {
+void NodeGraph::updateDragging(ImVec2 offset) {
     switch (s_dragState) {
         case DragState_Default: {
             ImVec2 pos;

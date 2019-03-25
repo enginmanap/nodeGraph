@@ -4,7 +4,6 @@
 
 #include "Node.h"
 
-std::vector<Node *> s_nodes;
 uint32_t s_id = 0;
 
 Node::Node(ImVec2 pos, NodeType *nodeType) {
@@ -79,22 +78,6 @@ Node::Node(ImVec2 pos, const char *name, uint32_t &error) {
         }
     }
     error = 1;
-}
-
-Node *findNodeByCon(Connection *findCon) {
-    for (Node *node : s_nodes) {
-        for (Connection *con : node->inputConnections) {
-            if (con == findCon)
-                return node;
-        }
-
-        for (Connection *con : node->outputConnections) {
-            if (con == findCon)
-                return node;
-        }
-    }
-
-    return 0;
 }
 
 
@@ -209,24 +192,4 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected) {
     //ImGui::EndGroup();
 
     ImGui::PopID();
-}
-
-
-void renderLines(ImDrawList *drawList, ImVec2 offset) {
-    for (Node *node : s_nodes) {
-        for (Connection *con : node->inputConnections) {
-            if (!con->input)
-                continue;
-
-            Node *targetNode = findNodeByCon(con->input);
-
-            if (!targetNode)
-                continue;
-
-            drawHermite(drawList,
-                        offset + targetNode->pos + con->input->pos,
-                        offset + node->pos + con->pos,
-                        12);
-        }
-    }
 }

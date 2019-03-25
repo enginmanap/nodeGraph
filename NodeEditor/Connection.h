@@ -49,7 +49,4 @@ struct Connection {
 void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs);
 
 
-Connection *getHoverCon(ImVec2 offset, ImVec2 *pos);
-
-
 #endif //SIL_NODETEST_CONNECTION_H

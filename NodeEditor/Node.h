@@ -72,14 +72,8 @@ struct Node {
 
     void display(ImDrawList *drawList, ImVec2 offset, int &node_selected);
 };
-
-extern std::vector<Node *> s_nodes;
 extern uint32_t s_id;
 
-// TODO: Ugly fix: me
-Node *findNodeByCon(Connection *findCon);
-
-void renderLines(ImDrawList *drawList, ImVec2 offset);
 
 
 #endif //SIL_NODETEST_NODE_H

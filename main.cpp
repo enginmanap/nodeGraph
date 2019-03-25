@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "NodeEditor/Node.h"
+#include "NodeEditor/NodeGraph.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,117 +44,16 @@ static void saveNodes(const char* filename)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static void ShowExampleAppCustomNodeGraph(bool *opened) {
+static void ShowExampleAppCustomNodeGraph(NodeGraph& nodeGraph, bool *opened) {
     ImGui::SetNextWindowSize(ImVec2(700, 600), ImGuiSetCond_FirstUseEver);
     if (!ImGui::Begin("Example: Custom Node Graph", opened)) {
         ImGui::End();
         return;
     }
 
-    bool open_context_menu = false;
-    int node_hovered_in_list = -1;
-    int node_hovered_in_scene = -1;
-
-    static int node_selected = -1;
-    static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
-
     ImGui::SameLine();
     ImGui::BeginGroup();
-
-    // Create our child canvas
-    //ImGui::Text("Hold middle mouse button to scroll (%.2f,%.2f)", scrolling.x, scrolling.y);
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImVec4(40, 40, 40, 200));
-    ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove);
-    ImGui::PushItemWidth(120.0f);
-
-
-    ImDrawList *draw_list = ImGui::GetWindowDrawList();
-    draw_list->ChannelsSplit(2);
-    //ImVec2 offset = ImGui::GetCursorScreenPos() - scrolling;
-
-    //displayNode(draw_list, scrolling, s_emittable, node_selected);
-    //displayNode(draw_list, scrolling, s_emitter, node_selected);
-
-    for (Node *node : s_nodes)
-        node->display(draw_list, scrolling, node_selected);
-
-    updateDraging(scrolling);
-    renderLines(draw_list, scrolling);
-
-    draw_list->ChannelsMerge();
-
-    // Open context menu
-    if (!ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1)) {
-        node_selected = node_hovered_in_list = node_hovered_in_scene = -1;
-        open_context_menu = true;
-    }
-    if (open_context_menu) {
-        ImGui::OpenPopup("context_menu");
-        if (node_hovered_in_list != -1)
-            node_selected = node_hovered_in_list;
-        if (node_hovered_in_scene != -1)
-            node_selected = node_hovered_in_scene;
-    }
-
-    // Draw context menu
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
-    if (ImGui::BeginPopup("context_menu")) {
-        if (ImGui::MenuItem("Load graph...")) {
-            /*
-            char path[1024];
-            if (Dialog_open(path))
-            {
-                printf("file to load %s\n", path);
-            }
-            */
-        }
-
-        if (ImGui::MenuItem("Save graph...")) {
-            /*
-            char path[1024];
-            if (Dialog_save(path))
-            {
-                saveNodes(path);
-            }
-            */
-        }
-
-
-        /*
-        Node* node = node_selected != -1 ? &nodes[node_selected] : NULL;
-        ImVec2 scene_pos = ImGui::GetMousePosOnOpeningCurrentPopup() - offset;
-        if (node)
-        {
-            ImGui::Text("Node '%s'", node->Name);
-            ImGui::Separator();
-            if (ImGui::MenuItem("Rename..", NULL, false, false)) {}
-            if (ImGui::MenuItem("Delete", NULL, false, false)) {}
-            if (ImGui::MenuItem("Copy", NULL, false, false)) {}
-        }
-        */
-        //else
-
-        for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
-            if (ImGui::MenuItem(s_nodeTypes[i].name)) {
-                Node *node = new Node(ImGui::GetIO().MousePos, &s_nodeTypes[i]);
-                s_nodes.push_back(node);
-            }
-        }
-
-        ImGui::EndPopup();
-    }
-    ImGui::PopStyleVar();
-
-    // Scrolling
-    if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::IsMouseDragging(2, 0.0f))
-        scrolling = scrolling - ImGui::GetIO().MouseDelta;
-
-    ImGui::PopItemWidth();
-    ImGui::EndChild();
-    ImGui::PopStyleColor();
-    ImGui::PopStyleVar(2);
+    nodeGraph.display();
     ImGui::EndGroup();
 
     ImGui::End();
@@ -265,6 +165,7 @@ int main(int, char **) {
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    NodeGraph nodeGraph;
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         // Poll and handle events (inputs, window resize, etc.)
@@ -280,7 +181,7 @@ int main(int, char **) {
         ImGui::NewFrame();
 
         bool show_test_window = true;
-        ShowExampleAppCustomNodeGraph(&show_test_window);
+        ShowExampleAppCustomNodeGraph(nodeGraph, &show_test_window);
 
 
 

@@ -5,29 +5,6 @@
 #include "Connection.h"
 #include "Node.h"
 
-Connection *getHoverCon(ImVec2 offset, ImVec2 *pos) {
-    for (Node *node : s_nodes) {
-        ImVec2 nodePos = node->pos + offset;
-
-        for (Connection *con : node->inputConnections) {
-            if (con->isHovered(nodePos)) {
-                *pos = nodePos + con->pos;
-                return con;
-            }
-        }
-
-        for (Connection *con : node->outputConnections) {
-            if (con->isHovered(nodePos)) {
-                *pos = nodePos + con->pos;
-                return con;
-            }
-        }
-    }
-
-    s_dragNode.con = 0;
-    return 0;
-}
-
 void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs) {
     for (int i = 0; i < MAX_CONNECTION_COUNT; ++i) {
         const ConnectionDesc &desc = connectionDescs[i];

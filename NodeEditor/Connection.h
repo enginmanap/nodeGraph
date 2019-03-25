@@ -10,6 +10,8 @@
 #include "../imgui/imgui.h"
 #include "Common.h"
 
+class Node;//To avoid circular dependency
+
 const float NODE_SLOT_RADIUS = 5.0f;
 
 enum ConnectionType {
@@ -25,6 +27,7 @@ struct ConnectionDesc {
 };
 
 struct Connection {
+    Node* parent;
     ImVec2 pos;
     ConnectionDesc desc;
 
@@ -39,10 +42,13 @@ struct Connection {
         int i;
     };
 
-    struct Connection *input;
+    Connection(Node* parent) : parent(parent) {}
+    struct Connection *input = nullptr;
     std::vector<Connection *> output;
 
     bool isHovered(ImVec2 offset);
+
+    Node* getInputNode();
 
 };
 

@@ -84,7 +84,7 @@ void Node::setupConnections(std::vector<Connection *> &connections, const Connec
         if (!desc.name)
             break;
 
-        Connection *con = new Connection;
+        Connection *con = new Connection(this);
         con->desc = desc;
 
         connections.push_back(con);

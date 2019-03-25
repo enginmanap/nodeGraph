@@ -14,3 +14,11 @@ bool Connection::isHovered(ImVec2 offset) {
 
     return ((xd * xd) + (yd * yd)) < (NODE_SLOT_RADIUS * NODE_SLOT_RADIUS);
 }
+
+Node* Connection::getInputNode() {
+    if(input != nullptr) {
+        return input->parent;
+    }
+    return nullptr;
+}
+

@@ -153,7 +153,8 @@ void NodeGraph::renderLines(ImDrawList *drawList, ImVec2 offset) {
             if (!con->input)
                 continue;
 
-            Node *targetNode = findNodeByCon(con->input);
+            Node *targetNode = con->getInputNode();
+            //Node *targetNode = findNodeByCon(con->input);
 
             if (!targetNode)
                 continue;

@@ -237,7 +237,23 @@ Connection *Node::getHoverConnection(ImVec2 offset, ImVec2 *pos) {
     return nullptr;
 }
 
-bool Node::getLinesToRender(ImVec2 &from, ImVec2 &to) {
+std::vector<std::pair<ImVec2, ImVec2>> Node::getLinesToRender() {
+    std::vector<std::pair<ImVec2, ImVec2>> fromToPairs;
+    for (Connection *con : this->inputConnections) {
+        if (!con->input) {
+            continue;
+        }
 
-    return false;
+        Node *targetNode = con->getInputNode();
+
+        if (!targetNode) {
+            continue;
+        }
+        std::pair<ImVec2, ImVec2> fromTo = std::make_pair(
+        targetNode->pos + con->input->pos,
+        this->pos + con->pos
+        );
+        fromToPairs.push_back(fromTo);
+    }
+    return fromToPairs;
 }

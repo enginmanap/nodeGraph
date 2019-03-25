@@ -76,7 +76,7 @@ public:
 
     Connection* getHoverConnection(ImVec2 offset, ImVec2 *pos);
 
-    bool getLinesToRender(ImVec2 &from, ImVec2 &to);
+    std::vector<std::pair<ImVec2, ImVec2>> getLinesToRender();
 };
 
 

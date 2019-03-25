@@ -139,32 +139,13 @@ Node *NodeGraph::findNodeByCon(Connection *findCon) {
 
 void NodeGraph::renderLines(ImDrawList *drawList, ImVec2 offset) {
     for (Node *node : nodes) {
-        /*
-        ImVec2 from, to;
-        if(node->getLinesToRender(from, to)) {
+        std::vector<std::pair<ImVec2, ImVec2>> fromToPairs = node->getLinesToRender();
+        for(std::pair<ImVec2, ImVec2> fromTo: fromToPairs) {
             drawHermite(drawList,
-                        offset + from,
-                        offset + to,
+                        offset + fromTo.first,
+                        offset + fromTo.second,
                         12);
         }
-         */
-
-        for (Connection *con : node->inputConnections) {
-            if (!con->input)
-                continue;
-
-            Node *targetNode = con->getInputNode();
-            //Node *targetNode = findNodeByCon(con->input);
-
-            if (!targetNode)
-                continue;
-
-            drawHermite(drawList,
-                        offset + targetNode->pos + con->input->pos,
-                        offset + node->pos + con->pos,
-                        12);
-        }
-
     }
 }
 

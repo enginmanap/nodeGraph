@@ -22,25 +22,6 @@
 static void error_callback(int error, const char *description) {
     fprintf(stderr, "Error %d: %s\n", error, description);
 }
-/*
-static void saveNodes(const char* filename)
-{
-    json_t* root = json_object();
-    json_t* nodes = json_array();
-    for (Node* node : s_nodes)
-	{
-		json_t* item = json_object();
-		json_object_set_new(item, "type", json_string(node->name));
-		json_object_set_new(item, "id", json_integer(node->id));
-		json_object_set_new(item, "pos", json_pack("{s:f, s:f}", "x",  node->pos.x, "y", node->pos.y));
-		json_array_append_new(nodes, item);
-	}
-    // save the nodes
-    json_object_set_new(root, "nodes", nodes);
-    if (json_dump_file(root, filename, JSON_INDENT(4) | JSON_PRESERVE_ORDER) != 0)
-        printf("JSON: Unable to open %s for write\n", filename);
-}
-*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

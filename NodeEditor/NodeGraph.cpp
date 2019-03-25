@@ -28,7 +28,7 @@ void NodeGraph::display() {
     //displayNode(draw_list, scrolling, s_emittable, node_selected);
     //displayNode(draw_list, scrolling, s_emitter, node_selected);
 
-    for (Node *node : s_nodes)
+    for (Node *node : nodes)
         node->display(draw_list, scrolling, node_selected);
 
     updateDragging(scrolling);
@@ -90,7 +90,7 @@ void NodeGraph::display() {
         for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
             if (ImGui::MenuItem(s_nodeTypes[i].name)) {
                 Node *node = new Node(ImGui::GetIO().MousePos, &s_nodeTypes[i]);
-                s_nodes.push_back(node);
+                nodes.push_back(node);
             }
         }
 
@@ -109,7 +109,7 @@ void NodeGraph::display() {
 }
 
 Node *NodeGraph::findNodeByCon(Connection *findCon) {
-    for (Node *node : s_nodes) {
+    for (Node *node : nodes) {
         for (Connection *con : node->inputConnections) {
             if (con == findCon)
                 return node;
@@ -126,7 +126,7 @@ Node *NodeGraph::findNodeByCon(Connection *findCon) {
 
 
 void NodeGraph::renderLines(ImDrawList *drawList, ImVec2 offset) {
-    for (Node *node : s_nodes) {
+    for (Node *node : nodes) {
         for (Connection *con : node->inputConnections) {
             if (!con->input)
                 continue;
@@ -145,7 +145,7 @@ void NodeGraph::renderLines(ImDrawList *drawList, ImVec2 offset) {
 }
 
 Connection *NodeGraph::getHoverCon(ImVec2 offset, ImVec2 *pos) {
-    for (Node *node : s_nodes) {
+    for (Node *node : nodes) {
         ImVec2 nodePos = node->pos + offset;
 
         for (Connection *con : node->inputConnections) {
@@ -240,3 +240,23 @@ void NodeGraph::updateDragging(ImVec2 offset) {
         }
     }
 }
+
+/*
+static void saveNodes(const char* filename)
+{
+    json_t* root = json_object();
+    json_t* nodes = json_array();
+    for (Node* node : nodes)
+	{
+		json_t* item = json_object();
+		json_object_set_new(item, "type", json_string(node->name));
+		json_object_set_new(item, "id", json_integer(node->id));
+		json_object_set_new(item, "pos", json_pack("{s:f, s:f}", "x",  node->pos.x, "y", node->pos.y));
+		json_array_append_new(nodes, item);
+	}
+    // save the nodes
+    json_object_set_new(root, "nodes", nodes);
+    if (json_dump_file(root, filename, JSON_INDENT(4) | JSON_PRESERVE_ORDER) != 0)
+        printf("JSON: Unable to open %s for write\n", filename);
+}
+*/

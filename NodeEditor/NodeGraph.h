@@ -9,7 +9,7 @@
 #include "Node.h"
 
 class NodeGraph {
-    std::vector<Node *> s_nodes;
+    std::vector<Node *> nodes;
 public:
     void display();
     // TODO: Ugly fix: me

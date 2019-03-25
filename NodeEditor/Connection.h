@@ -37,12 +37,12 @@ struct Connection {
     }
 
     union {
-        float v3[3];
+        float v3[3] = {0};
         float v;
         int i;
     };
 
-    Connection(Node* parent) : parent(parent) {}
+    explicit Connection(Node* parent) : parent(parent) {}
     struct Connection *input = nullptr;
     std::vector<Connection *> output;
 

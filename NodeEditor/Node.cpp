@@ -77,6 +77,20 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     // calculate the size of the node depending on nuber of connections
 }
 
+void Node::setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs) {
+    for (int i = 0; i < MAX_CONNECTION_COUNT; ++i) {
+        const ConnectionDesc &desc = connectionDescs[i];
+
+        if (!desc.name)
+            break;
+
+        Connection *con = new Connection;
+        con->desc = desc;
+
+        connections.push_back(con);
+    }
+}
+
 void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool dragNodeConnected) {
     int node_hovered_in_scene = -1;
     bool open_context_menu = false;

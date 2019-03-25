@@ -46,7 +46,4 @@ struct Connection {
 
 };
 
-void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs);
-
-
 #endif //SIL_NODETEST_CONNECTION_H

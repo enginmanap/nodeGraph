@@ -61,6 +61,9 @@ struct Node {
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;
 
+    void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs);
+
+
     Node(uint32_t id, ImVec2 pos, NodeType *nodeType);
 
     Node(uint32_t id, ImVec2 pos, const char *name, uint32_t &error);

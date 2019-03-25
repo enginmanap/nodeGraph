@@ -29,6 +29,8 @@ class NodeGraph {
     DragState dragState = DragState_Default;
     DragNode dragNode;
 
+    void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
+
 public:
     void display();
     // TODO: Ugly fix: me

@@ -54,7 +54,6 @@ static struct NodeType s_nodeTypes[] =
         };
 
 class Node {
-public:
     ImVec2 pos;
     ImVec2 size;
     int id;

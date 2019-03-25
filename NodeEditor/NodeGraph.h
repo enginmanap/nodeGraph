@@ -10,6 +10,10 @@
 
 class NodeGraph {
     std::vector<Node *> nodes;
+
+    DragState dragState = DragState_Default;
+    DragNode s_dragNode;
+
 public:
     void display();
     // TODO: Ugly fix: me

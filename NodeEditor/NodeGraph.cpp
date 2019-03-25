@@ -29,7 +29,7 @@ void NodeGraph::display() {
     //displayNode(draw_list, scrolling, s_emitter, node_selected);
 
     for (Node *node : nodes)
-        node->display(draw_list, scrolling, node_selected);
+        node->display(draw_list, scrolling, node_selected, s_dragNode.con != 0);
 
     updateDragging(scrolling);
     renderLines(draw_list, scrolling);
@@ -168,7 +168,7 @@ Connection *NodeGraph::getHoverCon(ImVec2 offset, ImVec2 *pos) {
 }
 
 void NodeGraph::updateDragging(ImVec2 offset) {
-    switch (s_dragState) {
+    switch (dragState) {
         case DragState_Default: {
             ImVec2 pos;
             Connection *con = getHoverCon(offset, &pos);
@@ -176,7 +176,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
             if (con) {
                 s_dragNode.con = con;
                 s_dragNode.pos = pos;
-                s_dragState = DragState_Hover;
+                dragState = DragState_Hover;
                 return;
             }
 
@@ -191,12 +191,12 @@ void NodeGraph::updateDragging(ImVec2 offset) {
 
             if (con != s_dragNode.con) {
                 s_dragNode.con = 0;
-                s_dragState = DragState_Default;
+                dragState = DragState_Default;
                 return;
             }
 
             if (ImGui::IsMouseClicked(0) && s_dragNode.con)
-                s_dragState = DragState_Draging;
+                dragState = DragState_Draging;
 
             break;
         }
@@ -220,7 +220,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
 
                 if (con == s_dragNode.con) {
                     s_dragNode.con = 0;
-                    s_dragState = DragState_Default;
+                    dragState = DragState_Default;
                     return;
                 }
 
@@ -229,7 +229,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
 
                 con->input = s_dragNode.con;
                 s_dragNode.con = 0;
-                s_dragState = DragState_Default;
+                dragState = DragState_Default;
             }
 
             break;

@@ -15,8 +15,6 @@
 
 #define sizeof_array(t) (sizeof(t) / sizeof(t[0]))
 const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
-extern DragNode s_dragNode;
-
 
 struct NodeType {
     const char *name;
@@ -70,7 +68,7 @@ struct Node {
 
     void initialize(const ImVec2 &pos, const NodeType *nodeType);
 
-    void display(ImDrawList *drawList, ImVec2 offset, int &node_selected);
+    void display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool dragNodeConnected);
 };
 extern uint32_t s_id;
 

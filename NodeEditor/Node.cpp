@@ -81,7 +81,7 @@ Node::Node(ImVec2 pos, const char *name, uint32_t &error) {
 }
 
 
-void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected) {
+void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool dragNodeConnected) {
     int node_hovered_in_scene = -1;
     bool open_context_menu = false;
 
@@ -124,7 +124,7 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected) {
 
     bool node_moving_active = false;
 
-    if (ImGui::IsItemActive() && !s_dragNode.con)
+    if (ImGui::IsItemActive() && !dragNodeConnected)
         node_moving_active = true;
 
     ImU32 node_bg_color = node_hovered_in_scene == id ? ImColor(75, 75, 75) : ImColor(60, 60, 60);

@@ -23,8 +23,4 @@ struct DragNode {
     ImVec2 pos;
     Connection *con;
 };
-
-extern DragNode s_dragNode;
-extern DragState s_dragState;
-
 #endif //SIL_NODETEST_DRAGNODE_H

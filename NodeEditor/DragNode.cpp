@@ -3,6 +3,3 @@
 //
 
 #include "DragNode.h"
-
-DragNode s_dragNode;
-DragState s_dragState = DragState_Default;

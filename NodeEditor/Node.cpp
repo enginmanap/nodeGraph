@@ -87,7 +87,7 @@ void Node::setupConnections(std::vector<Connection *> &connections, const Connec
     }
 }
 
-void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool dragNodeConnected) {
+void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected) {
     int node_hovered_in_scene = -1;
     bool open_context_menu = false;
 
@@ -193,9 +193,6 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
     //for (int i = 0; i < node->outputConnections.size(); ++i)
     //	drawList->AddCircleFilled(offset + node->outputSlotPos(i), NODE_SLOT_RADIUS, ImColor(150,150,150,150));
 
-    if (node_widgets_active || node_moving_active)
-        node_selected = id;
-
     if (node_moving_active && ImGui::IsMouseDragging(0))
         this->pos = this->pos + ImGui::GetIO().MouseDelta;
 
@@ -256,4 +253,27 @@ std::vector<std::pair<ImVec2, ImVec2>> Node::getLinesToRender() {
         fromToPairs.push_back(fromTo);
     }
     return fromToPairs;
+}
+
+bool Node::isHovered(ImVec2 offset) {
+    ImVec2 mousePos = ImGui::GetIO().MousePos;
+    mousePos = mousePos - offset;
+    //now check if mousepos is in the Node:
+    if((mousePos.x > this->pos.x && mousePos.x < this->pos.x + this->size.x) && //x inside
+       (mousePos.y > this->pos.y && mousePos.y < this->pos.y + this->size.y) //y inside
+        ) {
+        return true;
+    }
+
+    for(Connection* con:inputConnections) {
+        if(con->isHovered(this->pos + offset)) {
+            return true;
+        }
+    }
+    for(Connection* con:outputConnections) {
+        if(con->isHovered(this->pos + offset)) {
+            return true;
+        }
+    }
+    return false;
 }

@@ -21,11 +21,6 @@ void NodeGraph::drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEP
 }
 
 void NodeGraph::display() {
-    bool open_context_menu = false;
-    int node_hovered_in_list = -1;
-    int node_hovered_in_scene = -1;
-
-    static int node_selected = -1;
     static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
 
     // Create our child canvas
@@ -42,11 +37,11 @@ void NodeGraph::display() {
     //scrolling.y = -1 *ImGui::GetScrollY();
     //ImVec2 offset = ImGui::GetCursorScreenPos() - scrolling;
 
-    //displayNode(draw_list, scrolling, s_emittable, node_selected);
-    //displayNode(draw_list, scrolling, s_emitter, node_selected);
+    //displayNode(draw_list, scrolling, s_emittable, selectedNodeID);
+    //displayNode(draw_list, scrolling, s_emitter, selectedNodeID);
 
     for (Node *node : nodes) {
-        node->display(draw_list, scrolling, node_selected, dragNode.con != 0);
+        node->display(draw_list, scrolling, dragNode.con != 0);
     }
 
     updateDragging(scrolling);
@@ -55,22 +50,39 @@ void NodeGraph::display() {
     draw_list->ChannelsMerge();
 
     // Open context menu
-    if (!ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1)) {
-        node_selected = node_hovered_in_list = node_hovered_in_scene = -1;
-        open_context_menu = true;
+    if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1)) {
+        selectedNode = nullptr;
+        if(ImGui::IsAnyItemHovered()) {
+            for(Node* node:nodes) {
+                if(node->isHovered(scrolling)) {
+                    selectedNode = node;
+                }
+            }
+
+        }
+        //selectedNodeID = node_hovered_in_list = node_hovered_in_scene = -1;
+        state = DisplayStates::MENU_REQUEST;
     }
-    if (open_context_menu) {
+    if (state == DisplayStates::MENU_REQUEST) {
         ImGui::OpenPopup("context_menu");
-        if (node_hovered_in_list != -1) {
-            node_selected = node_hovered_in_list;
+        state = DisplayStates::MENU_SHOWN;
+        /*if (node_hovered_in_list != -1) {
+            selectedNodeID = node_hovered_in_list;
         }
         if (node_hovered_in_scene != -1) {
-            node_selected = node_hovered_in_scene;
-        }
+            selectedNodeID = node_hovered_in_scene;
+        }*/
     }
 
-    DrawContextMenu();
+    DrawContextMenu(selectedNode);
 
+    if(state == DisplayStates::RENAME_NODE_REQUEST) {
+        ImGui::OpenPopup("changeNameMenu");
+        state = DisplayStates::RENAME_NODE;
+        //ImGui::SetKeyboardFocusHere(0);
+    }
+
+    DrawRenameMenu(selectedNode);
     // Scrolling
     if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::IsMouseDragging(2, 0.0f))
         scrolling = scrolling - ImGui::GetIO().MouseDelta;
@@ -81,7 +93,7 @@ void NodeGraph::display() {
     ImGui::PopStyleVar(2);
 }
 
-void NodeGraph::DrawContextMenu() {
+void NodeGraph::DrawContextMenu(Node* selectedNode) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (ImGui::BeginPopup("context_menu")) {
 //        if (ImGui::MenuItem("Load graph...")) {
@@ -119,13 +131,39 @@ void NodeGraph::DrawContextMenu() {
         */
         //else
 
-        for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
-            if (ImGui::MenuItem(s_nodeTypes[i].name)) {
-                Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos, &s_nodeTypes[i]);
-                nodes.push_back(node);
+        if(selectedNode == nullptr ) {
+            //Add new node part
+            for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
+                if (ImGui::MenuItem(s_nodeTypes[i].name)) {
+                    Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos, &s_nodeTypes[i]);
+                    nodes.push_back(node);
+                }
+            }
+        } else {
+            if (ImGui::MenuItem("Change Name")) {
+                state = DisplayStates::RENAME_NODE_REQUEST;
+                strncpy(nodeName, selectedNode->getName().c_str(), sizeof(nodeName)-1);
             }
         }
+        ImGui::EndPopup();
+    }
+    ImGui::PopStyleVar();
+}
 
+void NodeGraph::DrawRenameMenu(Node* selectedNode) {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
+    if (selectedNode != nullptr && state == DisplayStates::RENAME_NODE && ImGui::BeginPopup("changeNameMenu")) {
+        if(ImGui::InputText("New name", nodeName, sizeof(nodeName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Apply")) {
+            selectedNode->setName(std::string(nodeName));
+            state = DisplayStates::NODE_GRAPH;
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if(ImGui::Button("Cancel")) {
+            state = DisplayStates::NODE_GRAPH;
+            ImGui::CloseCurrentPopup();
+        }
         ImGui::EndPopup();
     }
     ImGui::PopStyleVar();

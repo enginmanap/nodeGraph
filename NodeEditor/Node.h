@@ -83,15 +83,25 @@ public:
 
     Node(uint32_t id, ImVec2 pos, const char *name, uint32_t &error);
 
+    bool isHovered(ImVec2 offset);//offset is scrool information
+
     void initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType);
 
-    void display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool dragNodeConnected);
+    void display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected);
 
     bool hasConnection(Connection *connection);
 
     Connection* getHoverConnection(ImVec2 offset, ImVec2 *pos);
 
     std::vector<std::pair<ImVec2, ImVec2>> getLinesToRender();
+
+    const std::string& getName() const {
+        return name;
+    }
+
+    void setName(const std::string& name) {
+        this->name = name;
+    }
 };
 
 

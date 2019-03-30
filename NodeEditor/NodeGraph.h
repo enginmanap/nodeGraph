@@ -9,6 +9,9 @@
 #include "Node.h"
 
 class NodeGraph {
+    enum class DisplayStates { NODE_GRAPH, MENU_REQUEST, MENU_SHOWN, RENAME_NODE_REQUEST, RENAME_NODE };
+
+    DisplayStates state = DisplayStates::NODE_GRAPH;
     uint32_t nextNodeID = 0;
 
     enum DragState {
@@ -25,7 +28,8 @@ class NodeGraph {
     };
 
     std::vector<Node *> nodes;
-
+    Node* selectedNode = nullptr;
+    char nodeName[128] = {0};
     DragState dragState = DragState_Default;
     DragNode dragNode;
 
@@ -33,7 +37,6 @@ class NodeGraph {
 
 public:
     void display();
-    // TODO: Ugly fix: me
     Node *findNodeByCon(Connection *findCon);
     void renderLines(ImDrawList *drawList, ImVec2 offset);
 
@@ -41,7 +44,9 @@ public:
 
     void updateDragging(ImVec2 offset);
 
-    void DrawContextMenu();
+    void DrawContextMenu(Node* selectedNode);
+    void DrawRenameMenu(Node* selectedNode);
+
 };
 
 

@@ -69,7 +69,19 @@ void NodeGraph::display() {
         }
     }
 
-    // Draw context menu
+    DrawContextMenu();
+
+    // Scrolling
+    if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::IsMouseDragging(2, 0.0f))
+        scrolling = scrolling - ImGui::GetIO().MouseDelta;
+
+    ImGui::PopItemWidth();
+    ImGui::EndChild();
+    ImGui::PopStyleColor();
+    ImGui::PopStyleVar(2);
+}
+
+void NodeGraph::DrawContextMenu() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (ImGui::BeginPopup("context_menu")) {
         if (ImGui::MenuItem("Load graph...")) {
@@ -117,15 +129,6 @@ void NodeGraph::display() {
         ImGui::EndPopup();
     }
     ImGui::PopStyleVar();
-
-    // Scrolling
-    if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::IsMouseDragging(2, 0.0f))
-        scrolling = scrolling - ImGui::GetIO().MouseDelta;
-
-    ImGui::PopItemWidth();
-    ImGui::EndChild();
-    ImGui::PopStyleColor();
-    ImGui::PopStyleVar(2);
 }
 
 Node *NodeGraph::findNodeByCon(Connection *findCon) {

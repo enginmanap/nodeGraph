@@ -41,6 +41,7 @@ public:
 
     void updateDragging(ImVec2 offset);
 
+    void DrawContextMenu();
 };
 
 

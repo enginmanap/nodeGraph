@@ -51,6 +51,22 @@ static struct NodeType s_nodeTypes[] =
                                 {"Out", ConnectionType_Float},
                         },
                 },
+
+                {
+                        "Divide",
+                        // Input connections
+                        {
+                                {"Input1", ConnectionType_Float},
+                                {"Input2", ConnectionType_Float},
+                        },
+                        // Output
+                        {
+                                {"Output1", ConnectionType_Float},
+                                {"Output2", ConnectionType_Float},
+                                {"Output3", ConnectionType_Float},
+                        },
+                },
+
         };
 
 class Node {

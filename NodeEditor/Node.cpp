@@ -20,7 +20,8 @@ Node::Node(uint32_t id, ImVec2 pos, const char *name, uint32_t &error) {
 
 void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) {
     this->id = id;
-    name = nodeType->name;
+    this->pos = pos;
+    this->name = nodeType->name;
 
     ImVec2 titleSize = ImGui::CalcTextSize(name);
 
@@ -32,46 +33,42 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     // Calculate the size needed for the whole box
 
     ImVec2 inputTextSize(0.0f, 0.0f);
-    ImVec2 outputText(0.0f, 0.0f);
+    ImVec2 outputTextSize(0.0f, 0.0f);
 
     for (Connection *c : inputConnections) {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
+        ImVec2 textSize = c->getTextSize();
         inputTextSize.x = std::max<float>(textSize.x, inputTextSize.x);
-
-        c->pos = ImVec2(0.0f, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
-
         inputTextSize.y += textSize.y;
         inputTextSize.y += 4.0f;        // size between text entries
     }
-
     inputTextSize.x += 40.0f;
 
     // max text size + 40 pixels in between
-
     float xStart = inputTextSize.x;
 
     // Calculate for the outputs
-
     for (Connection *c : outputConnections) {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
+        ImVec2 textSize = c->getTextSize();
         inputTextSize.x = std::max<float>(xStart + textSize.x, inputTextSize.x);
+        outputTextSize.y += textSize.y;
+        outputTextSize.y += 4.0f;        // size between text entries
     }
 
-    Node::pos = pos;
+
     size.x = inputTextSize.x;
-    size.y = inputTextSize.y + titleSize.y;
+    size.y = std::max(inputTextSize.y, outputTextSize.y) + titleSize.y;
 
     inputTextSize.y = 0.0f;
 
+    for (Connection *c : inputConnections) {
+        c->setPosition(titleSize.y, inputTextSize.y, 0);
+    }
+
     // set the positions for the output nodes when we know where the place them
+    outputTextSize.y = 0.0f;
 
     for (Connection *c : outputConnections) {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
-
-        c->pos = ImVec2(size.x, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
-
-        inputTextSize.y += textSize.y;
-        inputTextSize.y += 4.0f;        // size between text entries
+        c->setPosition(titleSize.y, outputTextSize.y, size.x);
     }
 
     // calculate the size of the node depending on nuber of connections

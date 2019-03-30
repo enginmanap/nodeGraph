@@ -63,3 +63,12 @@ void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec
     }
 }
 
+void Connection::setPosition(float TitleSizeY, float& textSizeY, float xPosition) {
+    ImVec2 textSize = this->getTextSize();
+
+    this->pos = ImVec2(xPosition, TitleSizeY + textSizeY + textSize.y / 2.0f);
+
+    textSizeY += textSize.y;
+    textSizeY += 4.0f;        // size between text entries
+}
+

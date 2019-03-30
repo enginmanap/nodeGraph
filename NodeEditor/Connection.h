@@ -51,6 +51,10 @@ public:
     bool isHovered(ImVec2 offset);
     Node* getInputNode();
     void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);
+    ImVec2 getTextSize() {
+        return ImGui::CalcTextSize(desc.name.c_str());
+    }
+    void setPosition(float TitleSizeY, float& textSizeY, float xPosition);
 };
 
 #endif //SIL_NODETEST_CONNECTION_H

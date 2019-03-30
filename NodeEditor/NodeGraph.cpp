@@ -84,7 +84,7 @@ void NodeGraph::display() {
 void NodeGraph::DrawContextMenu() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (ImGui::BeginPopup("context_menu")) {
-        if (ImGui::MenuItem("Load graph...")) {
+//        if (ImGui::MenuItem("Load graph...")) {
             /*
             char path[1024];
             if (Dialog_open(path))
@@ -92,9 +92,9 @@ void NodeGraph::DrawContextMenu() {
                 printf("file to load %s\n", path);
             }
             */
-        }
+//        }
 
-        if (ImGui::MenuItem("Save graph...")) {
+//        if (ImGui::MenuItem("Save graph...")) {
             /*
             char path[1024];
             if (Dialog_save(path))
@@ -102,7 +102,7 @@ void NodeGraph::DrawContextMenu() {
                 saveNodes(path);
             }
             */
-        }
+//        }
 
 
         /*

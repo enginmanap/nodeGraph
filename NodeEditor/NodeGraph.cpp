@@ -223,7 +223,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
                 // Lets connect the nodes.
                 // TODO: Make sure we connect stuff in the correct way!
 
-                con->input = dragNode.con;
+                con->setInputConnection(dragNode.con);
                 dragNode.con = 0;
                 dragState = DragState_Default;
             }

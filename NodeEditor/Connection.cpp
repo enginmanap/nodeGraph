@@ -15,13 +15,6 @@ bool Connection::isHovered(ImVec2 offset) {
     return ((xd * xd) + (yd * yd)) < (NODE_SLOT_RADIUS * NODE_SLOT_RADIUS);
 }
 
-Node* Connection::getInputNode() {
-    if(input != nullptr) {
-        return input->parent;
-    }
-    return nullptr;
-}
-
 /**
  * Display should get information about the offset from Node,
  * and it should provide offset.

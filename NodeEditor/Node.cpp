@@ -35,7 +35,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     ImVec2 outputText(0.0f, 0.0f);
 
     for (Connection *c : inputConnections) {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
+        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
         inputTextSize.x = std::max<float>(textSize.x, inputTextSize.x);
 
         c->pos = ImVec2(0.0f, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
@@ -53,7 +53,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     // Calculate for the outputs
 
     for (Connection *c : outputConnections) {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
+        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
         inputTextSize.x = std::max<float>(xStart + textSize.x, inputTextSize.x);
     }
 
@@ -66,7 +66,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     // set the positions for the output nodes when we know where the place them
 
     for (Connection *c : outputConnections) {
-        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name);
+        ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
 
         c->pos = ImVec2(size.x, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
 
@@ -81,7 +81,7 @@ void Node::setupConnections(std::vector<Connection *> &connections, const Connec
     for (int i = 0; i < MAX_CONNECTION_COUNT; ++i) {
         const ConnectionDesc &desc = connectionDescs[i];
 
-        if (!desc.name)
+        if (desc.name.empty())
             break;
 
         Connection *con = new Connection(this);
@@ -174,10 +174,10 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
     offset.y += 40.0f;
 
     for (Connection *con : outputConnections) {
-        textSize = ImGui::CalcTextSize(con->desc.name);
+        textSize = ImGui::CalcTextSize(con->desc.name.c_str());
 
         ImGui::SetCursorScreenPos(offset + ImVec2(con->pos.x - (textSize.x + 10.0f), 0));
-        ImGui::Text("%s", con->desc.name);
+        ImGui::Text("%s", con->desc.name.c_str());
 
         ImColor conColor = ImColor(150, 150, 150);
 

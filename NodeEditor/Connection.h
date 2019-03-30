@@ -6,7 +6,7 @@
 #define SIL_NODETEST_CONNECTION_H
 
 #include <vector>
-
+#include <string>
 #include "../imgui/imgui.h"
 #include "Common.h"
 
@@ -22,11 +22,12 @@ enum ConnectionType {
 };
 
 struct ConnectionDesc {
-    const char *name;
+    std::string name;
     ConnectionType type;
 };
 
-struct Connection {
+class Connection {
+public:
     Node* parent;
     ImVec2 pos;
     ConnectionDesc desc;
@@ -41,7 +42,7 @@ struct Connection {
         float v;
         int i;
     };
-
+public:
     explicit Connection(Node* parent) : parent(parent) {}
     struct Connection *input = nullptr;
     std::vector<Connection *> output;

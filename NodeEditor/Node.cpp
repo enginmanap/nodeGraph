@@ -105,13 +105,6 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
     ImVec2 pos = node_rect_min + NODE_WINDOW_PADDING;
     pos.x = node_rect_min.x + (size.x / 2) - textSize.x / 2;
 
-    ImGui::SetCursorScreenPos(pos);
-    //ImGui::BeginGroup(); // Lock horizontal position
-    ImGui::Text("%s", name.c_str());
-    //ImGui::SliderFloat("##value", &node->Value, 0.0f, 1.0f, "Alpha %.2f");
-    //float dummy_color[3] = { node->Pos.x / ImGui::GetWindowWidth(), node->Pos.y / ImGui::GetWindowHeight(), fmodf((float)node->ID * 0.5f, 1.0f) };
-    //ImGui::ColorEdit3("##color", &dummy_color[0]);
-
     // Save the size of what we have emitted and weither any of the widgets are being used
     bool node_widgets_active = (!old_any_active && ImGui::IsAnyItemActive());
     //node->size = ImGui::GetItemRectSize() + NODE_WINDOW_PADDING + NODE_WINDOW_PADDING;
@@ -151,6 +144,10 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
 
     off.x = node_rect_min.x;
     off.y = node_rect_min.y;
+
+    ImGui::SetCursorScreenPos(pos);
+    //ImGui::BeginGroup(); // Lock horizontal position
+    ImGui::Text("%s", name.c_str());
 
     for (Connection *con : inputConnections) {
         con->display(drawList, node_rect_min, offset, textSize);

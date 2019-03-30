@@ -36,12 +36,6 @@ public:
     ConnectionDesc desc;
     Types type;
 
-    union {
-        float v3[3] = {0};
-        float v;
-        int i;
-    };
-
     struct Connection *input = nullptr;
     std::vector<Connection *> output;
 public:

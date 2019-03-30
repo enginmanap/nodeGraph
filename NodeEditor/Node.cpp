@@ -225,14 +225,14 @@ Connection *Node::getHoverConnection(ImVec2 offset, ImVec2 *pos) {
 
     for (Connection *con : this->inputConnections) {
         if (con->isHovered(nodePos)) {
-            *pos = nodePos + con->pos;
+            *pos = nodePos + con->getPosition();
             return con;
         }
     }
 
     for (Connection *con : this->outputConnections) {
         if (con->isHovered(nodePos)) {
-            *pos = nodePos + con->pos;
+            *pos = nodePos + con->getPosition();
             return con;
         }
     }

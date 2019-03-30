@@ -30,7 +30,7 @@ class Connection {
 public:
     enum class Types {INPUT, OUTPUT};
 private:
-public:
+//public:
     Node* parent;
     ImVec2 pos = {0,0};
     ConnectionDesc desc;
@@ -44,6 +44,7 @@ public:
 
     bool isHovered(ImVec2 offset);
     Node* getInputNode();
+    ImVec2 getPosition() { return pos;}
     void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);
     ImVec2 getTextSize() {
         return ImGui::CalcTextSize(desc.name.c_str());

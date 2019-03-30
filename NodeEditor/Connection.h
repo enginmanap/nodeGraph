@@ -17,6 +17,7 @@ const float NODE_SLOT_RADIUS = 5.0f;
 enum ConnectionType {
     ConnectionType_Color,
     ConnectionType_Vec3,
+    ConnectionType_Vec4,
     ConnectionType_Float,
     ConnectionType_Int,
 };

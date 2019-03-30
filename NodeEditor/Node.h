@@ -73,7 +73,7 @@ class Node {
     ImVec2 pos;
     ImVec2 size;
     int id;
-    const char *name;
+    std::string name;
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;
 

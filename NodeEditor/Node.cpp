@@ -23,7 +23,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->pos = pos;
     this->name = nodeType->name;
 
-    ImVec2 titleSize = ImGui::CalcTextSize(name);
+    ImVec2 titleSize = ImGui::CalcTextSize(name.c_str());
 
     titleSize.y *= 3;
 
@@ -100,14 +100,14 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
 
     // Draw title in center
 
-    ImVec2 textSize = ImGui::CalcTextSize(name);
+    ImVec2 textSize = ImGui::CalcTextSize(name.c_str());
 
     ImVec2 pos = node_rect_min + NODE_WINDOW_PADDING;
     pos.x = node_rect_min.x + (size.x / 2) - textSize.x / 2;
 
     ImGui::SetCursorScreenPos(pos);
     //ImGui::BeginGroup(); // Lock horizontal position
-    ImGui::Text("%s", name);
+    ImGui::Text("%s", name.c_str());
     //ImGui::SliderFloat("##value", &node->Value, 0.0f, 1.0f, "Alpha %.2f");
     //float dummy_color[3] = { node->Pos.x / ImGui::GetWindowWidth(), node->Pos.y / ImGui::GetWindowHeight(), fmodf((float)node->ID * 0.5f, 1.0f) };
     //ImGui::ColorEdit3("##color", &dummy_color[0]);

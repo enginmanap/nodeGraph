@@ -61,7 +61,7 @@ class Node {
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;
 
-    void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs);
+    void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs, Connection::Types connectionType);
 public:
     Node(uint32_t id, ImVec2 pos, NodeType *nodeType);
 

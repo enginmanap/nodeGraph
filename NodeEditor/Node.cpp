@@ -26,8 +26,8 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
 
     titleSize.y *= 3;
 
-    setupConnections(inputConnections, nodeType->inputConnections);
-    setupConnections(outputConnections, nodeType->outputConnections);
+    setupConnections(inputConnections, nodeType->inputConnections, Connection::Types::INPUT);
+    setupConnections(outputConnections, nodeType->outputConnections, Connection::Types::OUTPUT);
 
     // Calculate the size needed for the whole box
 
@@ -77,15 +77,14 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     // calculate the size of the node depending on nuber of connections
 }
 
-void Node::setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs) {
+void Node::setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs, Connection::Types connectionType) {
     for (int i = 0; i < MAX_CONNECTION_COUNT; ++i) {
         const ConnectionDesc &desc = connectionDescs[i];
 
         if (desc.name.empty())
             break;
 
-        Connection *con = new Connection(this);
-        con->desc = desc;
+        Connection *con = new Connection(this, desc, connectionType);
 
         connections.push_back(con);
     }
@@ -157,6 +156,8 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
     off.y = node_rect_min.y;
 
     for (Connection *con : inputConnections) {
+        con->display(drawList, node_rect_min, offset, textSize);
+        /*
         ImGui::SetCursorScreenPos(offset + ImVec2(10.0f, 0));
         ImGui::Text("%s", con->desc.name);
 
@@ -168,12 +169,16 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
         drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
 
         offset.y += textSize.y + 2.0f;
+         */
     }
 
     offset = node_rect_min;
     offset.y += 40.0f;
 
     for (Connection *con : outputConnections) {
+        con->display(drawList, node_rect_min, offset, textSize);
+
+        /*
         textSize = ImGui::CalcTextSize(con->desc.name.c_str());
 
         ImGui::SetCursorScreenPos(offset + ImVec2(con->pos.x - (textSize.x + 10.0f), 0));
@@ -187,6 +192,7 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, int &node_selected, bool
         drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
 
         offset.y += textSize.y + 2.0f;
+         */
     }
 
 

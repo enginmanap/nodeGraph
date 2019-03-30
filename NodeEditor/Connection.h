@@ -28,29 +28,29 @@ struct ConnectionDesc {
 
 class Connection {
 public:
+    enum class Types {INPUT, OUTPUT};
+private:
+public:
     Node* parent;
-    ImVec2 pos;
+    ImVec2 pos = {0,0};
     ConnectionDesc desc;
-
-    inline Connection() {
-        pos.x = pos.y = 0.0f;
-        input = 0;
-    }
+    Types type;
 
     union {
         float v3[3] = {0};
         float v;
         int i;
     };
-public:
-    explicit Connection(Node* parent) : parent(parent) {}
+
     struct Connection *input = nullptr;
     std::vector<Connection *> output;
+public:
+    explicit Connection(Node* parent, ConnectionDesc desc, Connection::Types type) :
+    parent(parent), desc(desc), type(type) {}
 
     bool isHovered(ImVec2 offset);
-
     Node* getInputNode();
-
+    void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);
 };
 
 #endif //SIL_NODETEST_CONNECTION_H

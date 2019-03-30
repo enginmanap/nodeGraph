@@ -22,3 +22,44 @@ Node* Connection::getInputNode() {
     return nullptr;
 }
 
+/**
+ * Display should get information about the offset from Node,
+ * and it should provide offset.
+ *
+ * This is because text of the connection is not known, so size needs calculation.
+ */
+void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize) {
+    switch (type) {
+        case Types::INPUT: {
+            ImGui::SetCursorScreenPos(offset + ImVec2(10.0f, 0));
+            ImGui::Text("%s", this->desc.name.c_str());
+
+            ImColor conColor = ImColor(150, 150, 150);
+
+            if (this->isHovered(node_rect_min))
+                conColor = ImColor(200, 200, 200);
+
+            drawList->AddCircleFilled(node_rect_min + this->pos, NODE_SLOT_RADIUS, conColor);
+
+            offset.y += textSize.y + 2.0f;
+        }
+        break;
+        case Types::OUTPUT: {
+            textSize = ImGui::CalcTextSize(this->desc.name.c_str());
+
+            ImGui::SetCursorScreenPos(offset + ImVec2(this->pos.x - (textSize.x + 10.0f), 0));
+            ImGui::Text("%s", this->desc.name.c_str());
+
+            ImColor conColor = ImColor(150, 150, 150);
+
+            if (this->isHovered(node_rect_min))
+            conColor = ImColor(200, 200, 200);
+
+            drawList->AddCircleFilled(node_rect_min + this->pos, NODE_SLOT_RADIUS, conColor);
+
+            offset.y += textSize.y + 2.0f;
+        }
+        break;
+    }
+}
+

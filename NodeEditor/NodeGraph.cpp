@@ -148,19 +148,21 @@ void NodeGraph::DrawContextMenu(Node* selectedNode) {
                 }
             }
         } else {
-            if (ImGui::MenuItem("Add Input")) {
-                state = DisplayStates::ADD_CONNECTION_REQUEST;
-                connectionRequestType = Connection::Types::INPUT;
-                strncpy(connectionName, "Input", sizeof(connectionName)-1);
-            }
-            if (ImGui::MenuItem("Add Output")) {
-                state = DisplayStates::ADD_CONNECTION_REQUEST;
-                connectionRequestType = Connection::Types::OUTPUT;
-                strncpy(connectionName, "Output", sizeof(connectionName)-1);
-            }
             if (ImGui::MenuItem("Change Name")) {
                 state = DisplayStates::RENAME_NODE_REQUEST;
                 strncpy(nodeName, selectedNode->getName().c_str(), sizeof(nodeName)-1);
+            }
+            if(selectedNode->getEditable()) {
+                if (ImGui::MenuItem("Add Input")) {
+                    state = DisplayStates::ADD_CONNECTION_REQUEST;
+                    connectionRequestType = Connection::Types::INPUT;
+                    strncpy(connectionName, "Input", sizeof(connectionName) - 1);
+                }
+                if (ImGui::MenuItem("Add Output")) {
+                    state = DisplayStates::ADD_CONNECTION_REQUEST;
+                    connectionRequestType = Connection::Types::OUTPUT;
+                    strncpy(connectionName, "Output", sizeof(connectionName) - 1);
+                }
             }
         }
         ImGui::EndPopup();

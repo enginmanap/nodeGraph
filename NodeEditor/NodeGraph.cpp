@@ -84,12 +84,12 @@ void NodeGraph::display() {
 
     DrawRenameMenu(selectedNode);
 
-    if(state == DisplayStates::ADD_INPUT_REQUEST) {
-        ImGui::OpenPopup("addInputMenu");
-        state = DisplayStates::ADD_INPUT;
+    if(state == DisplayStates::ADD_CONNECTION_REQUEST) {
+        ImGui::OpenPopup("addConnectionPopup");
+        state = DisplayStates::ADD_CONNECTION;
     }
 
-    drawAddInputMenu(selectedNode);
+    drawAddConnectionMenu(selectedNode);
 
     // Scrolling
     if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::IsMouseDragging(2, 0.0f))
@@ -149,11 +149,14 @@ void NodeGraph::DrawContextMenu(Node* selectedNode) {
             }
         } else {
             if (ImGui::MenuItem("Add Input")) {
-                state = DisplayStates::ADD_INPUT_REQUEST;
+                state = DisplayStates::ADD_CONNECTION_REQUEST;
+                connectionRequestType = Connection::Types::INPUT;
                 strncpy(connectionName, "Input", sizeof(connectionName)-1);
             }
             if (ImGui::MenuItem("Add Output")) {
-                //selectedNode->addOutput();
+                state = DisplayStates::ADD_CONNECTION_REQUEST;
+                connectionRequestType = Connection::Types::OUTPUT;
+                strncpy(connectionName, "Output", sizeof(connectionName)-1);
             }
             if (ImGui::MenuItem("Change Name")) {
                 state = DisplayStates::RENAME_NODE_REQUEST;
@@ -184,9 +187,9 @@ void NodeGraph::DrawRenameMenu(Node* selectedNode) {
     ImGui::PopStyleVar();
 }
 
-void NodeGraph::drawAddInputMenu(Node *selectedNode) {
+void NodeGraph::drawAddConnectionMenu(Node *pNode) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
-    if (selectedNode != nullptr && state == DisplayStates::ADD_INPUT && ImGui::BeginPopup("addInputMenu")) {
+    if (pNode != nullptr && state == DisplayStates::ADD_CONNECTION && ImGui::BeginPopup("addConnectionPopup")) {
         static ConnectionType connectionType = ConnectionType::ConnectionType_Float;
         if(ImGui::RadioButton("Integer", connectionType == ConnectionType::ConnectionType_Int)) { connectionType = ConnectionType::ConnectionType_Int;}
         if(ImGui::RadioButton("Float",   connectionType == ConnectionType::ConnectionType_Float)) { connectionType = ConnectionType::ConnectionType_Float;}
@@ -196,7 +199,10 @@ void NodeGraph::drawAddInputMenu(Node *selectedNode) {
             ConnectionDesc desc;
             desc.type = connectionType;
             desc.name = connectionName;
-            selectedNode->addInput(desc);
+            switch (connectionRequestType ) {
+                case Connection::Types::INPUT: pNode->addInput(desc); break;
+                case Connection::Types::OUTPUT: pNode->addOutput(desc); break;
+            }
             state = DisplayStates::NODE_GRAPH;
             ImGui::CloseCurrentPopup();
         }

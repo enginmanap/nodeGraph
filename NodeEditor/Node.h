@@ -114,6 +114,9 @@ public:
 
     void addInput(const ConnectionDesc &description);
 
+    void addOutput(const ConnectionDesc &description);
+
+
     /**
      * This method calculates node size and connection positions,
      * Node name or connection changes should trigger this method

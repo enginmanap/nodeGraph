@@ -12,7 +12,7 @@ class NodeGraph {
     enum class DisplayStates { NODE_GRAPH,
             MENU_REQUEST, MENU_SHOWN,
             RENAME_NODE_REQUEST, RENAME_NODE,
-            ADD_INPUT_REQUEST, ADD_INPUT, };
+            ADD_CONNECTION_REQUEST, ADD_CONNECTION, };
 
     DisplayStates state = DisplayStates::NODE_GRAPH;
     uint32_t nextNodeID = 0;
@@ -32,6 +32,8 @@ class NodeGraph {
 
     std::vector<Node *> nodes;
     Node* selectedNode = nullptr;
+    Connection::Types connectionRequestType = Connection::Types::INPUT;
+
     char nodeName[128] = {0};
     char connectionName[128] = {0};
     DragState dragState = DragState_Default;
@@ -51,7 +53,7 @@ public:
     void DrawContextMenu(Node* selectedNode);
     void DrawRenameMenu(Node* selectedNode);
 
-    void drawAddInputMenu(Node *pNode);
+    void drawAddConnectionMenu(Node *pNode);
 };
 
 

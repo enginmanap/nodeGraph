@@ -258,10 +258,22 @@ bool Node::isHovered(ImVec2 offset) {
 
 void Node::addInput(const ConnectionDesc &description) {
         if (description.name.empty()) {
+            std::cerr << "Connection creation request failed because of emtpy name" << std::endl;
             return;
         }
 
         Connection *con = new Connection(this, description, Connection::Types::INPUT);
         this->inputConnections.push_back(con);
         calculateAndSetDrawInformation();
+}
+
+void Node::addOutput(const ConnectionDesc &description) {
+    if (description.name.empty()) {
+        std::cerr << "Connection creation request failed because of emtpy name" << std::endl;
+        return;
+    }
+
+    Connection *con = new Connection(this, description, Connection::Types::OUTPUT);
+    this->outputConnections.push_back(con);
+    calculateAndSetDrawInformation();
 }

@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 #include "../imgui/imgui.h"
 #include "Common.h"
 
@@ -25,6 +26,20 @@ enum ConnectionType {
 struct ConnectionDesc {
     std::string name;
     ConnectionType type;
+
+    std::string getTypeString() {
+        switch (type) {
+            case ConnectionType::ConnectionType_Color: return "Color";
+            case ConnectionType::ConnectionType_Vec3: return "Vector3";
+            case ConnectionType::ConnectionType_Vec4: return "Vector4";
+            case ConnectionType::ConnectionType_Float: return "Float";
+            case ConnectionType::ConnectionType_Int: return "Integer";
+            default: {
+                std::cerr << "Missing type for Connection. Exiting" << std::endl;
+                std::exit(-1);
+            }
+        }
+    }
 };
 
 class Connection {

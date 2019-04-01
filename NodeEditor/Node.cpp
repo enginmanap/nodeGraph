@@ -23,14 +23,21 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->pos = pos;
     this->name = nodeType->name;
 
-    ImVec2 titleSize = ImGui::CalcTextSize(name.c_str());
 
-    titleSize.y *= 3;
 
     setupConnections(inputConnections, nodeType->inputConnections, Connection::Types::INPUT);
     setupConnections(outputConnections, nodeType->outputConnections, Connection::Types::OUTPUT);
+    calculateAndSetDrawInformation();
 
+
+}
+
+void Node::calculateAndSetDrawInformation() {
     // Calculate the size needed for the whole box
+
+    ImVec2 titleSize = ImGui::CalcTextSize(name.c_str());
+
+    titleSize.y *= 3;
 
     ImVec2 inputTextSize(0.0f, 0.0f);
     ImVec2 outputTextSize(0.0f, 0.0f);
@@ -276,4 +283,14 @@ bool Node::isHovered(ImVec2 offset) {
         }
     }
     return false;
+}
+
+void Node::addInput(const ConnectionDesc &description) {
+        if (description.name.empty()) {
+            return;
+        }
+
+        Connection *con = new Connection(this, description, Connection::Types::INPUT);
+        this->inputConnections.push_back(con);
+        calculateAndSetDrawInformation();
 }

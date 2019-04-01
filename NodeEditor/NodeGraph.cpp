@@ -83,6 +83,14 @@ void NodeGraph::display() {
     }
 
     DrawRenameMenu(selectedNode);
+
+    if(state == DisplayStates::ADD_INPUT_REQUEST) {
+        ImGui::OpenPopup("addInputMenu");
+        state = DisplayStates::ADD_INPUT;
+    }
+
+    drawAddInputMenu(selectedNode);
+
     // Scrolling
     if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::IsMouseDragging(2, 0.0f))
         scrolling = scrolling - ImGui::GetIO().MouseDelta;
@@ -140,6 +148,13 @@ void NodeGraph::DrawContextMenu(Node* selectedNode) {
                 }
             }
         } else {
+            if (ImGui::MenuItem("Add Input")) {
+                state = DisplayStates::ADD_INPUT_REQUEST;
+                strncpy(connectionName, "Input", sizeof(connectionName)-1);
+            }
+            if (ImGui::MenuItem("Add Output")) {
+                //selectedNode->addOutput();
+            }
             if (ImGui::MenuItem("Change Name")) {
                 state = DisplayStates::RENAME_NODE_REQUEST;
                 strncpy(nodeName, selectedNode->getName().c_str(), sizeof(nodeName)-1);
@@ -155,6 +170,33 @@ void NodeGraph::DrawRenameMenu(Node* selectedNode) {
     if (selectedNode != nullptr && state == DisplayStates::RENAME_NODE && ImGui::BeginPopup("changeNameMenu")) {
         if(ImGui::InputText("New name", nodeName, sizeof(nodeName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Apply")) {
             selectedNode->setName(std::string(nodeName));
+            state = DisplayStates::NODE_GRAPH;
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if(ImGui::Button("Cancel")) {
+            state = DisplayStates::NODE_GRAPH;
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+    ImGui::PopStyleVar();
+}
+
+void NodeGraph::drawAddInputMenu(Node *selectedNode) {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
+    if (selectedNode != nullptr && state == DisplayStates::ADD_INPUT && ImGui::BeginPopup("addInputMenu")) {
+        static ConnectionType connectionType = ConnectionType::ConnectionType_Float;
+        if(ImGui::RadioButton("Integer", connectionType == ConnectionType::ConnectionType_Int)) { connectionType = ConnectionType::ConnectionType_Int;}
+        if(ImGui::RadioButton("Float",   connectionType == ConnectionType::ConnectionType_Float)) { connectionType = ConnectionType::ConnectionType_Float;}
+        if(ImGui::RadioButton("Vec3", connectionType == ConnectionType::ConnectionType_Vec3)) { connectionType = ConnectionType::ConnectionType_Vec3;}
+        if(ImGui::RadioButton("Vec4", connectionType == ConnectionType::ConnectionType_Vec4)) { connectionType = ConnectionType::ConnectionType_Vec4;}
+        if(ImGui::InputText("Input name", connectionName, sizeof(connectionName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Apply")) {
+            ConnectionDesc desc;
+            desc.type = connectionType;
+            desc.name = connectionName;
+            selectedNode->addInput(desc);
             state = DisplayStates::NODE_GRAPH;
             ImGui::CloseCurrentPopup();
         }

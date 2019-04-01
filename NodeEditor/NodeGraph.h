@@ -9,7 +9,10 @@
 #include "Node.h"
 
 class NodeGraph {
-    enum class DisplayStates { NODE_GRAPH, MENU_REQUEST, MENU_SHOWN, RENAME_NODE_REQUEST, RENAME_NODE };
+    enum class DisplayStates { NODE_GRAPH,
+            MENU_REQUEST, MENU_SHOWN,
+            RENAME_NODE_REQUEST, RENAME_NODE,
+            ADD_INPUT_REQUEST, ADD_INPUT, };
 
     DisplayStates state = DisplayStates::NODE_GRAPH;
     uint32_t nextNodeID = 0;
@@ -30,6 +33,7 @@ class NodeGraph {
     std::vector<Node *> nodes;
     Node* selectedNode = nullptr;
     char nodeName[128] = {0};
+    char connectionName[128] = {0};
     DragState dragState = DragState_Default;
     DragNode dragNode;
 
@@ -47,6 +51,7 @@ public:
     void DrawContextMenu(Node* selectedNode);
     void DrawRenameMenu(Node* selectedNode);
 
+    void drawAddInputMenu(Node *pNode);
 };
 
 

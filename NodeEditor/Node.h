@@ -25,7 +25,16 @@ static struct NodeType s_nodeTypes[] =
         {
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 // Math
-
+                {
+                        "Texture",
+                        // Input connections
+                        {
+                        },
+                        // Output
+                        {
+                                {"Out", ConnectionType_Vec3},
+                        },
+                },
                 {
                         "Multiply",
                         // Input connections
@@ -102,6 +111,14 @@ public:
     void setName(const std::string& name) {
         this->name = name;
     }
+
+    void addInput(const ConnectionDesc &description);
+
+    /**
+     * This method calculates node size and connection positions,
+     * Node name or connection changes should trigger this method
+     */
+    void calculateAndSetDrawInformation();
 };
 
 

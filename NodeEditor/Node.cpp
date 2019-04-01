@@ -158,19 +158,6 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected) 
 
     for (Connection *con : inputConnections) {
         con->display(drawList, node_rect_min, offset, textSize);
-        /*
-        ImGui::SetCursorScreenPos(offset + ImVec2(10.0f, 0));
-        ImGui::Text("%s", con->desc.name);
-
-        ImColor conColor = ImColor(150, 150, 150);
-
-        if (con->isHovered(node_rect_min))
-            conColor = ImColor(200, 200, 200);
-
-        drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
-
-        offset.y += textSize.y + 2.0f;
-         */
     }
 
     offset = node_rect_min;
@@ -178,22 +165,6 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected) 
 
     for (Connection *con : outputConnections) {
         con->display(drawList, node_rect_min, offset, textSize);
-
-        /*
-        textSize = ImGui::CalcTextSize(con->desc.name.c_str());
-
-        ImGui::SetCursorScreenPos(offset + ImVec2(con->pos.x - (textSize.x + 10.0f), 0));
-        ImGui::Text("%s", con->desc.name.c_str());
-
-        ImColor conColor = ImColor(150, 150, 150);
-
-        if (con->isHovered(node_rect_min))
-            conColor = ImColor(200, 200, 200);
-
-        drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
-
-        offset.y += textSize.y + 2.0f;
-         */
     }
 
 

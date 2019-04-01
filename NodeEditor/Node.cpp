@@ -22,13 +22,11 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->id = id;
     this->pos = pos;
     this->name = nodeType->name;
-
-
+    this->editable = nodeType->editable;
 
     setupConnections(inputConnections, nodeType->inputConnections, Connection::Types::INPUT);
     setupConnections(outputConnections, nodeType->outputConnections, Connection::Types::OUTPUT);
     calculateAndSetDrawInformation();
-
 
 }
 
@@ -38,6 +36,7 @@ void Node::calculateAndSetDrawInformation() {
     ImVec2 titleSize = ImGui::CalcTextSize(name.c_str());
 
     titleSize.y *= 3;
+    titleSize.x += 5;
 
     ImVec2 inputTextSize(0.0f, 0.0f);
     ImVec2 outputTextSize(0.0f, 0.0f);
@@ -62,7 +61,7 @@ void Node::calculateAndSetDrawInformation() {
     }
 
 
-    size.x = inputTextSize.x;
+    size.x = std::max(titleSize.x, inputTextSize.x);
     size.y = std::max(inputTextSize.y, outputTextSize.y) + titleSize.y;
 
     inputTextSize.y = 0.0f;

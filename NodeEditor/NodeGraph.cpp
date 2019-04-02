@@ -28,13 +28,18 @@ void NodeGraph::display() {
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImVec4(40, 40, 40, 200));
-    ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove);
+    ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoMove);
 
     ImGui::PushItemWidth(120.0f);
 
+    ImVec2 windowPos = ImGui::GetWindowPos();
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
     draw_list->ChannelsSplit(2);
-    //scrolling.y = -1 *ImGui::GetScrollY();
+    scrolling.x = -1 *ImGui::GetScrollX();
+    scrolling.y = -1 *ImGui::GetScrollY();
+
+    scrolling.x += windowPos.x;
+    scrolling.y += windowPos.y;
     //ImVec2 offset = ImGui::GetCursorScreenPos() - scrolling;
 
     //displayNode(draw_list, scrolling, s_emittable, selectedNodeID);
@@ -74,7 +79,7 @@ void NodeGraph::display() {
         }*/
     }
 
-    DrawContextMenu(selectedNode);
+    DrawContextMenu(selectedNode, scrolling);
 
     if(state == DisplayStates::RENAME_NODE_REQUEST) {
         ImGui::OpenPopup("changeNameMenu");
@@ -101,7 +106,12 @@ void NodeGraph::display() {
     ImGui::PopStyleVar(2);
 }
 
-void NodeGraph::DrawContextMenu(Node* selectedNode) {
+/**
+ * Offset contains scrool + ImGui window position in application.
+ * @param selectedNode
+ * @param offset
+ */
+void NodeGraph::DrawContextMenu(Node *selectedNode, const ImVec2 &offset) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (ImGui::BeginPopup("context_menu")) {
 //        if (ImGui::MenuItem("Load graph...")) {
@@ -143,7 +153,7 @@ void NodeGraph::DrawContextMenu(Node* selectedNode) {
             //Add new node part
             for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
                 if (ImGui::MenuItem(s_nodeTypes[i].name)) {
-                    Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos, &s_nodeTypes[i]);
+                    Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos - offset, &s_nodeTypes[i]);
                     nodes.push_back(node);
                 }
             }

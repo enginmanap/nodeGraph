@@ -50,7 +50,7 @@ public:
 
     void updateDragging(ImVec2 offset);
 
-    void DrawContextMenu(Node* selectedNode);
+    void DrawContextMenu(Node *selectedNode, const ImVec2 &offset);
     void DrawRenameMenu(Node* selectedNode);
 
     void drawAddConnectionMenu(Node *pNode);

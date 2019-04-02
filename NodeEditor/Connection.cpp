@@ -46,7 +46,7 @@ void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec
             ImColor conColor = ImColor(150, 150, 150);
 
             if (this->isHovered(node_rect_min))
-            conColor = ImColor(200, 200, 200);
+                conColor = ImColor(200, 200, 200);
 
             drawList->AddCircleFilled(node_rect_min + this->pos, NODE_SLOT_RADIUS, conColor);
 

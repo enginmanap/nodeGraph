@@ -142,14 +142,9 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected) 
     drawList->AddRectFilled(node_rect_min + ImVec2(1, 1), titleArea, ImColor(100, 0, 0), 4.0f);
     drawList->AddRect(node_rect_min, node_rect_max, ImColor(100, 100, 100), 4.0f);
 
-    ImVec2 off;
 
+    offset = node_rect_min;
     offset.y += 40.0f;
-
-    offset = offset + node_rect_min;
-
-    off.x = node_rect_min.x;
-    off.y = node_rect_min.y;
 
     ImGui::SetCursorScreenPos(pos);
     //ImGui::BeginGroup(); // Lock horizontal position

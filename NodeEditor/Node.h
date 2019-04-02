@@ -2,8 +2,8 @@
 // Created by engin on 24.03.2019.
 //
 
-#ifndef SIL_NODETEST_NODE_H
-#define SIL_NODETEST_NODE_H
+#ifndef NODEGRAPH_NODE_H
+#define NODEGRAPH_NODE_H
 
 #include <vector>
 #include <cstdint>
@@ -208,4 +208,4 @@ public:
 };
 
 
-#endif //SIL_NODETEST_NODE_H
+#endif //NODEGRAPH_NODE_H

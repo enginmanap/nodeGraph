@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(sil_nodetest)
+project(nodegraph)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -44,6 +44,6 @@ if (NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif (NOT OPENGL_FOUND)
 
-add_executable(sil_nodetest NodeEditor/Common.h NodeEditor/Connection.cpp NodeEditor/Connection.h main.cpp NodeEditor/Node.cpp NodeEditor/Node.h NodeEditor/NodeGraph.cpp NodeEditor/NodeGraph.h)
+add_executable(nodegraph NodeEditor/Common.h NodeEditor/Connection.cpp NodeEditor/Connection.h main.cpp NodeEditor/Node.cpp NodeEditor/Node.h NodeEditor/NodeGraph.cpp NodeEditor/NodeGraph.h)
 
-TARGET_LINK_LIBRARIES(sil_nodetest ImGui ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES})
+TARGET_LINK_LIBRARIES(nodegraph ImGui ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES})

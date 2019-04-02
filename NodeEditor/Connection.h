@@ -2,8 +2,8 @@
 // Created by engin on 25.03.2019.
 //
 
-#ifndef SIL_NODETEST_CONNECTION_H
-#define SIL_NODETEST_CONNECTION_H
+#ifndef NODEGRAPH_CONNECTION_H
+#define NODEGRAPH_CONNECTION_H
 
 #include <vector>
 #include <string>
@@ -81,4 +81,4 @@ public:
     void setPosition(float TitleSizeY, float& textSizeY, float xPosition);
 };
 
-#endif //SIL_NODETEST_CONNECTION_H
+#endif //NODEGRAPH_CONNECTION_H

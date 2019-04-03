@@ -91,6 +91,7 @@ public:
         return desc.type;
     }
 
+    void clearConnections();
 };
 
 #endif //NODEGRAPH_CONNECTION_H

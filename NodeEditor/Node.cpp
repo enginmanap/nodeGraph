@@ -261,6 +261,17 @@ void Node::addInput(const ConnectionDesc &description) {
         calculateAndSetDrawInformation();
 }
 
+void Node::removeInput(Connection *connection) {
+    for(auto it = inputConnections.begin(); it != inputConnections.end(); it++) {
+        if((*it) == connection) {
+            inputConnections.erase(it);
+            delete connection;
+            calculateAndSetDrawInformation();
+            break;
+        }
+    }
+}
+
 void Node::addOutput(const ConnectionDesc &description) {
     if (description.name.empty()) {
         std::cerr << "Connection creation request failed because of emtpy name" << std::endl;
@@ -270,6 +281,17 @@ void Node::addOutput(const ConnectionDesc &description) {
     Connection *con = new Connection(this, description, Connection::Directions::OUTPUT);
     this->outputConnections.push_back(con);
     calculateAndSetDrawInformation();
+}
+
+void Node::removeOutput(Connection *connection) {
+    for(auto it = outputConnections.begin(); it != outputConnections.end(); it++) {
+        if((*it) == connection) {
+            outputConnections.erase(it);
+            delete connection;
+            calculateAndSetDrawInformation();
+            break;
+        }
+    }
 }
 
 Node::~Node() {

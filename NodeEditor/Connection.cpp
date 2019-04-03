@@ -75,6 +75,10 @@ void Connection::setPosition(float TitleSizeY, float& textSizeY, float xPosition
 }
 
 Connection::~Connection() {
+    clearConnections();
+}
+
+void Connection::clearConnections() {
     if(this->input != nullptr) {
         for(auto it = this->input->output.begin(); it != this->input->output.end(); it++) {
             if(*it == this) {
@@ -83,9 +87,11 @@ Connection::~Connection() {
             }
         }
     }
+    this->input = nullptr;
 
     for(auto it = this->output.begin(); it != this->output.end(); it++) {
         (*it)->input = nullptr;
     }
+    this->output.clear();
 }
 

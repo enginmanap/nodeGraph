@@ -61,39 +61,35 @@ void NodeGraph::display() {
 
     if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(0)) {
         selectedNode = nullptr;
-        if(ImGui::IsAnyItemHovered()) {
-            for(Node* node:nodes) {
-                if(node->isHovered(scrolling)) {
-                    selectedNode = node;
-                }
+        hoveredConnection = nullptr;
+        for(Node* node:nodes) {
+            if(node->isHovered(scrolling)) {
+                selectedNode = node;
+                ImVec2 temp;
+                hoveredConnection = selectedNode->getHoverConnection(scrolling, &temp);
+                break;
             }
-
         }
     }
 
     // Open context menu
     if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1)) {
         selectedNode = nullptr;
-        if(ImGui::IsAnyItemHovered()) {
-            for(Node* node:nodes) {
-                if(node->isHovered(scrolling)) {
-                    selectedNode = node;
-                }
+        hoveredConnection = nullptr;
+        for(Node* node:nodes) {
+            if(node->isHovered(scrolling)) {
+                selectedNode = node;
+                ImVec2 temp;
+                hoveredConnection = selectedNode->getHoverConnection(scrolling, &temp);
+                break;
             }
-
         }
-        //selectedNodeID = node_hovered_in_list = node_hovered_in_scene = -1;
+
         state = DisplayStates::MENU_REQUEST;
     }
     if (state == DisplayStates::MENU_REQUEST) {
         ImGui::OpenPopup("context_menu");
         state = DisplayStates::MENU_SHOWN;
-        /*if (node_hovered_in_list != -1) {
-            selectedNodeID = node_hovered_in_list;
-        }
-        if (node_hovered_in_scene != -1) {
-            selectedNodeID = node_hovered_in_scene;
-        }*/
     }
 
     drawContextMenu(selectedNode, scrolling);
@@ -187,7 +183,7 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
                 state = DisplayStates::RENAME_NODE_REQUEST;
                 strncpy(nodeName, selectedNode->getName().c_str(), sizeof(nodeName)-1);
             }
-            if(ImGui::MenuItem("Remove")) {
+            if(ImGui::MenuItem("Remove Node")) {
                 auto it = std::find(nodes.begin(), nodes.end(), selectedNode);
                 if(it != nodes.end()) {
                     nodes.erase(it);
@@ -196,6 +192,7 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
                 }
             } else {
                 if (selectedNode->getEditable()) {
+                    ImGui::Separator();
                     if (ImGui::MenuItem("Add Input")) {
                         state = DisplayStates::ADD_CONNECTION_REQUEST;
                         connectionRequestType = Connection::Directions::INPUT;
@@ -205,6 +202,30 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
                         state = DisplayStates::ADD_CONNECTION_REQUEST;
                         connectionRequestType = Connection::Directions::OUTPUT;
                         strncpy(connectionName, "Output", sizeof(connectionName) - 1);
+                    }
+                    if(hoveredConnection != nullptr) {
+                        switch (hoveredConnection->getType()) {
+                            case Connection::Directions::INPUT: {
+                                if (ImGui::MenuItem("Remove Input")) {
+                                    selectedNode->removeInput(hoveredConnection);
+                                    hoveredConnection = nullptr;
+                                }
+                            }
+                            break;
+                            case Connection::Directions::OUTPUT: {
+                                if (ImGui::MenuItem("Remove Output")) {
+                                    selectedNode->removeOutput(hoveredConnection);
+                                    hoveredConnection = nullptr;
+                                }
+                            }
+                            break;
+                        }
+                        ImGui::Separator();
+                        if(hoveredConnection != nullptr) {//if removed check
+                            if (ImGui::MenuItem("Remove Connection")) {
+                                hoveredConnection->clearConnections();
+                            }
+                        }
                     }
                 }
             }

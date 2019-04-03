@@ -32,6 +32,7 @@ class NodeGraph {
 
     std::vector<Node *> nodes;
     Node* selectedNode = nullptr;
+    Connection* hoveredConnection = nullptr;
     Connection::Directions connectionRequestType = Connection::Directions::INPUT;
 
     char nodeName[128] = {0};

@@ -201,9 +201,10 @@ public:
     }
 
     void addInput(const ConnectionDesc &description);
+    void removeInput(Connection *connection);
 
     void addOutput(const ConnectionDesc &description);
-
+    void removeOutput(Connection *connection);
     bool getEditable() {
         return this->editable;
     }

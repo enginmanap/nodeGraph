@@ -33,10 +33,7 @@ static void ShowExampleAppCustomNodeGraph(NodeGraph& nodeGraph, bool *opened) {
     }
 
     ImGui::SameLine();
-    ImGui::BeginGroup();
     nodeGraph.display();
-    ImGui::EndGroup();
-
     ImGui::End();
 }
 

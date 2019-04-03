@@ -21,6 +21,10 @@ void NodeGraph::drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEP
 }
 
 void NodeGraph::display() {
+    // 4/5 of window width is main, rest is detail by default
+    ImGui::Columns(2, "NodeGraph Main", false);
+    ImGui::SetColumnWidth(-1, ImGui::GetWindowWidth() - 200);
+    ImGui::BeginGroup();
     static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
 
     // Create our child canvas
@@ -53,6 +57,18 @@ void NodeGraph::display() {
     renderLines(draw_list, scrolling);
 
     draw_list->ChannelsMerge();
+
+    if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(0)) {
+        selectedNode = nullptr;
+        if(ImGui::IsAnyItemHovered()) {
+            for(Node* node:nodes) {
+                if(node->isHovered(scrolling)) {
+                    selectedNode = node;
+                }
+            }
+
+        }
+    }
 
     // Open context menu
     if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1)) {
@@ -104,6 +120,14 @@ void NodeGraph::display() {
     ImGui::EndChild();
     ImGui::PopStyleColor();
     ImGui::PopStyleVar(2);
+    ImGui::EndGroup();
+    ImGui::NextColumn();
+    ImGui::BeginGroup();
+    if(selectedNode != nullptr){
+        ImGui::Text(selectedNode->getName().c_str());
+    }
+    ImGui::EndGroup();
+
 }
 
 /**

@@ -3,6 +3,7 @@
 //
 
 #include "NodeGraph.h"
+#include <Algorithm>
 
 void NodeGraph::drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS) {
     ImVec2 t1 = ImVec2(+80.0f, 0.0f);
@@ -181,20 +182,30 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
                 }
             }
         } else {
+            // Selected Node is not null
             if (ImGui::MenuItem("Change Name")) {
                 state = DisplayStates::RENAME_NODE_REQUEST;
                 strncpy(nodeName, selectedNode->getName().c_str(), sizeof(nodeName)-1);
             }
-            if(selectedNode->getEditable()) {
-                if (ImGui::MenuItem("Add Input")) {
-                    state = DisplayStates::ADD_CONNECTION_REQUEST;
-                    connectionRequestType = Connection::Directions::INPUT;
-                    strncpy(connectionName, "Input", sizeof(connectionName) - 1);
+            if(ImGui::MenuItem("Remove")) {
+                auto it = std::find(nodes.begin(), nodes.end(), selectedNode);
+                if(it != nodes.end()) {
+                    nodes.erase(it);
+                    delete selectedNode;
+                    this->selectedNode = nullptr;
                 }
-                if (ImGui::MenuItem("Add Output")) {
-                    state = DisplayStates::ADD_CONNECTION_REQUEST;
-                    connectionRequestType = Connection::Directions::OUTPUT;
-                    strncpy(connectionName, "Output", sizeof(connectionName) - 1);
+            } else {
+                if (selectedNode->getEditable()) {
+                    if (ImGui::MenuItem("Add Input")) {
+                        state = DisplayStates::ADD_CONNECTION_REQUEST;
+                        connectionRequestType = Connection::Directions::INPUT;
+                        strncpy(connectionName, "Input", sizeof(connectionName) - 1);
+                    }
+                    if (ImGui::MenuItem("Add Output")) {
+                        state = DisplayStates::ADD_CONNECTION_REQUEST;
+                        connectionRequestType = Connection::Directions::OUTPUT;
+                        strncpy(connectionName, "Output", sizeof(connectionName) - 1);
+                    }
                 }
             }
         }

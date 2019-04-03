@@ -74,3 +74,18 @@ void Connection::setPosition(float TitleSizeY, float& textSizeY, float xPosition
     textSizeY += 4.0f;        // size between text entries
 }
 
+Connection::~Connection() {
+    if(this->input != nullptr) {
+        for(auto it = this->input->output.begin(); it != this->input->output.end(); it++) {
+            if(*it == this) {
+                this->input->output.erase(it);
+                break;
+            }
+        }
+    }
+
+    for(auto it = this->output.begin(); it != this->output.end(); it++) {
+        (*it)->input = nullptr;
+    }
+}
+

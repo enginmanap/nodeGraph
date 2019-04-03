@@ -271,3 +271,12 @@ void Node::addOutput(const ConnectionDesc &description) {
     this->outputConnections.push_back(con);
     calculateAndSetDrawInformation();
 }
+
+Node::~Node() {
+    for(Connection* connection:inputConnections) {
+        delete connection;
+    }
+    for(Connection* connection:outputConnections) {
+        delete connection;
+    }
+}

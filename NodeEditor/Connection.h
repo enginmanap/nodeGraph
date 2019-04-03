@@ -54,8 +54,10 @@ private:
     struct Connection *input = nullptr;
     std::vector<Connection *> output;
 public:
-    explicit Connection(Node* parent, ConnectionDesc desc, Connection::Directions type) :
+    Connection(Node* parent, ConnectionDesc desc, Connection::Directions type) :
     parent(parent), desc(desc), type(type) {}
+
+    ~Connection();
 
     bool isHovered(ImVec2 offset);
     Node* getInputNode() {
@@ -71,7 +73,8 @@ public:
 
     void setInputConnection(Connection* input ) {
         this->input = input;
-    };
+        input->output.push_back(this);
+    }
 
     ImVec2 getPosition() { return pos;}
     void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);

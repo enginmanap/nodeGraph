@@ -180,6 +180,8 @@ public:
 
     Node(uint32_t id, ImVec2 pos, const char *name, uint32_t &error);
 
+    ~Node();
+
     bool isHovered(ImVec2 offset);//offset is scrool information
 
     void display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected);

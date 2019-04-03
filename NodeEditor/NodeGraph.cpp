@@ -345,9 +345,43 @@ void NodeGraph::updateDragging(ImVec2 offset) {
                 }
 
                 // Lets connect the nodes.
-                // TODO: Make sure we connect stuff in the correct way!
+                /**
+                 * we have 2 nodes,
+                 * dragNode.con -> started node
+                 * con -> ended con.
+                 *
+                 * we should verify these:
+                 * * if one is input, other should be output, and vice versa
+                 * * They should be same type (float,vec3 etc.)
+                 */
 
-                con->setInputConnection(dragNode.con);
+                if((con->getType() == Connection::Types::INPUT && dragNode.con->getType() == Connection::Types::INPUT) ||
+                    (con->getType() == Connection::Types::OUTPUT && dragNode.con->getType() == Connection::Types::OUTPUT)) {
+                    dragNode.con = 0;
+                    dragState = DragState_Default;
+                    std::cerr << "Dragged to same type" << std::endl;
+                    return;
+                }
+
+                if(con->getDataType() != dragNode.con->getDataType()) {
+                    dragNode.con = 0;
+                    dragState = DragState_Default;
+                    std::cerr << "Dragged to different data type" << std::endl;
+                    return;
+                }
+
+                Connection* outputSide = nullptr;
+                Connection* inputSide = nullptr;
+                if(con->getType() == Connection::Types::OUTPUT) {
+                    outputSide = con;
+                    inputSide = dragNode.con;
+                }
+                if(dragNode.con->getType() == Connection::Types::OUTPUT) {
+                    outputSide = dragNode.con;
+                    inputSide = con;
+                }
+
+                inputSide->setInputConnection(outputSide);
                 dragNode.con = 0;
                 dragState = DragState_Default;
             }

@@ -79,6 +79,15 @@ public:
         return ImGui::CalcTextSize(desc.name.c_str());
     }
     void setPosition(float TitleSizeY, float& textSizeY, float xPosition);
+
+    Types getType() const {
+        return type;
+    }
+
+    ConnectionType getDataType() const {
+        return desc.type;
+    }
+
 };
 
 #endif //NODEGRAPH_CONNECTION_H

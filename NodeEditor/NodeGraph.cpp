@@ -188,12 +188,12 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
             if(selectedNode->getEditable()) {
                 if (ImGui::MenuItem("Add Input")) {
                     state = DisplayStates::ADD_CONNECTION_REQUEST;
-                    connectionRequestType = Connection::Types::INPUT;
+                    connectionRequestType = Connection::Directions::INPUT;
                     strncpy(connectionName, "Input", sizeof(connectionName) - 1);
                 }
                 if (ImGui::MenuItem("Add Output")) {
                     state = DisplayStates::ADD_CONNECTION_REQUEST;
-                    connectionRequestType = Connection::Types::OUTPUT;
+                    connectionRequestType = Connection::Directions::OUTPUT;
                     strncpy(connectionName, "Output", sizeof(connectionName) - 1);
                 }
             }
@@ -235,8 +235,8 @@ void NodeGraph::drawAddConnectionMenu(Node *pNode) {
             desc.type = connectionType;
             desc.name = connectionName;
             switch (connectionRequestType ) {
-                case Connection::Types::INPUT: pNode->addInput(desc); break;
-                case Connection::Types::OUTPUT: pNode->addOutput(desc); break;
+                case Connection::Directions::INPUT: pNode->addInput(desc); break;
+                case Connection::Directions::OUTPUT: pNode->addOutput(desc); break;
             }
             state = DisplayStates::NODE_GRAPH;
             ImGui::CloseCurrentPopup();
@@ -355,8 +355,8 @@ void NodeGraph::updateDragging(ImVec2 offset) {
                  * * They should be same type (float,vec3 etc.)
                  */
 
-                if((con->getType() == Connection::Types::INPUT && dragNode.con->getType() == Connection::Types::INPUT) ||
-                    (con->getType() == Connection::Types::OUTPUT && dragNode.con->getType() == Connection::Types::OUTPUT)) {
+                if((con->getType() == Connection::Directions::INPUT && dragNode.con->getType() == Connection::Directions::INPUT) ||
+                    (con->getType() == Connection::Directions::OUTPUT && dragNode.con->getType() == Connection::Directions::OUTPUT)) {
                     dragNode.con = 0;
                     dragState = DragState_Default;
                     std::cerr << "Dragged to same type" << std::endl;
@@ -372,11 +372,11 @@ void NodeGraph::updateDragging(ImVec2 offset) {
 
                 Connection* outputSide = nullptr;
                 Connection* inputSide = nullptr;
-                if(con->getType() == Connection::Types::OUTPUT) {
+                if(con->getType() == Connection::Directions::OUTPUT) {
                     outputSide = con;
                     inputSide = dragNode.con;
                 }
-                if(dragNode.con->getType() == Connection::Types::OUTPUT) {
+                if(dragNode.con->getType() == Connection::Directions::OUTPUT) {
                     outputSide = dragNode.con;
                     inputSide = con;
                 }

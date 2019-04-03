@@ -44,17 +44,17 @@ struct ConnectionDesc {
 
 class Connection {
 public:
-    enum class Types {INPUT, OUTPUT};
+    enum class Directions {INPUT, OUTPUT};
 private:
     Node* parent;
     ImVec2 pos = {0,0};
     ConnectionDesc desc;
-    Types type;
+    Directions type;
 
     struct Connection *input = nullptr;
     std::vector<Connection *> output;
 public:
-    explicit Connection(Node* parent, ConnectionDesc desc, Connection::Types type) :
+    explicit Connection(Node* parent, ConnectionDesc desc, Connection::Directions type) :
     parent(parent), desc(desc), type(type) {}
 
     bool isHovered(ImVec2 offset);
@@ -80,7 +80,7 @@ public:
     }
     void setPosition(float TitleSizeY, float& textSizeY, float xPosition);
 
-    Types getType() const {
+    Directions getType() const {
         return type;
     }
 

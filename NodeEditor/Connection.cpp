@@ -23,7 +23,7 @@ bool Connection::isHovered(ImVec2 offset) {
  */
 void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize) {
     switch (type) {
-        case Types::INPUT: {
+        case Directions::INPUT: {
             ImGui::SetCursorScreenPos(offset + ImVec2(10.0f, 0));
             ImGui::Text("%s", this->desc.name.c_str());
 
@@ -37,7 +37,7 @@ void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec
             offset.y += textSize.y + 2.0f;
         }
         break;
-        case Types::OUTPUT: {
+        case Directions::OUTPUT: {
             textSize = ImGui::CalcTextSize(this->desc.name.c_str());
 
             ImGui::SetCursorScreenPos(offset + ImVec2(this->pos.x - (textSize.x + 10.0f), 0));

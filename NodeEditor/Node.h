@@ -166,7 +166,7 @@ class Node {
     std::vector<Connection *> outputConnections;
     bool editable;
 
-    void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs, Connection::Types connectionType);
+    void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs, Connection::Directions connectionType);
 
     void initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType);
 

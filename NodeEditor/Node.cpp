@@ -24,8 +24,8 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->name = nodeType->name;
     this->editable = nodeType->editable;
 
-    setupConnections(inputConnections, nodeType->inputConnections, Connection::Types::INPUT);
-    setupConnections(outputConnections, nodeType->outputConnections, Connection::Types::OUTPUT);
+    setupConnections(inputConnections, nodeType->inputConnections, Connection::Directions::INPUT);
+    setupConnections(outputConnections, nodeType->outputConnections, Connection::Directions::OUTPUT);
     calculateAndSetDrawInformation();
 
 }
@@ -80,7 +80,7 @@ void Node::calculateAndSetDrawInformation() {
     // calculate the size of the node depending on nuber of connections
 }
 
-void Node::setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs, Connection::Types connectionType) {
+void Node::setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs, Connection::Directions connectionType) {
     for (int i = 0; i < MAX_CONNECTION_COUNT; ++i) {
         const ConnectionDesc &desc = connectionDescs[i];
 
@@ -256,7 +256,7 @@ void Node::addInput(const ConnectionDesc &description) {
             return;
         }
 
-        Connection *con = new Connection(this, description, Connection::Types::INPUT);
+        Connection *con = new Connection(this, description, Connection::Directions::INPUT);
         this->inputConnections.push_back(con);
         calculateAndSetDrawInformation();
 }
@@ -267,7 +267,7 @@ void Node::addOutput(const ConnectionDesc &description) {
         return;
     }
 
-    Connection *con = new Connection(this, description, Connection::Types::OUTPUT);
+    Connection *con = new Connection(this, description, Connection::Directions::OUTPUT);
     this->outputConnections.push_back(con);
     calculateAndSetDrawInformation();
 }

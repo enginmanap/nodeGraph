@@ -54,10 +54,25 @@ void NodeGraph::display() {
         node->display(draw_list, scrolling, dragNode.con != 0);
     }
 
-    updateDragging(scrolling);
+    if(!updateDragging(scrolling, errorMessage)) {
+        errorGenerated = true;
+    }
+    if(errorGenerated) {
+        ImVec2 position = ImGui::GetWindowPos() + ImVec2(15,15);
+        ImVec2 padding = ImVec2(10,10);
+        ImVec2 textSize = ImGui::CalcTextSize(errorMessage.c_str());
+        draw_list->AddRectFilled(position - padding, position + textSize + padding, ImColor(200, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.25, 0.25, 0.25, 1));
+        ImGui::SetCursorScreenPos(position);
+        ImGui::Text(errorMessage.c_str());
+        ImGui::PopStyleColor();
+    }
     renderLines(draw_list, scrolling);
 
     draw_list->ChannelsMerge();
+    if(ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1)) {
+        errorGenerated = false;
+    }
 
     if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(0)) {
         selectedNode = nullptr;
@@ -319,7 +334,7 @@ Connection *NodeGraph::getHoverCon(ImVec2 offset, ImVec2 *pos) {
     return result;//return null or found node
 }
 
-void NodeGraph::updateDragging(ImVec2 offset) {
+bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
     switch (dragState) {
         case DragState_Default: {
             ImVec2 pos;
@@ -329,7 +344,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
                 dragNode.con = con;
                 dragNode.pos = pos;
                 dragState = DragState_Hover;
-                return;
+                return true;
             }
 
             break;
@@ -344,7 +359,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
             if (con != dragNode.con) {
                 dragNode.con = 0;
                 dragState = DragState_Default;
-                return;
+                return true;
             }
 
             if (ImGui::IsMouseClicked(0) && dragNode.con)
@@ -373,7 +388,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
                 if (con == dragNode.con) {
                     dragNode.con = 0;
                     dragState = DragState_Default;
-                    return;
+                    return true;
                 }
 
                 // Lets connect the nodes.
@@ -391,15 +406,15 @@ void NodeGraph::updateDragging(ImVec2 offset) {
                     (con->getType() == Connection::Directions::OUTPUT && dragNode.con->getType() == Connection::Directions::OUTPUT)) {
                     dragNode.con = 0;
                     dragState = DragState_Default;
-                    std::cerr << "Dragged to same type" << std::endl;
-                    return;
+                    errorMessage = "Dragged to same direction. Match input with output";
+                    return false;
                 }
 
                 if(con->getDataType() != dragNode.con->getDataType()) {
                     dragNode.con = 0;
                     dragState = DragState_Default;
-                    std::cerr << "Dragged to different data type" << std::endl;
-                    return;
+                    errorMessage = "Dragged to different data types";
+                    return false;
                 }
 
                 Connection* outputSide = nullptr;
@@ -425,6 +440,7 @@ void NodeGraph::updateDragging(ImVec2 offset) {
             break;
         }
     }
+    return true;
 }
 
 /*

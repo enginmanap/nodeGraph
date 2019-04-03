@@ -37,8 +37,10 @@ class NodeGraph {
 
     char nodeName[128] = {0};
     char connectionName[128] = {0};
+    std::string errorMessage;
     DragState dragState = DragState_Default;
     DragNode dragNode;
+    bool errorGenerated = false;
 
     void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
 
@@ -49,7 +51,7 @@ public:
 
     Connection *getHoverCon(ImVec2 offset, ImVec2 *pos);
 
-    void updateDragging(ImVec2 offset);
+    bool updateDragging(ImVec2 offset, std::string &errorMessage);
 
     void drawContextMenu(Node *selectedNode, const ImVec2 &offset);
     void drawRenameMenu(Node *selectedNode);

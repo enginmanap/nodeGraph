@@ -95,7 +95,7 @@ void NodeGraph::display() {
         }*/
     }
 
-    DrawContextMenu(selectedNode, scrolling);
+    drawContextMenu(selectedNode, scrolling);
 
     if(state == DisplayStates::RENAME_NODE_REQUEST) {
         ImGui::OpenPopup("changeNameMenu");
@@ -103,7 +103,7 @@ void NodeGraph::display() {
         //ImGui::SetKeyboardFocusHere(0);
     }
 
-    DrawRenameMenu(selectedNode);
+    drawRenameMenu(selectedNode);
 
     if(state == DisplayStates::ADD_CONNECTION_REQUEST) {
         ImGui::OpenPopup("addConnectionPopup");
@@ -127,7 +127,6 @@ void NodeGraph::display() {
         ImGui::Text(selectedNode->getName().c_str());
     }
     ImGui::EndGroup();
-
 }
 
 /**
@@ -135,7 +134,7 @@ void NodeGraph::display() {
  * @param selectedNode
  * @param offset
  */
-void NodeGraph::DrawContextMenu(Node *selectedNode, const ImVec2 &offset) {
+void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (ImGui::BeginPopup("context_menu")) {
 //        if (ImGui::MenuItem("Load graph...")) {
@@ -204,7 +203,7 @@ void NodeGraph::DrawContextMenu(Node *selectedNode, const ImVec2 &offset) {
     ImGui::PopStyleVar();
 }
 
-void NodeGraph::DrawRenameMenu(Node* selectedNode) {
+void NodeGraph::drawRenameMenu(Node *selectedNode) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (selectedNode != nullptr && state == DisplayStates::RENAME_NODE && ImGui::BeginPopup("changeNameMenu")) {
         if(ImGui::InputText("New name", nodeName, sizeof(nodeName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Apply")) {

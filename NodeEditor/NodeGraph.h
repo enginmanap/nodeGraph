@@ -31,6 +31,7 @@ class NodeGraph {
     };
 
     std::vector<NodeType> nodeTypes;
+    std::set<std::string> connectionDataTypes;
     std::vector<Node *> nodes;
     Node* selectedNode = nullptr;
     Connection* hoveredConnection = nullptr;
@@ -54,7 +55,16 @@ class NodeGraph {
 
 public:
 
-    explicit NodeGraph(std::vector<NodeType> nodeTypes) : nodeTypes(nodeTypes){};
+    explicit NodeGraph(std::vector<NodeType> nodeTypes) : nodeTypes(nodeTypes) {
+        for(NodeType nodeType:nodeTypes) {
+            for(ConnectionDesc connectionDesc:nodeType.inputConnections) {
+                connectionDataTypes.insert(connectionDesc.type);
+            }
+            for(ConnectionDesc connectionDesc:nodeType.outputConnections) {
+                connectionDataTypes.insert(connectionDesc.type);
+            }
+        }
+    };
     void display();
 
     Connection *getHoverCon(ImVec2 offset, ImVec2 *pos);

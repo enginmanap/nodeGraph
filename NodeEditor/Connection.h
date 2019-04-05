@@ -15,31 +15,10 @@ class Node;//To avoid circular dependency
 
 const float NODE_SLOT_RADIUS = 5.0f;
 
-enum ConnectionType {
-    ConnectionType_Color,
-    ConnectionType_Vec3,
-    ConnectionType_Vec4,
-    ConnectionType_Float,
-    ConnectionType_Int,
-};
-
 struct ConnectionDesc {
     std::string name;
-    ConnectionType type;
+    std::string type;
 
-    std::string getTypeString() {
-        switch (type) {
-            case ConnectionType::ConnectionType_Color: return "Color";
-            case ConnectionType::ConnectionType_Vec3: return "Vector3";
-            case ConnectionType::ConnectionType_Vec4: return "Vector4";
-            case ConnectionType::ConnectionType_Float: return "Float";
-            case ConnectionType::ConnectionType_Int: return "Integer";
-            default: {
-                std::cerr << "Missing direction for Connection. Exiting" << std::endl;
-                std::exit(-1);
-            }
-        }
-    }
 };
 
 class Connection {
@@ -87,7 +66,7 @@ public:
         return direction;
     }
 
-    ConnectionType getDataType() const {
+    std::string getDataType() const {
         return desc.type;
     }
 

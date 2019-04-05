@@ -237,14 +237,13 @@ void NodeGraph::drawRenameMenu(Node *selectedNode) {
 void NodeGraph::drawAddConnectionMenu(Node *pNode) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (pNode != nullptr && state == DisplayStates::ADD_CONNECTION && ImGui::BeginPopup("addConnectionPopup")) {
-        static ConnectionType connectionType = ConnectionType::ConnectionType_Float;
-        if(ImGui::RadioButton("Integer", connectionType == ConnectionType::ConnectionType_Int)) { connectionType = ConnectionType::ConnectionType_Int;}
-        if(ImGui::RadioButton("Float",   connectionType == ConnectionType::ConnectionType_Float)) { connectionType = ConnectionType::ConnectionType_Float;}
-        if(ImGui::RadioButton("Vec3", connectionType == ConnectionType::ConnectionType_Vec3)) { connectionType = ConnectionType::ConnectionType_Vec3;}
-        if(ImGui::RadioButton("Vec4", connectionType == ConnectionType::ConnectionType_Vec4)) { connectionType = ConnectionType::ConnectionType_Vec4;}
-        if(ImGui::InputText("Input name", connectionName, sizeof(connectionName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Apply")) {
+        static std::string connectionDataType = *connectionDataTypes.begin();
+        for(std::string dataType:connectionDataTypes) {
+            if(ImGui::RadioButton(dataType.c_str(), connectionDataType == dataType)) { connectionDataType = dataType;}
+        }
+        if(ImGui::InputText("Connection name", connectionName, sizeof(connectionName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Apply")) {
             ConnectionDesc desc;
-            desc.type = connectionType;
+            desc.type = connectionDataType;
             desc.name = connectionName;
             switch (connectionRequestType ) {
                 case Connection::Directions::INPUT: pNode->addInput(desc); break;

@@ -16,7 +16,7 @@
 #define sizeof_array(t) (sizeof(t) / sizeof(t[0]))
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
 static struct NodeType nodeTypes[] =
         {
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +151,225 @@ static struct NodeType nodeTypes[] =
                 },
 
         };
+*/
+
+static struct NodeType nodeTypes[] =
+        {
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                {
+                        "Texture",
+                        true,
+                        // Input connections
+                        {
+                                {"Write", "Texture"},
+                        },
+                        // Output
+                        {
+                                {"Read", "Texture"},
+                        },
+                },
+                {
+                        "Combine All",
+                        false,
+                        // Input connections
+                        {
+                                {"diffuseSpecularLighted", "Texture"},
+                                {"depthMap", "Texture"},
+                        },
+                        // Output
+                        {
+                                {"finalColor", "Texture"},
+
+                        },
+                },
+                {
+                        "Combine All SSAO",
+                        false,
+                        // Input connections
+                        {
+                                {"diffuseSpecularLighted", "Texture"},
+                                {"ambient", "Texture"},
+                                {"ssao", "Texture"},
+                                {"depthMap", "Texture"},
+                        },
+                        // Output
+                        {
+                                {"finalColor", "Texture"},
+                        },
+                },
+                {
+                        "depthPrePass",
+                        false,
+                        // Input connections
+                        {
+                        },
+                        // Output
+                        {
+                                {"depthMap", "Texture"},
+                        },
+                },
+                {
+                        "GUI",
+                        false,
+                        // Input connections
+                        {
+                                {"GUISampler", "Texture"},
+                        },
+                        // Output
+                        {
+                                {"GUI", "Texture"},
+                        },
+                },
+                {
+                        "Models",
+                        false,
+                        // Input connections
+                        {
+                                {"shadowSamplerDirectional", "Texture"},
+                                {"shadowSamplerPoint", "Texture"},
+                                {"ambientSampler", "Texture"},
+                                {"diffuseSampler", "Texture"},
+                                {"specularSampler", "Texture"},
+                                {"opacitySampler", "Texture"},
+                                {"normalSampler", "Texture"},
+                        },
+                        // Output
+                        {
+                                {"diffuseAndSpecularLightedColor", "Texture"},
+                                {"ambientColor", "Texture"},
+                                {"normalOutput", "Texture"},
+
+                        },
+                },
+
+                {
+                        "ModelsTransparent",
+                        false,
+                        // Input connections
+                        {
+                                {"shadowSamplerDirectional", "Texture"},
+                                {"shadowSamplerPoint", "Texture"},
+                                {"ambientSampler", "Texture"},
+                                {"diffuseSampler", "Texture"},
+                                {"specularSampler", "Texture"},
+                                {"opacitySampler", "Texture"},
+                                {"normalSampler", "Texture"},
+                        },
+                        // Output
+                        {
+                                {"diffuseAndSpecularLightedColor", "Texture"},
+                                {"ambientColor", "Texture"},
+                                {"normalOutput", "Texture"},
+
+                        },
+                },
+                {
+                        "ShadowMapDirectional",
+                        false,
+                        // Input connections
+                        {
+                        },
+                        // Output
+                        {
+
+                                {"directionalShadowMap", "Texture"},
+
+                        },
+                },
+                {
+                        "ShadowMapPoint",
+                        false,
+                        // Input connections
+                        {
+                        },
+                        // Output
+                        {
+                                {"PointShadowMap", "Texture"},
+                        },
+                },
+                {
+                        "SkyCube",
+                        false,
+                        // Input connections
+                        {
+                        },
+                        // Output
+                        {
+                                {"SkyBox", "Texture"},
+                                {"NormalOutput", "Texture"},
+                        },
+                },
+                {
+                        "SSAO",
+                        false,
+                        // Input connections
+                        {
+                                {"depthMapSampler", "Texture"},
+                                {"normalMapSampler", "Texture"},
+                                {"ssaoNoiseSampler", "Texture"},
+                        },
+                        // Output
+                        {
+                                {"occlusion", "Texture"},
+                        },
+                },
+                {
+                        "SSAO",
+                        false,
+                        // Input connections
+                        {
+                                {"ssaoResultSampler", "Texture"},
+                        },
+                        // Output
+                        {
+                                {"occlusion", "Texture"},
+                        },
+                },
+
+                {
+                        "Multiply",
+                        true,
+                        // Input connections
+                        {
+                                {"Input1", "Float"},
+                                {"Input2", "Float"},
+                        },
+                        // Output
+                        {
+                                {"Out", "Float"},
+                        },
+                },
+
+                {
+                        "Add",
+                        true,
+                        // Input connections
+                        {
+                                {"Input1", "Integer"},
+                                {"Input2", "Integer"},
+                        },
+                        // Output
+                        {
+                                {"Out", "Integer"},
+                        },
+                },
+
+                {
+                        "Divide",
+                        true,
+                        // Input connections
+                        {
+                                {"Input1", "Float"},
+                                {"Input2", "Float"},
+                        },
+                        // Output
+                        {
+                                {"Output1", "Float"},
+                                {"Output2", "Float"},
+                                {"Output3", "Float"},
+                        },
+                },
+        };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -278,6 +497,14 @@ int main(int, char **) {
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     std::vector<NodeType> nodeTypeVector(nodeTypes, nodeTypes + sizeof_array(nodeTypes));
+
+    std::set<std::string> connectionDataTypes;
+    connectionDataTypes.insert("Integer");
+    connectionDataTypes.insert("Float");
+    connectionDataTypes.insert("Vec3");
+    connectionDataTypes.insert("Vec4");
+    connectionDataTypes.insert("Texture");
+    connectionDataTypes.insert("Color");
 
     NodeGraph nodeGraph(nodeTypeVector);
     // Main loop

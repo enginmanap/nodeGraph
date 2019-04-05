@@ -58,7 +58,7 @@ void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec
         {
             ImGui::BeginTooltip();
             ImGui::PushTextWrapPos(ImGui::GetFontSize() * 50.0f);
-            ImGui::Text(" %s ",this->desc.getTypeString().c_str());
+            ImGui::Text(" %s ",this->desc.type.c_str());
             ImGui::PopTextWrapPos();
             ImGui::EndTooltip();
         }

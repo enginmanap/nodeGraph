@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.12)
 project(nodegraph)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 add_definitions(-DMAX_CONNECTION_COUNT=32)
 
@@ -29,9 +30,9 @@ set(IMGUI_HEADERS
 
 add_library(ImGui ${IMGUI_SOURCES} ${IMGUI_HEADERS})
 
-find_package(PkgConfig REQUIRED)
+INCLUDE(FindPkgConfig)
 
-pkg_search_module(GLFW REQUIRED glfw3)
+find_package(GLFW REQUIRED)
 include_directories(${GLFW_INCLUDE_DIRS})
 
 find_package(GLEW REQUIRED)
@@ -46,4 +47,4 @@ endif (NOT OPENGL_FOUND)
 
 add_executable(nodegraph NodeEditor/Common.h NodeEditor/Connection.cpp NodeEditor/Connection.h main.cpp NodeEditor/Node.cpp NodeEditor/Node.h NodeEditor/NodeGraph.cpp NodeEditor/NodeGraph.h)
 
-TARGET_LINK_LIBRARIES(nodegraph ImGui ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES})
+TARGET_LINK_LIBRARIES(nodegraph ImGui ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLFW_LIBRARY})

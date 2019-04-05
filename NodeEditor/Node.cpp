@@ -80,14 +80,13 @@ void Node::calculateAndSetDrawInformation() {
     // calculate the size of the node depending on nuber of connections
 }
 
-void Node::setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs, Connection::Directions connectionType) {
-    for (int i = 0; i < MAX_CONNECTION_COUNT; ++i) {
-        const ConnectionDesc &desc = connectionDescs[i];
+void Node::setupConnections(std::vector<Connection *> &connections, const std::vector<ConnectionDesc> &connectionDescs, Connection::Directions connectionType) {
+    for (auto connectionDescription:connectionDescs) {
 
-        if (desc.name.empty())
+        if (connectionDescription.name.empty())
             break;
 
-        Connection *con = new Connection(this, desc, connectionType);
+        Connection *con = new Connection(this, connectionDescription, connectionType);
 
         connections.push_back(con);
     }

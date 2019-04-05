@@ -19,8 +19,8 @@ const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
 struct NodeType {
     const char *name;
     bool editable;
-    ConnectionDesc inputConnections[MAX_CONNECTION_COUNT];
-    ConnectionDesc outputConnections[MAX_CONNECTION_COUNT];
+    std::vector<ConnectionDesc> inputConnections;
+    std::vector<ConnectionDesc> outputConnections;
 };
 
 class Node {
@@ -32,7 +32,7 @@ class Node {
     std::vector<Connection *> outputConnections;
     bool editable;
 
-    void setupConnections(std::vector<Connection *> &connections, const ConnectionDesc *connectionDescs, Connection::Directions connectionType);
+    void setupConnections(std::vector<Connection *> &connections, const std::vector<ConnectionDesc> &connectionDescs, Connection::Directions connectionType);
 
     void initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType);
 

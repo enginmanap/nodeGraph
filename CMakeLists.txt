@@ -4,9 +4,6 @@ project(nodegraph)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-add_definitions(-DMAX_CONNECTION_COUNT=32)
-
-
 set(IMGUI_SOURCES
         "ImGui/imgui.cpp"
         "ImGui/imgui_demo.cpp"

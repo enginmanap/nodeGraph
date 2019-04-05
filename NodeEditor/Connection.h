@@ -35,7 +35,7 @@ struct ConnectionDesc {
             case ConnectionType::ConnectionType_Float: return "Float";
             case ConnectionType::ConnectionType_Int: return "Integer";
             default: {
-                std::cerr << "Missing type for Connection. Exiting" << std::endl;
+                std::cerr << "Missing direction for Connection. Exiting" << std::endl;
                 std::exit(-1);
             }
         }
@@ -49,13 +49,13 @@ private:
     Node* parent;
     ImVec2 pos = {0,0};
     ConnectionDesc desc;
-    Directions type;
+    Directions direction;
 
     struct Connection *input = nullptr;
     std::vector<Connection *> output;
 public:
-    Connection(Node* parent, ConnectionDesc desc, Connection::Directions type) :
-    parent(parent), desc(desc), type(type) {}
+    Connection(Node* parent, ConnectionDesc desc, Connection::Directions direction) :
+    parent(parent), desc(desc), direction(direction) {}
 
     ~Connection();
 
@@ -83,8 +83,8 @@ public:
     }
     void setPosition(float TitleSizeY, float& textSizeY, float xPosition);
 
-    Directions getType() const {
-        return type;
+    Directions getDirection() const {
+        return direction;
     }
 
     ConnectionType getDataType() const {

@@ -184,7 +184,7 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
                         strncpy(connectionName, "Output", sizeof(connectionName) - 1);
                     }
                     if(hoveredConnection != nullptr) {
-                        switch (hoveredConnection->getType()) {
+                        switch (hoveredConnection->getDirection()) {
                             case Connection::Directions::INPUT: {
                                 if (ImGui::MenuItem("Remove Input")) {
                                     selectedNode->removeInput(hoveredConnection);
@@ -367,8 +367,8 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                  * * They should be same type (float,vec3 etc.)
                  */
 
-                if((con->getType() == Connection::Directions::INPUT && dragNode.con->getType() == Connection::Directions::INPUT) ||
-                    (con->getType() == Connection::Directions::OUTPUT && dragNode.con->getType() == Connection::Directions::OUTPUT)) {
+                if((con->getDirection() == Connection::Directions::INPUT && dragNode.con->getDirection() == Connection::Directions::INPUT) ||
+                    (con->getDirection() == Connection::Directions::OUTPUT && dragNode.con->getDirection() == Connection::Directions::OUTPUT)) {
                     dragNode.con = 0;
                     dragState = DragState_Default;
                     errorMessage = "Dragged to same direction. Match input with output";
@@ -384,11 +384,11 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
 
                 Connection* outputSide = nullptr;
                 Connection* inputSide = nullptr;
-                if(con->getType() == Connection::Directions::OUTPUT) {
+                if(con->getDirection() == Connection::Directions::OUTPUT) {
                     outputSide = con;
                     inputSide = dragNode.con;
                 }
-                if(dragNode.con->getType() == Connection::Directions::OUTPUT) {
+                if(dragNode.con->getDirection() == Connection::Directions::OUTPUT) {
                     outputSide = dragNode.con;
                     inputSide = con;
                 }

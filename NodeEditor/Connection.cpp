@@ -22,7 +22,7 @@ bool Connection::isHovered(ImVec2 offset) {
  * This is because text of the connection is not known, so size needs calculation.
  */
 void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize) {
-    switch (type) {
+    switch (direction) {
         case Directions::INPUT: {
             ImGui::SetCursorScreenPos(offset + ImVec2(10.0f, 0));
             ImGui::Text("%s", this->desc.name.c_str());
@@ -97,7 +97,7 @@ void Connection::clearConnections() {
 
 std::vector<Node*> Connection::getConnectedNodes() {
     std::vector<Node*> nodes;
-    switch(this->type) {
+    switch(this->direction) {
         case Directions::OUTPUT:  {
             for(Connection* con:this->output) {
                 nodes.push_back(con->parent);

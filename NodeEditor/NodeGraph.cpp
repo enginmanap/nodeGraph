@@ -186,9 +186,9 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
 
         if(selectedNode == nullptr ) {
             //Add new node part
-            for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
-                if (ImGui::MenuItem(s_nodeTypes[i].name)) {
-                    Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos - offset, &s_nodeTypes[i]);
+            for (size_t i = 0; i < nodeTypes.size(); ++i) {
+                if (ImGui::MenuItem(nodeTypes[i].name)) {
+                    Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos - offset, &nodeTypes[i]);
                     nodes.push_back(node);
                 }
             }

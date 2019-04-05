@@ -30,6 +30,7 @@ class NodeGraph {
         Connection *con;
     };
 
+    std::vector<NodeType> nodeTypes;
     std::vector<Node *> nodes;
     Node* selectedNode = nullptr;
     Connection* hoveredConnection = nullptr;
@@ -45,6 +46,8 @@ class NodeGraph {
     void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
 
 public:
+
+    explicit NodeGraph(std::vector<NodeType> nodeTypes) : nodeTypes(nodeTypes){};
     void display();
     Node *findNodeByCon(Connection *findCon);
     void renderLines(ImDrawList *drawList, ImVec2 offset);

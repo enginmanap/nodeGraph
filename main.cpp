@@ -17,6 +17,141 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+static struct NodeType nodeTypes[] =
+        {
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                // Math
+                {
+                        "Texture",
+                        false,
+                        // Input connections
+                        {
+                                {"Write", ConnectionType_Vec3},
+                        },
+                        // Output
+                        {
+                                {"Read", ConnectionType_Vec3},
+                        },
+                },
+                {
+                        "PointShadows",
+                        false,
+                        // Input connections
+                        {
+                        },
+                        // Output
+                        {
+                                {"Out", ConnectionType_Vec3},
+                        },
+                },
+
+                {
+                        "WorldRender",
+                        false,
+                        // Input connections
+                        {
+                                {"Point Shadows", ConnectionType_Vec3},
+                                {"Directional Shadows", ConnectionType_Vec3},
+                        },
+                        // Output
+                        {
+                                {"Diffuse and Specular", ConnectionType_Vec3},
+                                {"Ambient", ConnectionType_Vec3},
+                                {"Normal", ConnectionType_Vec3},
+                                {"Depth", ConnectionType_Vec3},
+                        },
+                },
+                {
+                        "SSAO Generation",
+                        false,
+                        // Input connections
+                        {
+                                {"Noise", ConnectionType_Vec3},
+                                {"Normal", ConnectionType_Vec3},
+                                {"Depth", ConnectionType_Vec3},
+                        },
+                        // Output
+                        {
+                                {"SSAO", ConnectionType_Vec3},
+                        },
+                },
+
+                {
+                        "SSAO Blur",
+                        false,
+                        // Input connections
+                        {
+                                {"SSAO", ConnectionType_Vec3},
+                        },
+                        // Output
+                        {
+                                {"Blurred SSAO", ConnectionType_Vec3},
+                        },
+                },
+
+                {
+                        "Combine",
+                        false,
+                        // Input connections
+                        {
+                                {"Diffuse and Specular", ConnectionType_Vec3},
+                                {"Ambient", ConnectionType_Vec3},
+                                {"SSAO Blurred", ConnectionType_Vec3},
+                                {"Depth", ConnectionType_Vec3},
+                        },
+                        // Output
+                        {
+                        },
+                },
+
+
+
+                {
+                        "Multiply",
+                        true,
+                        // Input connections
+                        {
+                                {"Input1", ConnectionType_Float},
+                                {"Input2", ConnectionType_Float},
+                        },
+                        // Output
+                        {
+                                {"Out", ConnectionType_Float},
+                        },
+                },
+
+                {
+                        "Add",
+                        true,
+                        // Input connections
+                        {
+                                {"Input1", ConnectionType_Float},
+                                {"Input2", ConnectionType_Float},
+                        },
+                        // Output
+                        {
+                                {"Out", ConnectionType_Float},
+                        },
+                },
+
+                {
+                        "Divide",
+                        true,
+                        // Input connections
+                        {
+                                {"Input1", ConnectionType_Float},
+                                {"Input2", ConnectionType_Float},
+                        },
+                        // Output
+                        {
+                                {"Output1", ConnectionType_Float},
+                                {"Output2", ConnectionType_Float},
+                                {"Output3", ConnectionType_Float},
+                        },
+                },
+
+        };
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void error_callback(int error, const char *description) {
@@ -142,8 +277,9 @@ int main(int, char **) {
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    std::vector<NodeType> nodeTypeVector(nodeTypes, nodeTypes + sizeof_array(nodeTypes));
 
-    NodeGraph nodeGraph;
+    NodeGraph nodeGraph(nodeTypeVector);
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         // Poll and handle events (inputs, window resize, etc.)

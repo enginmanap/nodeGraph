@@ -4,14 +4,14 @@
 
 #include "Node.h"
 
-Node::Node(uint32_t id, ImVec2 pos, NodeType *nodeType) {
+Node::Node(uint32_t id, ImVec2 pos, const NodeType *nodeType) {
     initialize(id, pos, nodeType);
 }
 
-Node::Node(uint32_t id, ImVec2 pos, const char *name, uint32_t &error) {
-    for (int i = 0; i < (int) sizeof_array(s_nodeTypes); ++i) {
-        if (!strcmp(s_nodeTypes[i].name, name)) {
-            initialize(id, pos, &s_nodeTypes[i]);
+Node::Node(uint32_t id, ImVec2 pos, const std::vector<NodeType> &allNodeTypes, const char *name, uint32_t &error) {
+    for (size_t i = 0; i < allNodeTypes.size(); ++i) {
+        if (!strcmp(allNodeTypes[i].name, name)) {
+            initialize(id, pos, &allNodeTypes[i]);
             error = 0;
         }
     }

@@ -135,9 +135,8 @@ void NodeGraph::display() {
     ImGui::EndGroup();
     ImGui::NextColumn();
     ImGui::BeginGroup();
-    if(selectedNode != nullptr){
-        ImGui::Text(selectedNode->getName().c_str());
-    }
+    drawDetailsPane(selectedNode);
+
     ImGui::EndGroup();
 }
 
@@ -149,40 +148,6 @@ void NodeGraph::display() {
 void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (ImGui::BeginPopup("context_menu")) {
-//        if (ImGui::MenuItem("Load graph...")) {
-            /*
-            char path[1024];
-            if (Dialog_open(path))
-            {
-                printf("file to load %s\n", path);
-            }
-            */
-//        }
-
-//        if (ImGui::MenuItem("Save graph...")) {
-            /*
-            char path[1024];
-            if (Dialog_save(path))
-            {
-                saveNodes(path);
-            }
-            */
-//        }
-
-
-        /*
-        Node* node = node_selected != -1 ? &nodes[node_selected] : NULL;
-        ImVec2 scene_pos = ImGui::GetMousePosOnOpeningCurrentPopup() - offset;
-        if (node)
-        {
-            ImGui::Text("Node '%s'", node->Name);
-            ImGui::Separator();
-            if (ImGui::MenuItem("Rename..", NULL, false, false)) {}
-            if (ImGui::MenuItem("Delete", NULL, false, false)) {}
-            if (ImGui::MenuItem("Copy", NULL, false, false)) {}
-        }
-        */
-        //else
 
         if(selectedNode == nullptr ) {
             //Add new node part
@@ -478,6 +443,12 @@ bool NodeGraph::isCyclic() {
     return false;
 }
 
+void NodeGraph::drawDetailsPane(Node* selectedNode) {
+    if(selectedNode != nullptr){
+        ImGui::Text(selectedNode->getName().c_str());
+    }
+}
+
 /*
 static void saveNodes(const char* filename)
 {
@@ -497,3 +468,38 @@ static void saveNodes(const char* filename)
         printf("JSON: Unable to open %s for write\n", filename);
 }
 */
+
+//        if (ImGui::MenuItem("Load graph...")) {
+/*
+char path[1024];
+if (Dialog_open(path))
+{
+    printf("file to load %s\n", path);
+}
+*/
+//        }
+
+//        if (ImGui::MenuItem("Save graph...")) {
+/*
+char path[1024];
+if (Dialog_save(path))
+{
+    saveNodes(path);
+}
+*/
+//        }
+
+
+/*
+Node* node = node_selected != -1 ? &nodes[node_selected] : NULL;
+ImVec2 scene_pos = ImGui::GetMousePosOnOpeningCurrentPopup() - offset;
+if (node)
+{
+    ImGui::Text("Node '%s'", node->Name);
+    ImGui::Separator();
+    if (ImGui::MenuItem("Rename..", NULL, false, false)) {}
+    if (ImGui::MenuItem("Delete", NULL, false, false)) {}
+    if (ImGui::MenuItem("Copy", NULL, false, false)) {}
+}
+*/
+//else

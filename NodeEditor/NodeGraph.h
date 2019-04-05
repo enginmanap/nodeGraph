@@ -48,6 +48,7 @@ class NodeGraph {
     void drawContextMenu(Node *selectedNode, const ImVec2 &offset);
     void drawRenameMenu(Node *selectedNode);
     void drawAddConnectionMenu(Node *pNode);
+    void drawDetailsPane(Node* selectedNode);
     Node *findNodeByCon(Connection *findCon);
     void renderLines(ImDrawList *drawList, ImVec2 offset);
 

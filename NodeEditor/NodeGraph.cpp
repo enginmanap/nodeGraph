@@ -431,6 +431,11 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                 inputSide->setInputConnection(outputSide);
                 dragNode.con = 0;
                 dragState = DragState_Default;
+
+                if(isCyclic()) {
+                    errorMessage = "There is a cycle";
+                    errorGenerated = true;
+                }
             }
 
             break;
@@ -441,6 +446,36 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
         }
     }
     return true;
+}
+
+bool depthFirstSearch(Node *root, Node *search, std::set<Node *> &visitedNodes, bool &cycle) {
+    for(Node* child:root->getOutputConnectedNodes()) {
+        if(visitedNodes.find(child) != visitedNodes.end()) {
+            cycle = true;
+            return false;//cycle found.
+        }
+        visitedNodes.insert(child);
+        if(child == search) {
+            return true;
+        } else if(depthFirstSearch(child, search, visitedNodes, cycle)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool NodeGraph::isCyclic() {
+    for(Node* node:nodes) {
+        std::set<Node*> visitedNodes;
+        bool cyclic = false;
+        if(depthFirstSearch(node, node, visitedNodes, cyclic)) {
+            return true;
+        }
+        if(cyclic) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /*

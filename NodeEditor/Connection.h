@@ -92,6 +92,8 @@ public:
     }
 
     void clearConnections();
+
+    std::vector<Node*> getConnectedNodes();
 };
 
 #endif //NODEGRAPH_CONNECTION_H

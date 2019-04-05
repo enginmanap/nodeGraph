@@ -6,6 +6,7 @@
 #define NODEGRAPH_NODE_H
 
 #include <vector>
+#include <set>
 #include <cstdint>
 
 #include "../imgui/imgui.h"
@@ -73,6 +74,8 @@ public:
     bool getEditable() {
         return this->editable;
     }
+
+    std::set<Node*> getOutputConnectedNodes();
 };
 
 

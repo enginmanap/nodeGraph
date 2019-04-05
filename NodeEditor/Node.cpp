@@ -302,3 +302,12 @@ Node::~Node() {
         delete connection;
     }
 }
+
+std::set<Node*> Node::getOutputConnectedNodes() {
+    std::set<Node*> nodes;
+    for(Connection* connection:outputConnections) {
+        std::vector<Node*> connectedNodes = connection->getConnectedNodes();
+        nodes.insert(connectedNodes.begin(), connectedNodes.end());
+    }
+    return nodes;
+}

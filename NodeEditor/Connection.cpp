@@ -95,3 +95,20 @@ void Connection::clearConnections() {
     this->output.clear();
 }
 
+std::vector<Node*> Connection::getConnectedNodes() {
+    std::vector<Node*> nodes;
+    switch(this->type) {
+        case Directions::OUTPUT:  {
+            for(Connection* con:this->output) {
+                nodes.push_back(con->parent);
+            }
+        }
+        break;
+        case Directions::INPUT:  {
+            nodes.push_back(this->input->parent);
+        }
+        break;
+    }
+    return nodes;
+}
+

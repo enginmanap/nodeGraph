@@ -59,6 +59,8 @@ public:
     void drawContextMenu(Node *selectedNode, const ImVec2 &offset);
     void drawRenameMenu(Node *selectedNode);
     void drawAddConnectionMenu(Node *pNode);
+
+    bool isCyclic();
 };
 
 

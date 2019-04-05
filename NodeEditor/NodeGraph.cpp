@@ -448,7 +448,7 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
     return true;
 }
 
-bool depthFirstSearch(Node *root, Node *search, std::set<Node *> &visitedNodes, bool &cycle) {
+bool NodeGraph::depthFirstSearch(Node *root, Node *search, std::set<Node *> &visitedNodes, bool &cycle) {
     for(Node* child:root->getOutputConnectedNodes()) {
         if(visitedNodes.find(child) != visitedNodes.end()) {
             cycle = true;

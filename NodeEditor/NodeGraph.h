@@ -44,22 +44,21 @@ class NodeGraph {
     bool errorGenerated = false;
 
     void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
+    bool depthFirstSearch(Node *root, Node *search, std::set<Node *> &visitedNodes, bool &cycle);
+    void drawContextMenu(Node *selectedNode, const ImVec2 &offset);
+    void drawRenameMenu(Node *selectedNode);
+    void drawAddConnectionMenu(Node *pNode);
+    Node *findNodeByCon(Connection *findCon);
+    void renderLines(ImDrawList *drawList, ImVec2 offset);
 
 public:
 
     explicit NodeGraph(std::vector<NodeType> nodeTypes) : nodeTypes(nodeTypes){};
     void display();
-    Node *findNodeByCon(Connection *findCon);
-    void renderLines(ImDrawList *drawList, ImVec2 offset);
 
     Connection *getHoverCon(ImVec2 offset, ImVec2 *pos);
 
     bool updateDragging(ImVec2 offset, std::string &errorMessage);
-
-    void drawContextMenu(Node *selectedNode, const ImVec2 &offset);
-    void drawRenameMenu(Node *selectedNode);
-    void drawAddConnectionMenu(Node *pNode);
-
     bool isCyclic();
 };
 

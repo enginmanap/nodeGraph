@@ -64,6 +64,7 @@ public:
 
     void setName(const std::string& name) {
         this->name = name;
+        calculateAndSetDrawInformation();
     }
 
     void addInput(const ConnectionDesc &description);

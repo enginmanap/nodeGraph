@@ -235,12 +235,12 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
                             }
                             break;
                         }
-                        ImGui::Separator();
-                        if(hoveredConnection != nullptr) {//if removed check
-                            if (ImGui::MenuItem("Remove Connection")) {
-                                hoveredConnection->clearConnections();
-                            }
-                        }
+                    }
+                }
+                if(hoveredConnection != nullptr) {//if removed check
+                    ImGui::Separator();
+                    if (ImGui::MenuItem("Clear Connection")) {
+                        hoveredConnection->clearConnections();
                     }
                 }
             }

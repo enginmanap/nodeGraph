@@ -42,6 +42,6 @@ if (NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif (NOT OPENGL_FOUND)
 
-add_executable(nodegraph NodeEditor/Common.h NodeEditor/Connection.cpp NodeEditor/Connection.h main.cpp NodeEditor/Node.cpp NodeEditor/Node.h NodeEditor/NodeGraph.cpp NodeEditor/NodeGraph.h)
+add_executable(nodegraph NodeEditor/Common.h NodeEditor/Connection.cpp NodeEditor/Connection.h main.cpp NodeEditor/Node.cpp NodeEditor/Node.h NodeEditor/NodeGraph.cpp NodeEditor/NodeGraph.h NodeEditor/NodeExtension.h NodeEditor/SampleExtension.cpp NodeEditor/SampleExtension.h)
 
 TARGET_LINK_LIBRARIES(nodegraph ImGui ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLFW_LIBRARY})

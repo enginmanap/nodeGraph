@@ -23,6 +23,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->pos = pos;
     this->name = nodeType->name;
     this->editable = nodeType->editable;
+    this->nodeExtension = nodeType->nodeExtension;
 
     setupConnections(inputConnections, nodeType->inputConnections, Connection::Directions::INPUT);
     setupConnections(outputConnections, nodeType->outputConnections, Connection::Directions::OUTPUT);

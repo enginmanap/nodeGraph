@@ -10,6 +10,7 @@
 
 #include "NodeEditor/Node.h"
 #include "NodeEditor/NodeGraph.h"
+#include "NodeEditor/SampleExtension.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -153,12 +154,15 @@ static struct NodeType nodeTypes[] =
         };
 */
 
+static SampleExtension se;
+
 static struct NodeType nodeTypes[] =
         {
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 {
                         "Texture",
                         true,
+                        &se,
                         // Input connections
                         {
                                 {"Write", "Texture"},
@@ -171,6 +175,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "Combine All",
                         false,
+                        nullptr,
                         // Input connections
                         {
                                 {"diffuseSpecularLighted", "Texture"},
@@ -185,6 +190,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "Combine All SSAO",
                         false,
+                        nullptr,
                         // Input connections
                         {
                                 {"diffuseSpecularLighted", "Texture"},
@@ -200,6 +206,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "depthPrePass",
                         false,
+                        nullptr,
                         // Input connections
                         {
                         },
@@ -211,6 +218,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "GUI",
                         false,
+                        nullptr,
                         // Input connections
                         {
                                 {"GUISampler", "Texture"},
@@ -223,6 +231,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "Models",
                         false,
+                        nullptr,
                         // Input connections
                         {
                                 {"shadowSamplerDirectional", "Texture"},
@@ -245,6 +254,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "ModelsTransparent",
                         false,
+                        nullptr,
                         // Input connections
                         {
                                 {"shadowSamplerDirectional", "Texture"},
@@ -266,6 +276,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "ShadowMapDirectional",
                         false,
+                        nullptr,
                         // Input connections
                         {
                         },
@@ -279,6 +290,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "ShadowMapPoint",
                         false,
+                        nullptr,
                         // Input connections
                         {
                         },
@@ -290,6 +302,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "SkyCube",
                         false,
+                        nullptr,
                         // Input connections
                         {
                         },
@@ -302,6 +315,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "SSAO",
                         false,
+                        nullptr,
                         // Input connections
                         {
                                 {"depthMapSampler", "Texture"},
@@ -316,6 +330,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "SSAO",
                         false,
+                        nullptr,
                         // Input connections
                         {
                                 {"ssaoResultSampler", "Texture"},
@@ -329,6 +344,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "Multiply",
                         true,
+                        nullptr,
                         // Input connections
                         {
                                 {"Input1", "Float"},
@@ -343,6 +359,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "Add",
                         true,
+                        nullptr,
                         // Input connections
                         {
                                 {"Input1", "Integer"},
@@ -357,6 +374,7 @@ static struct NodeType nodeTypes[] =
                 {
                         "Divide",
                         true,
+                        nullptr,
                         // Input connections
                         {
                                 {"Input1", "Float"},

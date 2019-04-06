@@ -12,6 +12,7 @@
 #include "../imgui/imgui.h"
 #include "Connection.h"
 #include "Common.h"
+#include "NodeExtension.h"
 
 #define sizeof_array(t) (sizeof(t) / sizeof(t[0]))
 const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
@@ -19,6 +20,7 @@ const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
 struct NodeType {
     const char *name;
     bool editable;
+    NodeExtension* nodeExtension = nullptr;
     std::vector<ConnectionDesc> inputConnections;
     std::vector<ConnectionDesc> outputConnections;
 };
@@ -31,6 +33,7 @@ class Node {
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;
     bool editable;
+    NodeExtension* nodeExtension = nullptr;
 
     void setupConnections(std::vector<Connection *> &connections, const std::vector<ConnectionDesc> &connectionDescs, Connection::Directions connectionType);
 
@@ -77,6 +80,10 @@ public:
     }
 
     std::set<Node*> getOutputConnectedNodes();
+
+    NodeExtension* getExtension() {
+        return nodeExtension;
+    }
 };
 
 

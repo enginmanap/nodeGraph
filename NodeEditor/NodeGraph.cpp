@@ -443,8 +443,8 @@ bool NodeGraph::isCyclic() {
 }
 
 void NodeGraph::drawDetailsPane(Node* selectedNode) {
-    if(selectedNode != nullptr){
-        ImGui::Text(selectedNode->getName().c_str());
+    if(selectedNode != nullptr && selectedNode->getExtension() != nullptr){
+        selectedNode->getExtension()->drawDetailPane(selectedNode);
     }
 }
 

@@ -53,7 +53,7 @@ public:
 
     bool isHovered(ImVec2 offset);//offset is scrool information
 
-    void display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected);
+    void display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, bool isThisNodeSelected = false);
 
     bool hasConnection(Connection *connection);
 

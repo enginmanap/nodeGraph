@@ -51,7 +51,7 @@ void NodeGraph::display() {
     //displayNode(draw_list, scrolling, s_emitter, selectedNodeID);
 
     for (Node *node : nodes) {
-        node->display(draw_list, scrolling, dragNode.con != 0);
+        node->display(draw_list, scrolling, dragNode.con != 0, node == this->selectedNode);
     }
 
     if(!updateDragging(scrolling, errorMessage)) {

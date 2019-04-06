@@ -93,7 +93,7 @@ void Node::setupConnections(std::vector<Connection *> &connections, const std::v
     }
 }
 
-void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected) {
+void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, bool isThisNodeSelected) {
     int node_hovered_in_scene = -1;
     bool open_context_menu = false;
 
@@ -141,6 +141,12 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected) 
     // Draw text bg area
     drawList->AddRectFilled(node_rect_min + ImVec2(1, 1), titleArea, ImColor(100, 0, 0), 4.0f);
     drawList->AddRect(node_rect_min, node_rect_max, ImColor(100, 100, 100), 4.0f);
+
+    if(isThisNodeSelected) {
+        ImU32 node_perimeter_color = ImColor(45, 45, 45);
+        float borderSize = 2.0f;
+        drawList->AddRect(node_rect_min - ImVec2(borderSize, borderSize), node_rect_max + ImVec2(borderSize, borderSize), node_perimeter_color, 4.0f, ImDrawCornerFlags_All, 2*borderSize);
+    }
 
 
     offset = node_rect_min;

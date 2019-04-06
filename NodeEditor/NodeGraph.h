@@ -53,6 +53,7 @@ class NodeGraph {
     void drawDetailsPane(Node* selectedNode);
     Node *findNodeByCon(Connection *findCon);
     void renderLines(ImDrawList *drawList, ImVec2 offset);
+    void setSelectedNodeAndConnection(const ImVec2 &scrolling);
 
 public:
 

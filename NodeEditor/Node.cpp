@@ -121,7 +121,7 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, 
 
     ImGui::SetCursorScreenPos(node_rect_min);
     ImGui::InvisibleButton("node", size);
-
+    ImGui::SetItemAllowOverlap();
     if (ImGui::IsItemHovered()) {
         node_hovered_in_scene = id;
         open_context_menu |= ImGui::IsMouseClicked(1);
@@ -129,8 +129,9 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, 
 
     bool node_moving_active = false;
 
-    if (ImGui::IsItemActive() && !dragNodeConnected)
+    if (ImGui::IsItemActive() && !dragNodeConnected) {
         node_moving_active = true;
+    }
 
     ImU32 node_bg_color = node_hovered_in_scene == id ? ImColor(75, 75, 75) : ImColor(60, 60, 60);
     drawList->AddRectFilled(node_rect_min, node_rect_max, node_bg_color, 4.0f);

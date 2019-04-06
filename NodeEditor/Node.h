@@ -33,6 +33,7 @@ class Node {
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;
     bool editable;
+
     NodeExtension* nodeExtension = nullptr;
 
     void setupConnections(std::vector<Connection *> &connections, const std::vector<ConnectionDesc> &connectionDescs, Connection::Directions connectionType);

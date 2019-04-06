@@ -49,9 +49,8 @@ void NodeGraph::display() {
 
     //displayNode(draw_list, scrolling, s_emittable, selectedNodeID);
     //displayNode(draw_list, scrolling, s_emitter, selectedNodeID);
-
-    for (Node *node : nodes) {
-        node->display(draw_list, scrolling, dragNode.con != 0, node == this->selectedNode);
+    for(auto it = nodes.rbegin(); it != nodes.rend(); it++) {
+        (*it)->display(draw_list, scrolling, dragNode.con != 0, (*it) == this->selectedNode);
     }
 
     if(!updateDragging(scrolling, errorMessage)) {
@@ -75,31 +74,12 @@ void NodeGraph::display() {
     }
 
     if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(0)) {
-        selectedNode = nullptr;
-        hoveredConnection = nullptr;
-        for(Node* node:nodes) {
-            if(node->isHovered(scrolling)) {
-                selectedNode = node;
-                ImVec2 temp;
-                hoveredConnection = selectedNode->getHoverConnection(scrolling, &temp);
-                break;
-            }
-        }
+        setSelectedNodeAndConnection(scrolling);
     }
 
     // Open context menu
     if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1)) {
-        selectedNode = nullptr;
-        hoveredConnection = nullptr;
-        for(Node* node:nodes) {
-            if(node->isHovered(scrolling)) {
-                selectedNode = node;
-                ImVec2 temp;
-                hoveredConnection = selectedNode->getHoverConnection(scrolling, &temp);
-                break;
-            }
-        }
-
+        setSelectedNodeAndConnection(scrolling);
         state = DisplayStates::MENU_REQUEST;
     }
     if (state == DisplayStates::MENU_REQUEST) {
@@ -138,6 +118,24 @@ void NodeGraph::display() {
     drawDetailsPane(selectedNode);
 
     ImGui::EndGroup();
+}
+
+void NodeGraph::setSelectedNodeAndConnection(const ImVec2 &scrolling) {
+    selectedNode = nullptr;
+    hoveredConnection = nullptr;
+    for (Node *node:nodes) {
+        if (node->isHovered(scrolling)) {
+            selectedNode = node;
+            if (selectedNode != nodes[0]) {
+                auto nodeIt = std::find(nodes.begin(), nodes.end(), selectedNode);
+                nodes.erase(nodeIt);
+                nodes.insert(nodes.begin(), selectedNode);
+            }
+            ImVec2 temp;
+            hoveredConnection = selectedNode->getHoverConnection(scrolling, &temp);
+            break;
+        }
+    }
 }
 
 /**

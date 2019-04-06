@@ -33,7 +33,7 @@ class NodeGraph {
 
     std::vector<NodeType> nodeTypes;
     std::set<std::string> connectionDataTypes;
-    std::vector<Node *> nodes;
+    std::vector<Node *> nodes;//first node is rendered last, and it is at the top.
     Node* selectedNode = nullptr;
     Connection* hoveredConnection = nullptr;
     Connection::Directions connectionRequestType = Connection::Directions::INPUT;

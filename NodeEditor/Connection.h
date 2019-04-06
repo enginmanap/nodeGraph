@@ -57,6 +57,8 @@ public:
 
     ImVec2 getPosition() { return pos;}
     void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);
+    void displayDataTooltip();
+
     ImVec2 getTextSize() {
         return ImGui::CalcTextSize(desc.name.c_str());
     }

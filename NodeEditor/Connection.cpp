@@ -54,15 +54,14 @@ void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec
         }
         break;
     }
-    if(this->isHovered(node_rect_min)) {
-        {
-            ImGui::BeginTooltip();
-            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 50.0f);
-            ImGui::Text(" %s ",this->desc.type.c_str());
-            ImGui::PopTextWrapPos();
-            ImGui::EndTooltip();
-        }
-    }
+}
+
+void Connection::displayDataTooltip() {
+    ImGui::BeginTooltip();
+    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 50.0f);
+    ImGui::Text(" %s ",this->desc.type.c_str());
+    ImGui::PopTextWrapPos();
+    ImGui::EndTooltip();
 }
 
 void Connection::setPosition(float TitleSizeY, float& textSizeY, float xPosition) {

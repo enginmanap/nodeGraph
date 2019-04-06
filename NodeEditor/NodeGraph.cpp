@@ -286,8 +286,13 @@ void NodeGraph::renderLines(ImDrawList *drawList, ImVec2 offset) {
 Connection *NodeGraph::getHoverCon(ImVec2 offset, ImVec2 *pos) {
     Connection* result = nullptr;
     for (Node *node : nodes) {
+        bool barrier = node->isHovered(offset);//Since nodes rendered on reverse order, the ones after first overed are under it, so they should not activate dragging.
         result = node->getHoverConnection(offset, pos);
         if(result != nullptr){
+            result->displayDataTooltip();
+            break;
+        }
+        if(barrier) {
             break;
         }
     }

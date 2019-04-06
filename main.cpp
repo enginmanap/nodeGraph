@@ -10,7 +10,8 @@
 
 #include "NodeEditor/Node.h"
 #include "NodeEditor/NodeGraph.h"
-#include "NodeEditor/SampleExtension.h"
+#include "SampleExtension.h"
+#include "SampleEditorExtension.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -516,15 +517,8 @@ int main(int, char **) {
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     std::vector<NodeType> nodeTypeVector(nodeTypes, nodeTypes + sizeof_array(nodeTypes));
 
-    std::set<std::string> connectionDataTypes;
-    connectionDataTypes.insert("Integer");
-    connectionDataTypes.insert("Float");
-    connectionDataTypes.insert("Vec3");
-    connectionDataTypes.insert("Vec4");
-    connectionDataTypes.insert("Texture");
-    connectionDataTypes.insert("Color");
-
-    NodeGraph nodeGraph(nodeTypeVector);
+    SampleEditorExtension sampleEditorExtension;
+    NodeGraph nodeGraph(nodeTypeVector, &sampleEditorExtension);
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         // Poll and handle events (inputs, window resize, etc.)

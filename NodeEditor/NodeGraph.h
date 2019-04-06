@@ -7,6 +7,7 @@
 
 
 #include "Node.h"
+#include "EditorExtension.h"
 
 class NodeGraph {
     enum class DisplayStates { NODE_GRAPH,
@@ -36,7 +37,7 @@ class NodeGraph {
     Node* selectedNode = nullptr;
     Connection* hoveredConnection = nullptr;
     Connection::Directions connectionRequestType = Connection::Directions::INPUT;
-
+    EditorExtension* editorExtension = nullptr;
     char nodeName[128] = {0};
     char connectionName[128] = {0};
     std::string errorMessage;
@@ -55,7 +56,7 @@ class NodeGraph {
 
 public:
 
-    explicit NodeGraph(std::vector<NodeType> nodeTypes) : nodeTypes(nodeTypes) {
+    explicit NodeGraph(std::vector<NodeType> nodeTypes, EditorExtension* editorExtension = nullptr) : nodeTypes(nodeTypes), editorExtension(editorExtension) {
         for(NodeType nodeType:nodeTypes) {
             for(ConnectionDesc connectionDesc:nodeType.inputConnections) {
                 connectionDataTypes.insert(connectionDesc.type);

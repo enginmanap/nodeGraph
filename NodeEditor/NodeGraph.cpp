@@ -443,8 +443,15 @@ bool NodeGraph::isCyclic() {
 }
 
 void NodeGraph::drawDetailsPane(Node* selectedNode) {
+    if(editorExtension != nullptr) {
+        if(ImGui::CollapsingHeader("Graph Details", ImGuiTreeNodeFlags_DefaultOpen)) {
+            editorExtension->drawDetailPane();
+        }
+    }
     if(selectedNode != nullptr && selectedNode->getExtension() != nullptr){
-        selectedNode->getExtension()->drawDetailPane(selectedNode);
+        if(ImGui::CollapsingHeader("Node Details", ImGuiTreeNodeFlags_DefaultOpen)) {
+            selectedNode->getExtension()->drawDetailPane(selectedNode);
+        }
     }
 }
 

@@ -9,7 +9,7 @@
 #include <set>
 #include <cstdint>
 
-#include "../imgui/imgui.h"
+#include "imgui/imgui.h"
 #include "Connection.h"
 #include "Common.h"
 #include "NodeExtension.h"

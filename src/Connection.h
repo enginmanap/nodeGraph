@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "../imgui/imgui.h"
+#include "imgui/imgui.h"
 #include "Common.h"
 
 class Node;//To avoid circular dependency

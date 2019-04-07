@@ -8,8 +8,8 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 
-#include "NodeEditor/Node.h"
-#include "NodeEditor/NodeGraph.h"
+#include "../src/Node.h"
+#include "../src/NodeGraph.h"
 #include "SampleExtension.h"
 #include "SampleEditorExtension.h"
 

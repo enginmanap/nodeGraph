@@ -6,7 +6,7 @@
 #define NODEGRAPH_SAMPLEEXTENSION_H
 
 
-#include "NodeEditor/NodeExtension.h"
+#include "../src/NodeExtension.h"
 
 class SampleExtension : public NodeExtension {
 public:

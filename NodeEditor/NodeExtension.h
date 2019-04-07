@@ -11,6 +11,8 @@ class NodeExtension {
 public:
     virtual void drawDetailPane(Node* node) = 0;
 
+    virtual ~NodeExtension() {}
+
 };
 
 

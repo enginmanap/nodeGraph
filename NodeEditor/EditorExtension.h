@@ -9,6 +9,8 @@
 class EditorExtension {
 public:
     virtual void drawDetailPane() = 0;
+
+    virtual ~EditorExtension() {}
 };
 
 

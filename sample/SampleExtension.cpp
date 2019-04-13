@@ -3,7 +3,7 @@
 //
 
 #include "SampleExtension.h"
-#include "imgui/imgui.h"
+#include "ImGui/imgui.h"
 
 void SampleExtension::drawDetailPane(Node *node) {
     ImGui::Text("Extension Text");

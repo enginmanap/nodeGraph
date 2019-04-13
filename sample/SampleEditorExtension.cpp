@@ -3,7 +3,7 @@
 //
 
 #include "SampleEditorExtension.h"
-#include "imgui/imgui.h"
+#include "ImGui/imgui.h"
 
 void SampleEditorExtension::drawDetailPane() {
     ImGui::Text("Graph Detail Extension");

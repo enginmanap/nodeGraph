@@ -3,7 +3,7 @@
 //
 
 #include "NodeGraph.h"
-#include <Algorithm>
+#include <algorithm>
 
 void NodeGraph::drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS) {
     ImVec2 t1 = ImVec2(+80.0f, 0.0f);

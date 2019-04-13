@@ -1,8 +1,8 @@
 // ImGui - standalone example application for Glfw + OpenGL 3, using programmable pipeline
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_glfw.h"
+#include "ImGui/imgui_impl_opengl3.h"
 #include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

@@ -18,7 +18,7 @@
 const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
 
 struct NodeType {
-    const char *name;
+    std::string name;
     bool editable;
     NodeExtension* nodeExtension = nullptr;
     std::vector<ConnectionDesc> inputConnections;

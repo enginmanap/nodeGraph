@@ -150,7 +150,7 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
         if(selectedNode == nullptr ) {
             //Add new node part
             for (size_t i = 0; i < nodeTypes.size(); ++i) {
-                if (ImGui::MenuItem(nodeTypes[i].name)) {
+                if (ImGui::MenuItem(nodeTypes[i].name.c_str())) {
                     Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos - offset, &nodeTypes[i]);
                     nodes.push_back(node);
                     this->selectedNode = node;

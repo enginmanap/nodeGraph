@@ -34,7 +34,7 @@ void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec
 
             drawList->AddCircleFilled(node_rect_min + this->pos, NODE_SLOT_RADIUS, conColor);
 
-            offset.y += textSize.y + 2.0f;
+            offset.y += textSize.y + 4.0f;
         }
         break;
         case Directions::OUTPUT: {
@@ -50,7 +50,7 @@ void Connection::display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec
 
             drawList->AddCircleFilled(node_rect_min + this->pos, NODE_SLOT_RADIUS, conColor);
 
-            offset.y += textSize.y + 2.0f;
+            offset.y += textSize.y + 4.0f;
         }
         break;
     }

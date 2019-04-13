@@ -1,11 +1,12 @@
 cmake_minimum_required (VERSION 3.5.1)
 
-INCLUDE(libs/CmakeLists.txt)
+if((NOT NODEGRAPH_AS_LIBRARY) OR (NOT ("${NODEGRAPH_AS_LIBRARY}" STREQUAL "True")))
+    include(libs/CmakeLists.txt)
+endif()
 
 set(nodeGraph_SOURCES
         "src/Connection.cpp"
         "src/Connection.h"
-        "sample/main.cpp"
         "src/Node.cpp"
         "src/NodeGraph.cpp"
 
@@ -20,4 +21,6 @@ set(nodeGraph_HEADERS
 
 add_library(nodeGraph ${nodeGraph_SOURCES} ${nodeGraph_HEADERS})
 
-include(sample/CMakeLists.txt)
+if((NOT NODEGRAPH_AS_LIBRARY) OR (NOT ("${NODEGRAPH_AS_LIBRARY}" STREQUAL "True")))
+    include(sample/CMakeLists.txt)
+endif()

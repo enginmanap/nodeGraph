@@ -37,6 +37,7 @@ class NodeGraph {
     Node* selectedNode = nullptr;
     Connection* hoveredConnection = nullptr;
     Connection::Directions connectionRequestType = Connection::Directions::INPUT;
+    bool cycleAllowed = true;
     EditorExtension* editorExtension = nullptr;
     char nodeName[128] = {0};
     char connectionName[128] = {0};
@@ -57,7 +58,8 @@ class NodeGraph {
 
 public:
 
-    explicit NodeGraph(std::vector<NodeType> nodeTypes, EditorExtension* editorExtension = nullptr) : nodeTypes(nodeTypes), editorExtension(editorExtension) {
+    explicit NodeGraph(std::vector<NodeType> nodeTypes, bool cycleAllowed = true, EditorExtension* editorExtension = nullptr) : nodeTypes(nodeTypes), cycleAllowed(cycleAllowed),
+    editorExtension(editorExtension) {
         for(NodeType nodeType:nodeTypes) {
             for(ConnectionDesc connectionDesc:nodeType.inputConnections) {
                 connectionDataTypes.insert(connectionDesc.type);

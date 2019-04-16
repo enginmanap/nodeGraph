@@ -55,6 +55,10 @@ public:
         input->output.push_back(this);
     }
 
+    Connection * getInputConnection() const {
+        return this->input;
+    }
+
     ImVec2 getPosition() { return pos;}
     void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);
     void displayDataTooltip();

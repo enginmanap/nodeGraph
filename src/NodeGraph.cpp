@@ -395,12 +395,16 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                     outputSide = dragNode.con;
                     inputSide = con;
                 }
-
+                Connection* backup = inputSide->getInputConnection();
                 inputSide->setInputConnection(outputSide);
                 dragNode.con = 0;
                 dragState = DragState_Default;
 
-                if(isCyclic()) {
+                if(isCyclic() && !cycleAllowed) {
+                    inputSide->clearConnections();
+                    if(backup != nullptr) {
+                        inputSide->setInputConnection(backup);
+                    }
                     errorMessage = "There is a cycle";
                     errorGenerated = true;
                 }

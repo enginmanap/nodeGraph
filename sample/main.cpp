@@ -518,7 +518,7 @@ int main(int, char **) {
     std::vector<NodeType> nodeTypeVector(nodeTypes, nodeTypes + sizeof_array(nodeTypes));
 
     SampleEditorExtension sampleEditorExtension;
-    NodeGraph nodeGraph(nodeTypeVector, &sampleEditorExtension);
+    NodeGraph nodeGraph(nodeTypeVector, false, &sampleEditorExtension);
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         // Poll and handle events (inputs, window resize, etc.)

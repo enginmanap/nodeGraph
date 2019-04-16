@@ -46,7 +46,7 @@ class NodeGraph {
     bool errorGenerated = false;
 
     void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
-    bool depthFirstSearch(Node *root, Node *search, std::set<Node *> &visitedNodes, bool &cycle);
+    bool depthFirstSearch(Node *root, Node *search, std::set<Node *> visitedNodes, bool &cycle);
     void drawContextMenu(Node *selectedNode, const ImVec2 &offset);
     void drawRenameMenu(Node *selectedNode);
     void drawAddConnectionMenu(Node *pNode);

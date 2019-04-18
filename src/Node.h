@@ -84,7 +84,7 @@ public:
 
     std::vector<const Connection *> getOutputConnections() const {
         std::vector<const Connection *> result;
-        for (int i = 0; i < outputConnections.size(); ++i) {
+        for (size_t i = 0; i < outputConnections.size(); ++i) {
             result.push_back(outputConnections.at(i));
         }
         return result;
@@ -92,7 +92,7 @@ public:
 
     std::vector<const Connection *> getInputConnections() const {
         std::vector<const Connection *> result;
-        for (int i = 0; i < inputConnections.size(); ++i) {
+        for (size_t i = 0; i < inputConnections.size(); ++i) {
             result.push_back(inputConnections.at(i));
         }
         return result;

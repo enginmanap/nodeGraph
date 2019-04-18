@@ -82,6 +82,22 @@ public:
 
     std::set<Node*> getOutputConnectedNodes();
 
+    std::vector<const Connection *> getOutputConnections() const {
+        std::vector<const Connection *> result;
+        for (int i = 0; i < outputConnections.size(); ++i) {
+            result.push_back(outputConnections.at(i));
+        }
+        return result;
+    }
+
+    std::vector<const Connection *> getInputConnections() const {
+        std::vector<const Connection *> result;
+        for (int i = 0; i < inputConnections.size(); ++i) {
+            result.push_back(inputConnections.at(i));
+        }
+        return result;
+    }
+
     NodeExtension* getExtension() {
         return nodeExtension;
     }

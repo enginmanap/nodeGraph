@@ -78,7 +78,7 @@ public:
 
     void clearConnections();
 
-    std::vector<Node*> getConnectedNodes();
+    std::vector<Node*> getConnectedNodes() const;
 };
 
 #endif //NODEGRAPH_CONNECTION_H

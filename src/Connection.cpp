@@ -94,7 +94,7 @@ void Connection::clearConnections() {
     this->output.clear();
 }
 
-std::vector<Node*> Connection::getConnectedNodes() {
+std::vector<Node*> Connection::getConnectedNodes() const {
     std::vector<Node*> nodes;
     switch(this->direction) {
         case Directions::OUTPUT:  {

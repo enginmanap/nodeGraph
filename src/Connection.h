@@ -72,8 +72,12 @@ public:
         return direction;
     }
 
-    std::string getDataType() const {
+    const std::string &getDataType() const {
         return desc.type;
+    }
+
+    const std::string &getName() const {
+        return desc.name;
     }
 
     void clearConnections();

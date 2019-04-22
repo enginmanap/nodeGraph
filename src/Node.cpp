@@ -102,7 +102,6 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, 
 
     // Display node contents first
     drawList->ChannelsSetCurrent(1); // Foreground
-    bool old_any_active = ImGui::IsAnyItemActive();
 
     // Draw title in center
 
@@ -112,8 +111,6 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, 
     pos.x = node_rect_min.x + (size.x / 2) - textSize.x / 2;
 
     // Save the size of what we have emitted and weither any of the widgets are being used
-    bool node_widgets_active = (!old_any_active && ImGui::IsAnyItemActive());
-    //node->size = ImGui::GetItemRectSize() + NODE_WINDOW_PADDING + NODE_WINDOW_PADDING;
     ImVec2 node_rect_max = node_rect_min + size;
 
     // Display node box

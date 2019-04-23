@@ -297,6 +297,10 @@ void Node::removeOutput(Connection *connection) {
         }
     }
 }
+void Node::removeAllOutputs(){
+    outputConnections.clear();
+    calculateAndSetDrawInformation();
+}
 
 Node::~Node() {
     for(Connection* connection:inputConnections) {

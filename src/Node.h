@@ -76,6 +76,7 @@ public:
 
     void addOutput(const ConnectionDesc &description);
     void removeOutput(Connection *connection);
+    void removeAllOutputs();
     bool getEditable() {
         return this->editable;
     }

@@ -83,6 +83,10 @@ public:
     void clearConnections();
 
     std::vector<Node*> getConnectedNodes() const;
+
+    Node* getParent() {
+        return parent;
+    }
 };
 
 #endif //NODEGRAPH_CONNECTION_H

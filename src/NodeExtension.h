@@ -6,12 +6,15 @@
 #define NODEGRAPH_NODEEXTENSION_H
 
 class Node;
+class Connection;
 
 class NodeExtension {
 public:
     virtual void drawDetailPane(Node* node) = 0;
 
     virtual ~NodeExtension() {}
+
+    virtual bool isConnectionActive(Connection* connection [[gnu::unused]]) { return true;}
 
 };
 

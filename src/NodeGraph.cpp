@@ -330,8 +330,17 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                 return true;
             }
 
-            if (ImGui::IsMouseClicked(0) && dragNode.con)
-                dragState = DragState_Draging;
+            if (ImGui::IsMouseClicked(0) && dragNode.con) {
+                if(dragNode.con->getParent()->getExtension() != nullptr) {
+                    if ((dragNode.con->getParent()->getExtension()->isConnectionActive(dragNode.con))) {
+                        dragState = DragState_Draging;
+                    }
+                } else {
+                    errorMessage = "This Connection is not draggable.";
+                    errorGenerated = true;
+                }
+
+            }
 
             break;
         }

@@ -11,6 +11,9 @@
 class SampleExtension : public NodeExtension {
 public:
     void drawDetailPane(Node *node) override;
+
+    bool isConnectionActive(Connection* connection);
+
 };
 
 

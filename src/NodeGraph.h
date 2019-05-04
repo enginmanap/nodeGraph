@@ -45,6 +45,7 @@ class NodeGraph {
     DragState dragState = DragState_Default;
     DragNode dragNode;
     bool errorGenerated = false;
+    double errorGenerationTime = 0;
 
     void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
     bool depthFirstSearch(Node *root, Node *search, std::set<Node *> visitedNodes, bool &cycle);

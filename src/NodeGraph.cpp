@@ -55,6 +55,7 @@ void NodeGraph::display() {
 
     if(!updateDragging(scrolling, errorMessage)) {
         errorGenerated = true;
+        errorGenerationTime = ImGui::GetTime();
     }
     if(errorGenerated) {
         ImVec2 position = ImGui::GetWindowPos() + ImVec2(15,15);
@@ -69,8 +70,8 @@ void NodeGraph::display() {
     renderLines(draw_list, scrolling);
 
     draw_list->ChannelsMerge();
-    if(ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1)) {
-        errorGenerated = false;
+    if((ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1))&& ( ImGui::GetTime() - errorGenerationTime > 3.0))  {
+            errorGenerated = false;
     }
 
     if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(0)) {
@@ -334,14 +335,15 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                 if(dragNode.con->getParent()->getExtension() != nullptr) {
                     if ((dragNode.con->getParent()->getExtension()->isConnectionActive(dragNode.con))) {
                         dragState = DragState_Draging;
+                    } else {
+                        dragNode.con = 0;
+                        errorMessage = "This Connection is not draggable.";
+                        return false;
                     }
                 } else {
-                    errorMessage = "This Connection is not draggable.";
-                    errorGenerated = true;
+                    dragState = DragState_Draging;
                 }
-
             }
-
             break;
         }
 
@@ -415,7 +417,7 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                         inputSide->setInputConnection(backup);
                     }
                     errorMessage = "There is a cycle";
-                    errorGenerated = true;
+                    return false;
                 }
             }
 

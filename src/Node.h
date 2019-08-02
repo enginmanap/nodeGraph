@@ -99,7 +99,7 @@ public:
         return result;
     }
 
-    NodeExtension* getExtension() {
+    NodeExtension* getExtension() const {
         return nodeExtension;
     }
 };

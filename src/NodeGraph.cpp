@@ -464,7 +464,11 @@ bool NodeGraph::isCyclic() {
 void NodeGraph::drawDetailsPane(Node* selectedNode) {
     if(editorExtension != nullptr) {
         if(ImGui::CollapsingHeader("Graph Details", ImGuiTreeNodeFlags_DefaultOpen)) {
-            editorExtension->drawDetailPane();
+            std::vector<const Node*> tempVector;
+            for (size_t i = 0; i < this->nodes.size(); ++i) {
+                tempVector.push_back(nodes[i]);
+            }
+            editorExtension->drawDetailPane(tempVector, this->selectedNode);
         }
     }
     if(selectedNode != nullptr && selectedNode->getExtension() != nullptr){

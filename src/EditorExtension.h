@@ -8,7 +8,7 @@
 
 class EditorExtension {
 public:
-    virtual void drawDetailPane() = 0;
+    virtual void drawDetailPane(const std::vector<const Node *>& nodes, const Node* selectedNode = nullptr) = 0;
 
     virtual ~EditorExtension() {}
 };

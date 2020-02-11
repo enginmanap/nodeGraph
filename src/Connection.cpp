@@ -78,33 +78,37 @@ Connection::~Connection() {
 }
 
 void Connection::clearConnections() {
-    if(this->input != nullptr) {
-        for(auto it = this->input->output.begin(); it != this->input->output.end(); it++) {
-            if(*it == this) {
-                this->input->output.erase(it);
-                break;
+    if(!this->inputList.empty()) {
+        for(auto currentInput:this->inputList) {
+            for (auto it = currentInput->outputList.begin(); it != currentInput->outputList.end(); it++) {
+                if (*it == this) {
+                    currentInput->outputList.erase(it);
+                    break;
+                }
             }
         }
     }
-    this->input = nullptr;
+    this->inputList.clear();
 
-    for(auto it = this->output.begin(); it != this->output.end(); it++) {
-        (*it)->input = nullptr;
+    for(auto it = this->outputList.begin(); it != this->outputList.end(); it++) {
+        (*it)->removeInputConnection(this);
     }
-    this->output.clear();
+    this->outputList.clear();
 }
 
 std::vector<Node*> Connection::getConnectedNodes() const {
     std::vector<Node*> nodes;
     switch(this->direction) {
         case Directions::OUTPUT:  {
-            for(Connection* con:this->output) {
+            for(Connection* con:this->outputList) {
                 nodes.push_back(con->parent);
             }
         }
         break;
         case Directions::INPUT:  {
-            nodes.push_back(this->input->parent);
+            for(auto connection:inputList) {
+                nodes.push_back(connection->parent);
+            }
         }
         break;
     }

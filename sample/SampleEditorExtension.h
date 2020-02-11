@@ -10,7 +10,7 @@
 
 class SampleEditorExtension : public EditorExtension {
 public:
-    void drawDetailPane() override;
+    void drawDetailPane(const std::vector<const Node *>& nodes, const Node* selectedNode = nullptr) override;
 };
 
 

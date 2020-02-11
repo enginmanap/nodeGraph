@@ -23,6 +23,7 @@ struct NodeType {
     NodeExtension* nodeExtension = nullptr;
     std::vector<ConnectionDesc> inputConnections;
     std::vector<ConnectionDesc> outputConnections;
+    bool combineInputs;
 };
 
 class Node {
@@ -33,6 +34,7 @@ class Node {
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;
     bool editable;
+    bool combineInputs;
 
     NodeExtension* nodeExtension = nullptr;
 

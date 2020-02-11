@@ -24,6 +24,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->name = nodeType->name;
     this->editable = nodeType->editable;
     this->nodeExtension = nodeType->nodeExtension;
+    this->combineInputs = nodeType->combineInputs;
 
     setupConnections(inputConnections, nodeType->inputConnections, Connection::Directions::INPUT);
     setupConnections(outputConnections, nodeType->outputConnections, Connection::Directions::OUTPUT);
@@ -87,7 +88,7 @@ void Node::setupConnections(std::vector<Connection *> &connections, const std::v
         if (connectionDescription.name.empty())
             break;
 
-        Connection *con = new Connection(this, connectionDescription, connectionType);
+        Connection *con = new Connection(this, connectionDescription, connectionType, this->combineInputs);
 
         connections.push_back(con);
     }
@@ -213,20 +214,39 @@ Connection *Node::getHoverConnection(ImVec2 offset, ImVec2 *pos) {
 std::vector<std::pair<ImVec2, ImVec2>> Node::getLinesToRender() {
     std::vector<std::pair<ImVec2, ImVec2>> fromToPairs;
     for (Connection *con : this->inputConnections) {
-        if (con->getInputNode() == nullptr) {
+        std::vector<Connection *> inputConnections = con->getInputConnections();
+        if (inputConnections.empty()) {
             continue;
         }
 
-        Node *targetNode = con->getInputNode();
+        for(Connection * targetConnection:inputConnections) {
+            if (!targetConnection) {
+                continue;
+            }
 
-        if (!targetNode) {
+            std::pair<ImVec2, ImVec2> fromTo = std::make_pair(
+                    targetConnection->getParent()->pos + targetConnection->getPosition(),
+                    this->pos + con->getPosition()
+            );
+            fromToPairs.push_back(fromTo);
+        /*
+        std::vector<Node*> inputNodes = con->getInputNodes();
+        if (inputNodes.empty()) {
             continue;
         }
-        std::pair<ImVec2, ImVec2> fromTo = std::make_pair(
-        targetNode->pos + con->getInput()->getPosition(),
-        this->pos + con->getPosition()
-        );
-        fromToPairs.push_back(fromTo);
+
+        for(Node* targetNode:inputNodes) {
+            if (!targetNode) {
+                continue;
+            }
+
+            std::pair<ImVec2, ImVec2> fromTo = std::make_pair(
+                    targetNode->pos + con->getInputConnections()->getPosition(),
+                    this->pos + con->getPosition()
+            );
+            fromToPairs.push_back(fromTo);
+            */
+        }
     }
     return fromToPairs;
 }
@@ -260,7 +280,7 @@ void Node::addInput(const ConnectionDesc &description) {
             return;
         }
 
-        Connection *con = new Connection(this, description, Connection::Directions::INPUT);
+        Connection *con = new Connection(this, description, Connection::Directions::INPUT, this->combineInputs);
         this->inputConnections.push_back(con);
         calculateAndSetDrawInformation();
 }
@@ -282,7 +302,7 @@ void Node::addOutput(const ConnectionDesc &description) {
         return;
     }
 
-    Connection *con = new Connection(this, description, Connection::Directions::OUTPUT);
+    Connection *con = new Connection(this, description, Connection::Directions::OUTPUT, this->combineInputs);
     this->outputConnections.push_back(con);
     calculateAndSetDrawInformation();
 }

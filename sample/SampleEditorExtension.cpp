@@ -5,6 +5,6 @@
 #include "SampleEditorExtension.h"
 #include "ImGui/imgui.h"
 
-void SampleEditorExtension::drawDetailPane() {
+void SampleEditorExtension::drawDetailPane(const std::vector<const Node *>& nodes, const Node* selectedNode) {
     ImGui::Text("Graph Detail Extension");
 }

@@ -29,35 +29,53 @@ private:
     ImVec2 pos = {0,0};
     ConnectionDesc desc;
     Directions direction;
+    bool combinedInput;//default false by constructor
 
-    struct Connection *input = nullptr;
-    std::vector<Connection *> output;
+    std::vector<Connection *> inputList;
+    std::vector<Connection *> outputList;
 public:
     Connection(Node* parent, ConnectionDesc desc, Connection::Directions direction) :
-    parent(parent), desc(desc), direction(direction) {}
+    Connection(parent, desc, direction, false) {}
+
+    Connection(Node* parent, ConnectionDesc desc, Connection::Directions direction, bool combinedInput) :
+            parent(parent), desc(desc), direction(direction), combinedInput(combinedInput) {}
 
     ~Connection();
 
     bool isHovered(ImVec2 offset);
-    Node* getInputNode() {
-        if(input != nullptr) {
-            return input->parent;
+
+    std::vector<Node*> getInputNodes() {
+        std::vector<Node*> nodes;
+        for(auto connection:inputList) {
+            nodes.push_back(connection->parent);
         }
-        return nullptr;
+        return nodes;
     }
 
-    Connection *getInput() const {
-        return input;
+    std::vector<Connection *> getInputConnections() const {
+        return inputList;
     }
 
-    void setInputConnection(Connection* input ) {
-        this->input = input;
-        input->output.push_back(this);
+    void addInputConnection(Connection* input ) {
+        if (!combinedInput) {
+            this->inputList.clear();
+        }
+        this->inputList.push_back(input);
+        input->outputList.push_back(this);
     }
 
+    void removeInputConnection(Connection* input ) {
+        for(std::vector<Connection*>::iterator it= this->inputList.begin(); it != this->inputList.end(); it++) {
+            if((*it) == input) {
+                this->inputList.erase(it);
+                return;
+            }
+        }
+    }
+/*
     Connection * getInputConnection() const {
         return this->input;
-    }
+    }*/
 
     ImVec2 getPosition() { return pos;}
     void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);

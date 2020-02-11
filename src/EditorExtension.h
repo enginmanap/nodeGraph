@@ -5,6 +5,9 @@
 #ifndef NODEGRAPH_EDITOREXTENSION_H
 #define NODEGRAPH_EDITOREXTENSION_H
 
+#include <vector>
+
+class Node;
 
 class EditorExtension {
 public:

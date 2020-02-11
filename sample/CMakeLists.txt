@@ -21,4 +21,4 @@ endif (NOT OPENGL_FOUND)
 
 add_executable(nodeEditor sample/main.cpp sample/SampleExtension.cpp sample/SampleExtension.h sample/SampleEditorExtension.cpp sample/SampleEditorExtension.h)
 
-TARGET_LINK_LIBRARIES(nodeEditor ImGui nodeGraph ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLFW_LIBRARY})
+TARGET_LINK_LIBRARIES(nodeEditor ImGui nodeGraph GLEW::GLEW ${OPENGL_LIBRARIES} ${GLFW_LIBRARY})

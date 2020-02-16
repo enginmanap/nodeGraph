@@ -415,7 +415,7 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                     inputSide->clearConnections();
                     if(!backup.empty()) {
                         for (auto conn:backup) {
-                            inputSide->addInputConnection(con);
+                            inputSide->addInputConnection(conn);
                         }
                     }
                     errorMessage = "There is a cycle";

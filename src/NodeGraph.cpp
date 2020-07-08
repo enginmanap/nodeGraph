@@ -4,6 +4,8 @@
 
 #include "NodeGraph.h"
 #include <algorithm>
+#include <sstream>
+#include <tinyxml2.h>
 
 void NodeGraph::drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS) {
     ImVec2 t1 = ImVec2(+80.0f, 0.0f);
@@ -477,6 +479,28 @@ void NodeGraph::drawDetailsPane(Node* selectedNode) {
         if(ImGui::CollapsingHeader("Node Details", ImGuiTreeNodeFlags_DefaultOpen)) {
             selectedNode->getExtension()->drawDetailPane(selectedNode);
         }
+    }
+    if (ImGui::Button("Save Nodes")) {
+        this->serialize("Nodes.xml");
+    }}
+
+void NodeGraph::serialize(const std::string& fileName) {
+    tinyxml2::XMLDocument serializeDocument;
+    tinyxml2::XMLNode * rootNode = serializeDocument.NewElement("NodeGraph");
+    serializeDocument.InsertFirstChild(rootNode);
+
+    tinyxml2::XMLElement * nodesElement = serializeDocument.NewElement("Nodes");
+    //nodesElement->SetText(fileName.c_str());
+    rootNode->InsertEndChild(nodesElement);
+
+
+    for (size_t i = 0; i < nodes.size(); ++i) {
+        nodes[i]->serialize(serializeDocument, nodesElement);
+    }
+
+    tinyxml2::XMLError eResult = serializeDocument.SaveFile(fileName.c_str());
+    if(eResult != tinyxml2::XML_SUCCESS) {
+        std::cerr  << "ERROR " << eResult << std::endl;
     }
 }
 

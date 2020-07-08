@@ -115,3 +115,81 @@ std::vector<Node*> Connection::getConnectedNodes() const {
     return nodes;
 }
 
+void Connection::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement) {
+    /*
+
+    struct ConnectionDesc {
+        std::string name;
+        std::string type;
+
+    };
+
+    class Connection {
+    public:
+        enum class Directions {INPUT, OUTPUT};
+    private:
+        Node* parent;
+        ImVec2 pos = {0,0};
+        ConnectionDesc desc;
+        Directions direction;
+        bool combinedInput;//default false by constructor
+
+        std::vector<Connection *> inputList;
+        std::vector<Connection *> outputList;
+        */
+
+
+    tinyxml2::XMLElement *connectionElement = document.NewElement("Connection");
+    parentElement->InsertEndChild(connectionElement);
+
+    tinyxml2::XMLElement *nameElement = document.NewElement("Name");
+    nameElement->SetText(desc.name.c_str());
+    connectionElement->InsertEndChild(nameElement);
+
+    tinyxml2::XMLElement *typeElement = document.NewElement("Type");
+    typeElement->SetText(desc.type.c_str());
+    connectionElement->InsertEndChild(typeElement);
+
+    tinyxml2::XMLElement *directionElement = document.NewElement("Direction");
+    switch (direction) {
+        case Directions::INPUT:
+            directionElement->SetText("Input");
+            break;
+        case Directions::OUTPUT:
+            directionElement->SetText("Output");
+            break;
+        default:
+            std::cerr << "Unknown direction, assuming output!" << std::endl;
+    }
+    connectionElement->InsertEndChild(directionElement);
+
+    tinyxml2::XMLElement *combinedInputsElement = document.NewElement("CombineInputs");
+    combinedInputsElement->SetText(combinedInput ? "True" : "False");
+    connectionElement->InsertEndChild(combinedInputsElement);
+
+
+    tinyxml2::XMLElement *positionElement = document.NewElement("Position");
+    connectionElement->InsertEndChild(positionElement);
+    tinyxml2::XMLElement *posXElement = document.NewElement("X");
+    posXElement->SetText(std::to_string(pos.x).c_str());
+    positionElement->InsertEndChild(posXElement);
+    tinyxml2::XMLElement *posYElement = document.NewElement("Y");
+    posYElement->SetText(std::to_string(pos.y).c_str());
+    positionElement->InsertEndChild(posYElement);
+
+    tinyxml2::XMLElement *inputsElement = document.NewElement("Inputs");
+    for (size_t i = 0; i < inputList.size(); ++i) {
+        inputsElement->SetText(inputList[i]->getName().c_str());
+        inputsElement->SetAttribute("NodeId", inputList[i]->getParent()->getId());
+    }
+    connectionElement->InsertEndChild(inputsElement);
+
+    tinyxml2::XMLElement *outputsElement = document.NewElement("Outputs");
+    for (size_t i = 0; i < outputList.size(); ++i) {
+        outputsElement->SetText(outputList[i]->getName().c_str());
+        inputsElement->SetAttribute("NodeId", outputList[i]->getParent()->getId());
+    }
+    connectionElement->InsertEndChild(outputsElement);
+
+}
+

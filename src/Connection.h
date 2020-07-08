@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <tinyxml2.h>
 #include "ImGui/imgui.h"
 #include "Common.h"
 
@@ -105,6 +106,9 @@ public:
     Node* getParent() {
         return parent;
     }
+
+    void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement);
+
 };
 
 #endif //NODEGRAPH_CONNECTION_H

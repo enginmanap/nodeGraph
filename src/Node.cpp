@@ -2,6 +2,7 @@
 // Created by engin on 24.03.2019.
 //
 
+#include <sstream>
 #include "Node.h"
 
 Node::Node(uint32_t id, ImVec2 pos, const NodeType *nodeType) {
@@ -338,4 +339,57 @@ std::set<Node*> Node::getOutputConnectedNodes() {
         nodes.insert(connectedNodes.begin(), connectedNodes.end());
     }
     return nodes;
+}
+
+void Node::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement) {
+
+    tinyxml2::XMLElement *nodeElement = document.NewElement("Node");
+    parentElement->InsertEndChild(nodeElement);
+
+    tinyxml2::XMLElement *idElement = document.NewElement("ID");
+    idElement->SetText(std::to_string(id).c_str());
+    nodeElement->InsertEndChild(idElement);
+
+    tinyxml2::XMLElement *nameElement = document.NewElement("Name");
+    nameElement->SetText(name.c_str());
+    nodeElement->InsertEndChild(nameElement);
+
+    tinyxml2::XMLElement *editableElement = document.NewElement("Editable");
+    editableElement->SetText(editable ? "True" : "False");
+    nodeElement->InsertEndChild(editableElement);
+
+    tinyxml2::XMLElement *combineInputsElement = document.NewElement("CombineInputs");
+    combineInputsElement->SetText(combineInputs ? "True" : "False");
+    nodeElement->InsertEndChild(combineInputsElement);
+
+
+    tinyxml2::XMLElement *positionElement = document.NewElement("Position");
+    nodeElement->InsertEndChild(positionElement);
+    tinyxml2::XMLElement *posXElement = document.NewElement("X");
+    posXElement->SetText(std::to_string(pos.x).c_str());
+    positionElement->InsertEndChild(posXElement);
+    tinyxml2::XMLElement *posYElement = document.NewElement("Y");
+    posYElement->SetText(std::to_string(pos.y).c_str());
+    positionElement->InsertEndChild(posYElement);
+
+    tinyxml2::XMLElement *sizeElement = document.NewElement("Size");
+    nodeElement->InsertEndChild(sizeElement);
+    tinyxml2::XMLElement *sizeXElement = document.NewElement("X");
+    sizeXElement->SetText(std::to_string(size.x).c_str());
+    sizeElement->InsertEndChild(sizeXElement);
+    tinyxml2::XMLElement *sizeYElement = document.NewElement("Y");
+    sizeYElement->SetText(std::to_string(size.y).c_str());
+    sizeElement->InsertEndChild(sizeYElement);
+
+    tinyxml2::XMLElement *inputsElement = document.NewElement("Inputs");
+    for (size_t i = 0; i < inputConnections.size(); ++i) {
+        inputConnections[i]->serialize(document, inputsElement);
+    }
+    nodeElement->InsertEndChild(inputsElement);
+
+    tinyxml2::XMLElement *outputsElement = document.NewElement("Outputs");
+    for (size_t i = 0; i < outputConnections.size(); ++i) {
+        outputConnections[i]->serialize(document, outputsElement);
+    }
+    nodeElement->InsertEndChild(outputsElement);
 }

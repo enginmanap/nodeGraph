@@ -8,6 +8,7 @@
 #include <vector>
 #include <set>
 #include <cstdint>
+#include <tinyxml2.h>
 
 #include "ImGui/imgui.h"
 #include "Connection.h"
@@ -68,6 +69,10 @@ public:
         return name;
     }
 
+    int getId() const {
+        return id;
+    }
+
     void setName(const std::string& name) {
         this->name = name;
         calculateAndSetDrawInformation();
@@ -104,6 +109,8 @@ public:
     NodeExtension* getExtension() const {
         return nodeExtension;
     }
+
+    void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement);
 };
 
 

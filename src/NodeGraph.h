@@ -76,6 +76,8 @@ public:
 
     bool updateDragging(ImVec2 offset, std::string &errorMessage);
     bool isCyclic();
+
+    void serialize(const std::string& fileName);
 };
 
 

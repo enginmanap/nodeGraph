@@ -30,7 +30,8 @@ struct NodeType {
 class Node {
     ImVec2 pos;
     ImVec2 size;
-    int id;
+    uint32_t id;
+    uint32_t nextConnectionId;
     std::string name;
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;

@@ -142,6 +142,10 @@ void Connection::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement
     tinyxml2::XMLElement *connectionElement = document.NewElement("Connection");
     parentElement->InsertEndChild(connectionElement);
 
+    tinyxml2::XMLElement *idElement = document.NewElement("ID");
+    idElement->SetText(std::to_string(id).c_str());
+    connectionElement->InsertEndChild(idElement);
+
     tinyxml2::XMLElement *nameElement = document.NewElement("Name");
     nameElement->SetText(desc.name.c_str());
     connectionElement->InsertEndChild(nameElement);
@@ -181,13 +185,16 @@ void Connection::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement
     for (size_t i = 0; i < inputList.size(); ++i) {
         inputsElement->SetText(inputList[i]->getName().c_str());
         inputsElement->SetAttribute("NodeId", inputList[i]->getParent()->getId());
+        inputsElement->SetAttribute("connectionID", inputList[i]->getId());
+
     }
     connectionElement->InsertEndChild(inputsElement);
 
     tinyxml2::XMLElement *outputsElement = document.NewElement("Outputs");
     for (size_t i = 0; i < outputList.size(); ++i) {
         outputsElement->SetText(outputList[i]->getName().c_str());
-        inputsElement->SetAttribute("NodeId", outputList[i]->getParent()->getId());
+        outputsElement->SetAttribute("NodeId", outputList[i]->getParent()->getId());
+        outputsElement->SetAttribute("connectionID", outputList[i]->getId());
     }
     connectionElement->InsertEndChild(outputsElement);
 

@@ -26,6 +26,7 @@ class Connection {
 public:
     enum class Directions {INPUT, OUTPUT};
 private:
+    uint32_t id;//This id should be unique per node, not global. used for serialize/deserialize.
     Node* parent;
     ImVec2 pos = {0,0};
     ConnectionDesc desc;
@@ -35,11 +36,11 @@ private:
     std::vector<Connection *> inputList;
     std::vector<Connection *> outputList;
 public:
-    Connection(Node* parent, ConnectionDesc desc, Connection::Directions direction) :
-    Connection(parent, desc, direction, false) {}
+    Connection(Node* parent, uint32_t id, ConnectionDesc desc, Connection::Directions direction) :
+    Connection(parent, id, desc, direction, false) {}
 
-    Connection(Node* parent, ConnectionDesc desc, Connection::Directions direction, bool combinedInput) :
-            parent(parent), desc(desc), direction(direction), combinedInput(combinedInput) {}
+    Connection(Node* parent, uint32_t id, ConnectionDesc desc, Connection::Directions direction, bool combinedInput) :
+            id(id), parent(parent), desc(desc), direction(direction), combinedInput(combinedInput) {}
 
     ~Connection();
 
@@ -78,7 +79,14 @@ public:
         return this->input;
     }*/
 
+
+
     ImVec2 getPosition() { return pos;}
+
+    uint32_t getId() const {
+        return id;
+    }
+
     void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);
     void displayDataTooltip();
 

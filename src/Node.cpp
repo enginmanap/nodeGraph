@@ -26,6 +26,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->editable = nodeType->editable;
     this->nodeExtension = nodeType->nodeExtension;
     this->combineInputs = nodeType->combineInputs;
+    this->nextConnectionId = 0;
 
     setupConnections(inputConnections, nodeType->inputConnections, Connection::Directions::INPUT);
     setupConnections(outputConnections, nodeType->outputConnections, Connection::Directions::OUTPUT);
@@ -89,7 +90,7 @@ void Node::setupConnections(std::vector<Connection *> &connections, const std::v
         if (connectionDescription.name.empty())
             break;
 
-        Connection *con = new Connection(this, connectionDescription, connectionType, this->combineInputs);
+        Connection *con = new Connection(this, ++nextConnectionId, connectionDescription, connectionType, this->combineInputs);
 
         connections.push_back(con);
     }
@@ -281,7 +282,7 @@ void Node::addInput(const ConnectionDesc &description) {
             return;
         }
 
-        Connection *con = new Connection(this, description, Connection::Directions::INPUT, this->combineInputs);
+        Connection *con = new Connection(this, ++nextConnectionId, description, Connection::Directions::INPUT, this->combineInputs);
         this->inputConnections.push_back(con);
         calculateAndSetDrawInformation();
 }
@@ -303,7 +304,7 @@ void Node::addOutput(const ConnectionDesc &description) {
         return;
     }
 
-    Connection *con = new Connection(this, description, Connection::Directions::OUTPUT, this->combineInputs);
+    Connection *con = new Connection(this, ++nextConnectionId, description, Connection::Directions::OUTPUT, this->combineInputs);
     this->outputConnections.push_back(con);
     calculateAndSetDrawInformation();
 }

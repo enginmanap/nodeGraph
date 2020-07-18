@@ -489,10 +489,17 @@ void NodeGraph::serialize(const std::string& fileName) {
     tinyxml2::XMLNode * rootNode = serializeDocument.NewElement("NodeGraph");
     serializeDocument.InsertFirstChild(rootNode);
 
-    tinyxml2::XMLElement * nodesElement = serializeDocument.NewElement("Nodes");
-    //nodesElement->SetText(fileName.c_str());
-    rootNode->InsertEndChild(nodesElement);
 
+
+    tinyxml2::XMLElement * nodeTypesElement = serializeDocument.NewElement("NodeTypes");
+    rootNode->InsertEndChild(nodeTypesElement);
+
+    for (size_t i = 0; i < nodeTypes.size(); ++i) {
+        nodeTypes[i].serialize(serializeDocument, nodeTypesElement);
+    }
+
+    tinyxml2::XMLElement * nodesElement = serializeDocument.NewElement("Nodes");
+    rootNode->InsertEndChild(nodesElement);
 
     for (size_t i = 0; i < nodes.size(); ++i) {
         nodes[i]->serialize(serializeDocument, nodesElement);
@@ -503,7 +510,37 @@ void NodeGraph::serialize(const std::string& fileName) {
         std::cerr  << "ERROR " << eResult << std::endl;
     }
 }
+/*
+NodeGraph * NodeGraph::deserialize(const std::string& fileName) {
+    tinyxml2::XMLDocument xmlDoc;
+    tinyxml2::XMLError eResult = xmlDoc.LoadFile(fileName.c_str());
+    if (eResult != tinyxml2::XML_SUCCESS) {
+        std::cerr << "Error loading XML "<< fileName << ": " <<  xmlDoc.ErrorName() << std::endl;
+        exit(-1);
+    }
 
+    tinyxml2::XMLNode * rootNode = xmlDoc.FirstChild();
+    if (rootNode == nullptr) {
+        std::cerr << "World xml is not a valid XML." << std::endl;
+        return nullptr;
+    }
+
+    tinyxml2::XMLElement* nodesElement =  rootNode->FirstChildElement("Nodes");
+    if (nodesElement == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": No Nodes found!" << std::endl;
+        exit(-1);
+    }
+
+    NodeGraph* newNodeGraph = new NodeGraph();
+    tinyxml2::XMLElement* nodeElement =  nodesElement->FirstChildElement("Node");
+    while(nodeElement != nullptr) {
+        Node* node = Node::deserialize(nodeElement);
+        newNodeGraph->nodes.emplace_back(node);
+        tinyxml2::XMLElement* nodeElement =  nodesElement->NextSiblingElement("Node");
+    }
+    return newNodeGraph;
+}
+*/
 /*
 static void saveNodes(const char* filename)
 {

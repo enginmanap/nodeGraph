@@ -14,6 +14,10 @@ public:
 
     bool isConnectionActive(Connection* connection);
 
+    std::string getName() {
+        return "SampleExtension";
+    }
+
 };
 
 

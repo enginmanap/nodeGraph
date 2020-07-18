@@ -9,6 +9,7 @@
 #include <set>
 #include <cstdint>
 #include <tinyxml2.h>
+#include <unordered_map>
 
 #include "ImGui/imgui.h"
 #include "Connection.h"
@@ -25,6 +26,44 @@ struct NodeType {
     std::vector<ConnectionDesc> inputConnections;
     std::vector<ConnectionDesc> outputConnections;
     bool combineInputs;
+
+    void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement) {
+        tinyxml2::XMLElement * nodeTypeElement = document.NewElement("NodeType");
+        parentElement->InsertEndChild(nodeTypeElement);
+
+        tinyxml2::XMLElement * nameElement = document.NewElement("Name");
+        nameElement->SetText(name.c_str());
+        nodeTypeElement->InsertEndChild(nameElement);
+
+        tinyxml2::XMLElement* editableElement = document.NewElement("Editable");
+        editableElement->SetText(editableElement ? "True" : "False");
+        nodeTypeElement->InsertEndChild(editableElement);
+
+        tinyxml2::XMLElement * inputConnectionsElement = document.NewElement("Inputs");
+        for (size_t i = 0; i < inputConnections.size(); ++i) {
+            inputConnections[i].serialize(document, inputConnectionsElement);
+        }
+        nodeTypeElement->InsertEndChild(inputConnectionsElement);
+
+        tinyxml2::XMLElement * outputConnectionsElement = document.NewElement("Outputs");
+        for (size_t i = 0; i < inputConnections.size(); ++i) {
+            inputConnections[i].serialize(document, outputConnectionsElement);
+        }
+        nodeTypeElement->InsertEndChild(outputConnectionsElement);
+
+        if(nodeExtension != nullptr) {
+            nodeExtension->serialize(document, nodeTypeElement);
+        } else {
+            tinyxml2::XMLElement * nodeExtensionElement = document.NewElement("NodeExtension");
+            nodeExtensionElement->SetText("PlaceHolderExtension");
+            nodeTypeElement->InsertEndChild(nodeExtensionElement);
+        }
+    }
+
+    static NodeType deserialize(tinyxml2::XMLElement *nodeTypeElement) {
+
+    }
+
 };
 
 class Node {
@@ -112,6 +151,8 @@ public:
     }
 
     void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement);
+    static Node* deserialize(tinyxml2::XMLElement *nodeElement);
+
 };
 
 

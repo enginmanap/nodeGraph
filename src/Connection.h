@@ -20,6 +20,18 @@ struct ConnectionDesc {
     std::string name;
     std::string type;
 
+    void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement) {
+        tinyxml2::XMLElement * connectionDescElement = document.NewElement("ConnectionDesc");
+        parentElement->InsertEndChild(connectionDescElement);
+
+        tinyxml2::XMLElement * nameElement = document.NewElement("Name");
+        nameElement->SetText(name.c_str());
+        connectionDescElement->InsertEndChild(nameElement);
+
+        tinyxml2::XMLElement * typeElement = document.NewElement("Type");
+        typeElement->SetText(type.c_str());
+        connectionDescElement->InsertEndChild(typeElement);
+    }
 };
 
 class Connection {

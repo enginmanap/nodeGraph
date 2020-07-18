@@ -78,6 +78,8 @@ public:
     bool isCyclic();
 
     void serialize(const std::string& fileName);
+
+    static NodeGraph * deserialize(const std::string& fileName);
 };
 
 

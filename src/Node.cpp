@@ -394,3 +394,7 @@ void Node::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *pare
     }
     nodeElement->InsertEndChild(outputsElement);
 }
+
+Node *Node::deserialize(tinyxml2::XMLElement *nodeElement) {
+    return nullptr;
+}

@@ -153,8 +153,8 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
         if(selectedNode == nullptr ) {
             //Add new node part
             for (size_t i = 0; i < nodeTypes.size(); ++i) {
-                if (ImGui::MenuItem(nodeTypes[i].name.c_str())) {
-                    Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos - offset, &nodeTypes[i]);
+                if (ImGui::MenuItem(nodeTypes[i]->name.c_str())) {
+                    Node *node = new Node(nextNodeID++, ImGui::GetIO().MousePos - offset, nodeTypes[i]);
                     nodes.push_back(node);
                     this->selectedNode = node;
                 }
@@ -495,7 +495,7 @@ void NodeGraph::serialize(const std::string& fileName) {
     rootNode->InsertEndChild(nodeTypesElement);
 
     for (size_t i = 0; i < nodeTypes.size(); ++i) {
-        nodeTypes[i].serialize(serializeDocument, nodeTypesElement);
+        nodeTypes[i]->serialize(serializeDocument, nodeTypesElement);
     }
 
     tinyxml2::XMLElement * nodesElement = serializeDocument.NewElement("Nodes");

@@ -31,7 +31,7 @@ class NodeGraph {
         Connection *con;
     };
 
-    std::vector<NodeType> nodeTypes;
+    std::vector<NodeType*> nodeTypes;
     std::set<std::string> connectionDataTypes;
     std::vector<Node *> nodes;//first node is rendered last, and it is at the top.
     Node* selectedNode = nullptr;
@@ -59,13 +59,13 @@ class NodeGraph {
 
 public:
 
-    explicit NodeGraph(std::vector<NodeType> nodeTypes, bool cycleAllowed = true, EditorExtension* editorExtension = nullptr) : nodeTypes(nodeTypes), cycleAllowed(cycleAllowed),
+    explicit NodeGraph(std::vector<NodeType*> nodeTypes, bool cycleAllowed = true, EditorExtension* editorExtension = nullptr) : nodeTypes(nodeTypes), cycleAllowed(cycleAllowed),
     editorExtension(editorExtension) {
-        for(NodeType nodeType:nodeTypes) {
-            for(ConnectionDesc connectionDesc:nodeType.inputConnections) {
+        for(NodeType* nodeType:nodeTypes) {
+            for(ConnectionDesc connectionDesc:nodeType->inputConnections) {
                 connectionDataTypes.insert(connectionDesc.type);
             }
-            for(ConnectionDesc connectionDesc:nodeType.outputConnections) {
+            for(ConnectionDesc connectionDesc:nodeType->outputConnections) {
                 connectionDataTypes.insert(connectionDesc.type);
             }
         }

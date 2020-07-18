@@ -156,7 +156,7 @@ static struct NodeType nodeTypes[] =
 */
 
 static SampleExtension se;
-
+/*
 static struct NodeType nodeTypes[] =
         {
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -393,7 +393,7 @@ static struct NodeType nodeTypes[] =
                         },
                 },
         };
-
+*/
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void error_callback(int error, const char *description) {
@@ -519,7 +519,56 @@ int main(int, char **) {
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    std::vector<NodeType> nodeTypeVector(nodeTypes, nodeTypes + sizeof_array(nodeTypes));
+    std::vector <NodeType* > nodeTypeVector;
+
+    NodeType* textureNodeType = new NodeType();
+    textureNodeType->combineInputs = true;
+    textureNodeType->editable = true;
+    textureNodeType->nodeExtension = nullptr;
+    textureNodeType->name = "Texture";
+    textureNodeType->inputConnections.emplace_back(ConnectionDesc{"Write", "Texture"});
+    textureNodeType->outputConnections.emplace_back(ConnectionDesc{"Read", "Texture"});
+    nodeTypeVector.emplace_back(textureNodeType);
+
+    NodeType* combineAllNodeType = new NodeType();
+    combineAllNodeType->combineInputs = true;
+    combineAllNodeType->editable = false;
+    combineAllNodeType->nodeExtension = nullptr;
+    combineAllNodeType->name = "Combine All";
+    combineAllNodeType->inputConnections.emplace_back(ConnectionDesc{"diffuseSpecularLighted", "Texture"});
+    combineAllNodeType->inputConnections.emplace_back(ConnectionDesc{"depthMap", "Texture"});
+    combineAllNodeType->outputConnections.emplace_back(ConnectionDesc{"finalColor", "Texture"});
+    nodeTypeVector.emplace_back(combineAllNodeType);
+
+    NodeType* combineAllSSAONodeType = new NodeType();
+    combineAllSSAONodeType->combineInputs = true;
+    combineAllSSAONodeType->editable = false;
+    combineAllSSAONodeType->nodeExtension = nullptr;
+    combineAllSSAONodeType->name = "Combine All SSAO";
+    combineAllSSAONodeType->inputConnections.emplace_back(ConnectionDesc{"diffuseSpecularLighted", "Texture"});
+    combineAllSSAONodeType->inputConnections.emplace_back(ConnectionDesc{"ambient", "Texture"});
+    combineAllSSAONodeType->inputConnections.emplace_back(ConnectionDesc{"ssao", "Texture"});
+    combineAllSSAONodeType->inputConnections.emplace_back(ConnectionDesc{"depthMap", "Texture"});
+    combineAllSSAONodeType->outputConnections.emplace_back(ConnectionDesc{"finalColor", "Texture"});
+    nodeTypeVector.emplace_back(combineAllSSAONodeType);
+
+    NodeType* guiNodeType = new NodeType();
+    guiNodeType->combineInputs = false;
+    guiNodeType->editable = false;
+    guiNodeType->nodeExtension = &se;
+    guiNodeType->name = "GUI";
+    guiNodeType->inputConnections.emplace_back(ConnectionDesc{"GUISampler", "Texture"});
+    guiNodeType->outputConnections.emplace_back(ConnectionDesc{"GUI", "Texture"});
+    nodeTypeVector.emplace_back(guiNodeType);
+
+    NodeType* depthPrePassNodeType = new NodeType();
+    depthPrePassNodeType->combineInputs = false;
+    depthPrePassNodeType->editable = false;
+    depthPrePassNodeType->nodeExtension = &se;
+    depthPrePassNodeType->name = "depthPrePass";
+    depthPrePassNodeType->outputConnections.emplace_back(ConnectionDesc{"depthMap", "Texture"});
+    nodeTypeVector.emplace_back(depthPrePassNodeType);
+
 
     SampleEditorExtension sampleEditorExtension;
     NodeGraph nodeGraph(nodeTypeVector, false, &sampleEditorExtension);

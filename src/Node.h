@@ -35,8 +35,12 @@ struct NodeType {
         nameElement->SetText(name.c_str());
         nodeTypeElement->InsertEndChild(nameElement);
 
+        tinyxml2::XMLElement* combineInputsElement = document.NewElement("CombineInputs");
+        combineInputsElement->SetText(combineInputs ? "True" : "False");
+        nodeTypeElement->InsertEndChild(combineInputsElement);
+
         tinyxml2::XMLElement* editableElement = document.NewElement("Editable");
-        editableElement->SetText(editableElement ? "True" : "False");
+        editableElement->SetText(editable ? "True" : "False");
         nodeTypeElement->InsertEndChild(editableElement);
 
         tinyxml2::XMLElement * inputConnectionsElement = document.NewElement("Inputs");

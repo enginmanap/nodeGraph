@@ -64,8 +64,111 @@ struct NodeType {
         }
     }
 
-    static NodeType deserialize(tinyxml2::XMLElement *nodeTypeElement) {
+    static NodeType *deserialize(const std::string &fileName,
+            tinyxml2::XMLElement *nodeTypeElement,
+            std::unordered_map<std::string, NodeExtension *> possibleNodeExtension) {
+        NodeType* newNodeType = new NodeType();
 
+        tinyxml2::XMLElement* nameElement =  nodeTypeElement->FirstChildElement("Name");
+        if (nameElement == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Name of NodeType is not found!" << std::endl;
+            exit(-1);
+        }
+
+        if(nameElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Name of NodeType has no text!" << std::endl;
+            exit(-1);
+        }
+        newNodeType->name = nameElement->GetText();
+
+
+        tinyxml2::XMLElement* extensionElement =  nodeTypeElement->FirstChildElement("NodeExtension");
+        if (extensionElement == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Extension of NodeType is not found!" << std::endl;
+        } else {
+            if(extensionElement->GetText() != nullptr && std::string(extensionElement->GetText()) == "PlaceHolderExtension") {
+                //no need to try to load the extension
+            } else {
+                tinyxml2::XMLElement *extensionNameElement = extensionElement->FirstChildElement("Name");
+                if (extensionNameElement == nullptr) {
+                    std::cerr << "Error loading XML " << fileName << ": Extension name of NodeType is not found!" << std::endl;
+                } else {
+                    if (extensionNameElement->GetText() == nullptr) {
+                        std::cerr << "Error loading XML " << fileName << ": Extension name of NodeType has no text!" << std::endl;
+                    } else {
+
+                        if (possibleNodeExtension.find(extensionNameElement->GetText()) != possibleNodeExtension.end()) {
+                            newNodeType->nodeExtension = possibleNodeExtension[extensionNameElement->GetText()];
+                        } else {
+                            std::cerr << "Error loading XML " << fileName << ": Extension of NodeType(" << extensionNameElement->GetText() << ") is not found, setting Null!"
+                                      << std::endl;
+                        }
+                    }
+                }
+            }
+        }
+        tinyxml2::XMLElement* editableElement =  nodeTypeElement->FirstChildElement("Editable");
+        if (editableElement == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Editable of NodeType is not found!" << std::endl;
+            exit(-1);
+        }
+        if(editableElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Editable of NodeType has no text! assuming false" << std::endl;
+            newNodeType->editable = false;
+        } else {
+            if(std::string(editableElement->GetText()) == "True") {
+                newNodeType->editable = true;
+            } else if(std::string(editableElement->GetText()) == "False") {
+                newNodeType->editable = false;
+            } else {
+                std::cerr << "Error loading XML "<< fileName << ": Editable of NodeType has unknown("<<editableElement->GetText()<<") text! assuming false" << std::endl;
+                newNodeType->editable = false;
+            }
+        }
+
+        tinyxml2::XMLElement* combineInputsElement =  nodeTypeElement->FirstChildElement("CombineInputs");
+        if (combineInputsElement == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Combine inputs of NodeType is not found!" << std::endl;
+            exit(-1);
+        }
+        if(combineInputsElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Combine inputs of NodeType has no text! assuming false" << std::endl;
+            newNodeType->combineInputs = false;
+        } else {
+            if(std::string(combineInputsElement->GetText()) == "True") {
+                newNodeType->combineInputs = true;
+            } else if(std::string(combineInputsElement->GetText()) == "False") {
+                newNodeType->combineInputs = false;
+            } else {
+                std::cerr << "Error loading XML " << fileName << ": Combine inputs of NodeType has unknown(" << combineInputsElement->GetText() << ") text! assuming false" << std::endl;
+                newNodeType->combineInputs = false;
+            }
+        }
+
+        tinyxml2::XMLElement* inputsElement =  nodeTypeElement->FirstChildElement("Inputs");
+        if (inputsElement == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Inputs of NodeType is not found!" << std::endl;
+        }
+        tinyxml2::XMLElement* inputElement =  inputsElement->FirstChildElement("ConnectionDesc");
+        while(inputElement != nullptr) {
+            ConnectionDesc inputDesc;
+            ConnectionDesc::deserialize(fileName, inputElement, inputDesc);
+            newNodeType->inputConnections.emplace_back(inputDesc);
+            inputElement = inputElement->NextSiblingElement("ConnectionDesc");
+        }
+
+        tinyxml2::XMLElement* outputsElement =  nodeTypeElement->FirstChildElement("Outputs");
+        if (outputsElement == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Outputs of NodeType is not found!" << std::endl;
+        }
+        tinyxml2::XMLElement* outputElement =  outputsElement->FirstChildElement("ConnectionDesc");
+        while(outputElement != nullptr) {
+            ConnectionDesc outputDesc;
+            ConnectionDesc::deserialize(fileName, outputElement, outputDesc);
+            newNodeType->outputConnections.emplace_back(outputDesc);
+            outputElement = outputElement->NextSiblingElement("ConnectionDesc");
+        }
+        return newNodeType;
     }
 
 };

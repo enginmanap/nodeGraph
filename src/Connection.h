@@ -32,7 +32,34 @@ struct ConnectionDesc {
         typeElement->SetText(type.c_str());
         connectionDescElement->InsertEndChild(typeElement);
     }
-};
+
+    static void deserialize(const std::string& fileName, tinyxml2::XMLElement *connectionDescElement, ConnectionDesc& elementToFill) {
+
+        tinyxml2::XMLElement *nameElement = connectionDescElement->FirstChildElement("Name");
+        if (nameElement == nullptr) {
+            std::cerr << "Error loading XML " << fileName << ": Name of ConnectionDesc is not found!" << std::endl;
+            exit(-1);
+        }
+
+        if (nameElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML " << fileName << ": Name of ConnectionDesc has no text!" << std::endl;
+            exit(-1);
+        }
+        elementToFill.name = nameElement->GetText();
+
+        tinyxml2::XMLElement *typeElement = connectionDescElement->FirstChildElement("Type");
+        if (typeElement == nullptr) {
+            std::cerr << "Error loading XML " << fileName << ": Type of ConnectionDesc is not found!" << std::endl;
+            exit(-1);
+        }
+
+        if (typeElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML " << fileName << ": Type of ConnectionDesc has no text!" << std::endl;
+            exit(-1);
+        }
+        elementToFill.type = typeElement->GetText();
+    }
+    };
 
 class Connection {
 public:

@@ -482,7 +482,8 @@ void NodeGraph::drawDetailsPane(Node* selectedNode) {
     }
     if (ImGui::Button("Save Nodes")) {
         this->serialize("Nodes.xml");
-    }}
+    }
+}
 
 void NodeGraph::serialize(const std::string& fileName) {
     tinyxml2::XMLDocument serializeDocument;
@@ -510,8 +511,10 @@ void NodeGraph::serialize(const std::string& fileName) {
         std::cerr  << "ERROR " << eResult << std::endl;
     }
 }
-/*
-NodeGraph * NodeGraph::deserialize(const std::string& fileName) {
+
+NodeGraph * NodeGraph::deserialize(const std::string& fileName,
+        std::unordered_map<std::string, EditorExtension*> possibleEditorExtensions,
+        std::unordered_map<std::string, NodeExtension*> possibleNodeExtensions) {
     tinyxml2::XMLDocument xmlDoc;
     tinyxml2::XMLError eResult = xmlDoc.LoadFile(fileName.c_str());
     if (eResult != tinyxml2::XML_SUCCESS) {
@@ -525,22 +528,54 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName) {
         return nullptr;
     }
 
+    EditorExtension* usedEditorExtension = nullptr;
+    tinyxml2::XMLElement* editorExtensionElement =  rootNode->FirstChildElement("EditorExtension");
+    if (editorExtensionElement == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": EditorExtension are not found!" << std::endl;
+    }
+    if(editorExtensionElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": EditorExtension has no text!" << std::endl;
+    } else {
+        if(possibleEditorExtensions.find(editorExtensionElement->GetText()) != possibleEditorExtensions.end()) {
+            usedEditorExtension = possibleEditorExtensions[editorExtensionElement->GetText()];
+        }
+    }
+
+    tinyxml2::XMLElement* nodeTypesElement =  rootNode->FirstChildElement("NodeTypes");
+    if (nodeTypesElement == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": NodeTypes are not found!" << std::endl;
+        exit(-1);
+    }
+    tinyxml2::XMLElement* nodeTypeElement =  nodeTypesElement->FirstChildElement("NodeType");
+    if (nodeTypeElement == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": Not even one NodeType found!" << std::endl;
+        exit(-1);
+    }
+    std::vector<NodeType*> nodeTypes;
+
+    while(nodeTypeElement != nullptr) {
+        NodeType* nodeType = NodeType::deserialize(fileName, nodeTypeElement, possibleNodeExtensions);
+        nodeTypes.emplace_back(nodeType);
+        nodeTypeElement = nodeTypeElement->NextSiblingElement("NodeType");
+
+    }
+
     tinyxml2::XMLElement* nodesElement =  rootNode->FirstChildElement("Nodes");
     if (nodesElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": No Nodes found!" << std::endl;
         exit(-1);
     }
+    NodeGraph* newNodeGraph = new NodeGraph(nodeTypes, false, usedEditorExtension);
 
-    NodeGraph* newNodeGraph = new NodeGraph();
     tinyxml2::XMLElement* nodeElement =  nodesElement->FirstChildElement("Node");
     while(nodeElement != nullptr) {
         Node* node = Node::deserialize(nodeElement);
         newNodeGraph->nodes.emplace_back(node);
-        tinyxml2::XMLElement* nodeElement =  nodesElement->NextSiblingElement("Node");
+        nodeElement =  nodesElement->NextSiblingElement("Node");
     }
     return newNodeGraph;
 }
-*/
+
 /*
 static void saveNodes(const char* filename)
 {

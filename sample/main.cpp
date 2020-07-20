@@ -571,7 +571,13 @@ int main(int, char **) {
 
 
     SampleEditorExtension sampleEditorExtension;
-    NodeGraph nodeGraph(nodeTypeVector, false, &sampleEditorExtension);
+    //NodeGraph nodeGraph(nodeTypeVector, false, &sampleEditorExtension);
+
+    std::unordered_map<std::string, EditorExtension*> possibleEditorExtensions;
+    possibleEditorExtensions[sampleEditorExtension.getName()] = &sampleEditorExtension;
+    std::unordered_map<std::string, NodeExtension*> possibleNodeExtensions;
+    possibleNodeExtensions[se.getName()] = &se;
+    NodeGraph* nodeGraph = NodeGraph::deserialize("Nodes.xml", possibleEditorExtensions, possibleNodeExtensions);
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         // Poll and handle events (inputs, window resize, etc.)
@@ -587,9 +593,7 @@ int main(int, char **) {
         ImGui::NewFrame();
 
         bool show_test_window = true;
-        ShowExampleAppCustomNodeGraph(nodeGraph, &show_test_window);
-
-
+        ShowExampleAppCustomNodeGraph(*nodeGraph, &show_test_window);
 
         // Rendering
         ImGui::Render();

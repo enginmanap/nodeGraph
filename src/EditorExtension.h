@@ -6,6 +6,7 @@
 #define NODEGRAPH_EDITOREXTENSION_H
 
 #include <vector>
+#include <tinyxml2.h>
 
 class Node;
 

@@ -12,9 +12,21 @@ class Node;
 
 class EditorExtension {
 public:
+    virtual ~EditorExtension() {}
+
     virtual void drawDetailPane(const std::vector<const Node *>& nodes, const Node* selectedNode = nullptr) = 0;
 
-    virtual ~EditorExtension() {}
+    virtual std::string getName() = 0;
+
+    virtual void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement) {
+        tinyxml2::XMLElement *nodeTypeElement = document.NewElement("EditorExtension");
+        parentElement->InsertEndChild(nodeTypeElement);
+
+        tinyxml2::XMLElement *nameElement = document.NewElement("Name");
+        nameElement->SetText(getName().c_str());
+        nodeTypeElement->InsertEndChild(nameElement);
+    }
+
 };
 
 

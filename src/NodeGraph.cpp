@@ -487,10 +487,12 @@ void NodeGraph::drawDetailsPane(Node* selectedNode) {
 
 void NodeGraph::serialize(const std::string& fileName) {
     tinyxml2::XMLDocument serializeDocument;
-    tinyxml2::XMLNode * rootNode = serializeDocument.NewElement("NodeGraph");
+    tinyxml2::XMLElement * rootNode = serializeDocument.NewElement("NodeGraph");
     serializeDocument.InsertFirstChild(rootNode);
 
-
+    if(editorExtension != nullptr) {
+        this->editorExtension->serialize(serializeDocument, rootNode);
+    }
 
     tinyxml2::XMLElement * nodeTypesElement = serializeDocument.NewElement("NodeTypes");
     rootNode->InsertEndChild(nodeTypesElement);
@@ -575,58 +577,3 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
     }
     return newNodeGraph;
 }
-
-/*
-static void saveNodes(const char* filename)
-{
-    json_t* root = json_object();
-    json_t* nodes = json_array();
-    for (Node* node : nodes)
-	{
-		json_t* item = json_object();
-		json_object_set_new(item, "type", json_string(node->name));
-		json_object_set_new(item, "id", json_integer(node->id));
-		json_object_set_new(item, "pos", json_pack("{s:f, s:f}", "x",  node->pos.x, "y", node->pos.y));
-		json_array_append_new(nodes, item);
-	}
-    // save the nodes
-    json_object_set_new(root, "nodes", nodes);
-    if (json_dump_file(root, filename, JSON_INDENT(4) | JSON_PRESERVE_ORDER) != 0)
-        printf("JSON: Unable to open %s for write\n", filename);
-}
-*/
-
-//        if (ImGui::MenuItem("Load graph...")) {
-/*
-char path[1024];
-if (Dialog_open(path))
-{
-    printf("file to load %s\n", path);
-}
-*/
-//        }
-
-//        if (ImGui::MenuItem("Save graph...")) {
-/*
-char path[1024];
-if (Dialog_save(path))
-{
-    saveNodes(path);
-}
-*/
-//        }
-
-
-/*
-Node* node = node_selected != -1 ? &nodes[node_selected] : NULL;
-ImVec2 scene_pos = ImGui::GetMousePosOnOpeningCurrentPopup() - offset;
-if (node)
-{
-    ImGui::Text("Node '%s'", node->Name);
-    ImGui::Separator();
-    if (ImGui::MenuItem("Rename..", NULL, false, false)) {}
-    if (ImGui::MenuItem("Delete", NULL, false, false)) {}
-    if (ImGui::MenuItem("Copy", NULL, false, false)) {}
-}
-*/
-//else

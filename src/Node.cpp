@@ -9,11 +9,12 @@ Node::Node(uint32_t id, ImVec2 pos, const NodeType *nodeType) {
     initialize(id, pos, nodeType);
 }
 
-Node::Node(uint32_t id, ImVec2 pos, const std::vector<NodeType> &allNodeTypes, const char *name, uint32_t &error) {
+Node::Node(uint32_t id, ImVec2 pos, const std::vector<NodeType*> &allNodeTypes, const char *name, uint32_t &error) {
     for (size_t i = 0; i < allNodeTypes.size(); ++i) {
-        if (!strcmp(allNodeTypes[i].name.c_str(), name)) {
-            initialize(id, pos, &allNodeTypes[i]);
+        if (!strcmp(allNodeTypes[i]->name.c_str(), name)) {
+            initialize(id, pos, allNodeTypes[i]);
             error = 0;
+            return;
         }
     }
     error = 1;
@@ -395,6 +396,71 @@ void Node::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *pare
     nodeElement->InsertEndChild(outputsElement);
 }
 
-Node *Node::deserialize(tinyxml2::XMLElement *nodeElement) {
-    return nullptr;
+Node *Node::deserialize(const std::string &fileName,
+        tinyxml2::XMLElement *nodeElement,
+        std::vector<NodeType*> possibleNodeTypes) {
+
+    tinyxml2::XMLElement* idElement =  nodeElement->FirstChildElement("ID");
+    if (idElement == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": ID of Node is not found!" << std::endl;
+        exit(-1);
+    }
+
+    if(idElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": ID of Node has no text!" << std::endl;
+        exit(-1);
+    }
+    uint32_t nodeID = std::stoul(idElement->GetText());
+
+    tinyxml2::XMLElement* nameElement =  nodeElement->FirstChildElement("Name");
+    if (nameElement == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": Name of Node is not found!" << std::endl;
+        exit(-1);
+    }
+
+    if(nameElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": Name of Node has no text!" << std::endl;
+        exit(-1);
+    }
+    std::string nodeName = nameElement->GetText();
+
+    ImVec2 position;
+    tinyxml2::XMLElement* positionElement =  nodeElement->FirstChildElement("Position");
+    if (positionElement == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": Position of Node is not found!" << std::endl;
+        exit(-1);
+    } else {
+
+        tinyxml2::XMLElement* posXElement =  positionElement->FirstChildElement("X");
+        if (posXElement == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": X position of Node is not found!" << std::endl;
+            exit(-1);
+        }
+
+        if(posXElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": X position of Node has no text!" << std::endl;
+            exit(-1);
+        }
+        position.x = std::stof(posXElement->GetText());
+
+        tinyxml2::XMLElement* posYElement =  positionElement->FirstChildElement("Y");
+        if (posYElement == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Y position of Node is not found!" << std::endl;
+            exit(-1);
+        }
+
+        if(posYElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML "<< fileName << ": Y position of Node has no text!" << std::endl;
+            exit(-1);
+        }
+        position.y = std::stof(posYElement->GetText());
+    }
+
+    uint32_t error = 0;
+    Node* newNode = new Node(nodeID, position, possibleNodeTypes, nodeName.c_str(), error);
+    if(error != 0) {
+        std::cerr << "Error loading XML "<< fileName << ": Node creation failed!" << std::endl;
+        exit(-1);
+    }
+    return newNode;
 }

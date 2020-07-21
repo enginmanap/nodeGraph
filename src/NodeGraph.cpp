@@ -571,9 +571,9 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
 
     tinyxml2::XMLElement* nodeElement =  nodesElement->FirstChildElement("Node");
     while(nodeElement != nullptr) {
-        Node* node = Node::deserialize(nodeElement);
+        Node* node = Node::deserialize(fileName, nodeElement, nodeTypes);
         newNodeGraph->nodes.emplace_back(node);
-        nodeElement =  nodesElement->NextSiblingElement("Node");
+        nodeElement =  nodeElement->NextSiblingElement("Node");
     }
     return newNodeGraph;
 }

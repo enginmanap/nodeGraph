@@ -198,7 +198,7 @@ class Node {
 public:
     Node(uint32_t id, ImVec2 pos, const NodeType *nodeType);
 
-    Node(uint32_t id, ImVec2 pos, const std::vector<NodeType> &allNodeTypes, const char *name, uint32_t &error);
+    Node(uint32_t id, ImVec2 pos, const std::vector<NodeType*> &allNodeTypes, const char *name, uint32_t &error);
 
     ~Node();
 
@@ -258,7 +258,7 @@ public:
     }
 
     void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement);
-    static Node* deserialize(tinyxml2::XMLElement *nodeElement);
+    static Node *deserialize(const std::string &fileName, tinyxml2::XMLElement *nodeElement,std::vector<NodeType*> possibleNodeTypes);
 
 };
 

@@ -516,8 +516,6 @@ int main(int, char **) {
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
-    bool show_demo_window = true;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     std::vector <NodeType* > nodeTypeVector;
 
@@ -571,13 +569,20 @@ int main(int, char **) {
 
 
     SampleEditorExtension sampleEditorExtension;
-    //NodeGraph nodeGraph(nodeTypeVector, false, &sampleEditorExtension);
+    //NodeGraph* nodeGraph = new NodeGraph(nodeTypeVector, false, &sampleEditorExtension);
 
     std::unordered_map<std::string, EditorExtension*> possibleEditorExtensions;
     possibleEditorExtensions[sampleEditorExtension.getName()] = &sampleEditorExtension;
     std::unordered_map<std::string, NodeExtension*> possibleNodeExtensions;
     possibleNodeExtensions[se.getName()] = &se;
+
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::Render();
     NodeGraph* nodeGraph = NodeGraph::deserialize("Nodes.xml", possibleEditorExtensions, possibleNodeExtensions);
+
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         // Poll and handle events (inputs, window resize, etc.)

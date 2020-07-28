@@ -216,7 +216,7 @@ public:
         return name;
     }
 
-    int getId() const {
+    uint32_t getId() const {
         return id;
     }
 

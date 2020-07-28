@@ -155,6 +155,8 @@ public:
     }
 
     void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement);
+    static Connection* deserialize(const std::string &fileName,
+                                               tinyxml2::XMLElement *connectionElement, Node* parentNode);
 
 };
 

@@ -462,5 +462,36 @@ Node *Node::deserialize(const std::string &fileName,
         std::cerr << "Error loading XML "<< fileName << ": Node creation failed!" << std::endl;
         exit(-1);
     }
+    //now try to deserialize the connections
+    tinyxml2::XMLElement* inputsElement =  nodeElement->FirstChildElement("Inputs");
+    if (inputsElement == nullptr) {
+        if(newNode->getInputConnections().size() != 0) {
+            std::cerr << "Error loading XML " << fileName << ": Inputs node is not found! continue with defaults" << std::endl;
+        }
+    } else {
+        newNode->inputConnections.clear();//there might be different kinds of connection modifications, just clear and load.
+        tinyxml2::XMLElement* inputElement =  inputsElement->FirstChildElement("Connection");
+        while(inputElement != nullptr) {
+            Connection* connection = Connection::deserialize(fileName, inputElement, newNode);
+            newNode->inputConnections.emplace_back(connection);
+            inputElement = inputElement->NextSiblingElement("Connection");
+        }
+    }
+
+    tinyxml2::XMLElement* outputsElement =  nodeElement->FirstChildElement("Outputs");
+    if (outputsElement == nullptr) {
+        if(newNode->getOutputConnections().size() != 0) {
+            std::cerr << "Error loading XML " << fileName << ": Outputs node is not found! continue with defaults" << std::endl;
+        }
+    } else {
+        newNode->outputConnections.clear();//there might be different kinds of connection modifications, just clear and load.
+        tinyxml2::XMLElement* outputElement =  outputsElement->FirstChildElement("Connection");
+        while(outputElement != nullptr) {
+            Connection* connection = Connection::deserialize(fileName, outputElement, newNode);
+            newNode->outputConnections.emplace_back(connection);
+            outputElement = outputElement->NextSiblingElement("Connection");
+        }
+    }
+
     return newNode;
 }

@@ -570,11 +570,22 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
     }
     NodeGraph* newNodeGraph = new NodeGraph(nodeTypes, false, usedEditorExtension);
     tinyxml2::XMLElement* nodeElement =  nodesElement->FirstChildElement("Node");
+    std::unordered_map<Node*, std::unordered_map<Connection*, std::vector<LateDeserializeInformation>>> lateSerializeInputsPerNode;
+    std::unordered_map<Node*, std::unordered_map<Connection*, std::vector<LateDeserializeInformation>>> lateSerializeOutputsPerNode;
     while(nodeElement != nullptr) {
-        Node* node = Node::deserialize(fileName, nodeElement, nodeTypes);
+        std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> lateDeserializeInputs;
+        std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> lateDeserializeOutputs;
+        Node* node = Node::deserialize(fileName, nodeElement, nodeTypes, lateDeserializeInputs, lateDeserializeOutputs);
+        lateSerializeInputsPerNode[node] = lateDeserializeInputs;
+        lateSerializeOutputsPerNode[node] = lateDeserializeOutputs;
         newNodeGraph->nodes.emplace_back(node);
         newNodeGraph->nextNodeID = std::max(node->getId() +1, newNodeGraph->nextNodeID);
         nodeElement =  nodeElement->NextSiblingElement("Node");
+    }
+
+    //now deserialize late part
+    for(auto node:newNodeGraph->nodes) {
+        node->lateDeserialize(lateSerializeInputsPerNode[node], lateSerializeOutputsPerNode[node], newNodeGraph->nodes);
     }
     return newNodeGraph;
 }

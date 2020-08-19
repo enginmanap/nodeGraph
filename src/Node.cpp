@@ -398,7 +398,9 @@ void Node::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *pare
 
 Node *Node::deserialize(const std::string &fileName,
         tinyxml2::XMLElement *nodeElement,
-        std::vector<NodeType*> possibleNodeTypes) {
+        std::vector<NodeType*> possibleNodeTypes,
+        std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> &lateDeserializeInputs,
+        std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> &lateDeserializeOutputs) {
 
     tinyxml2::XMLElement* idElement =  nodeElement->FirstChildElement("ID");
     if (idElement == nullptr) {
@@ -472,7 +474,11 @@ Node *Node::deserialize(const std::string &fileName,
         newNode->inputConnections.clear();//there might be different kinds of connection modifications, just clear and load.
         tinyxml2::XMLElement* inputElement =  inputsElement->FirstChildElement("Connection");
         while(inputElement != nullptr) {
-            Connection* connection = Connection::deserialize(fileName, inputElement, newNode);
+            std::vector<LateDeserializeInformation> inputLateDeserializeInfo;
+            std::vector<LateDeserializeInformation> outputLateDeserializeInfo;
+            Connection* connection = Connection::deserialize(fileName, inputElement, newNode, inputLateDeserializeInfo, outputLateDeserializeInfo);
+            lateDeserializeInputs[connection] = inputLateDeserializeInfo;
+            lateDeserializeOutputs[connection] = outputLateDeserializeInfo;
             newNode->inputConnections.emplace_back(connection);
             inputElement = inputElement->NextSiblingElement("Connection");
         }
@@ -487,11 +493,31 @@ Node *Node::deserialize(const std::string &fileName,
         newNode->outputConnections.clear();//there might be different kinds of connection modifications, just clear and load.
         tinyxml2::XMLElement* outputElement =  outputsElement->FirstChildElement("Connection");
         while(outputElement != nullptr) {
-            Connection* connection = Connection::deserialize(fileName, outputElement, newNode);
+            std::vector<LateDeserializeInformation> inputLateDeserializeInfo;
+            std::vector<LateDeserializeInformation> outputLateDeserializeInfo;
+            Connection* connection = Connection::deserialize(fileName, outputElement, newNode, inputLateDeserializeInfo, outputLateDeserializeInfo);
+            lateDeserializeInputs[connection] = inputLateDeserializeInfo;
+            lateDeserializeOutputs[connection] = outputLateDeserializeInfo;
             newNode->outputConnections.emplace_back(connection);
             outputElement = outputElement->NextSiblingElement("Connection");
         }
     }
 
     return newNode;
+}
+
+void Node::lateDeserialize(const std::unordered_map<Connection*, std::vector<LateDeserializeInformation>>& lateDeserializeInputs,
+                           const std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> &lateDeserializeOutputs,
+                           std::vector<Node *> allNodes) {
+    for (auto input = inputConnections.begin(); input != inputConnections.end(); ++input) {
+        if(lateDeserializeInputs.find((*input)) != lateDeserializeInputs.end()) {
+            (*input)->lateSerialize(lateDeserializeInputs.at((*input)), allNodes);
+        }
+    }
+
+    for (auto output = outputConnections.begin(); output != outputConnections.end(); ++output) {
+        if(lateDeserializeOutputs.find((*output)) != lateDeserializeOutputs.end()) {
+            (*output)->lateSerialize(lateDeserializeOutputs.at((*output)), allNodes);
+        }
+    }
 }

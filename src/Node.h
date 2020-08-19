@@ -258,8 +258,15 @@ public:
     }
 
     void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement);
-    static Node *deserialize(const std::string &fileName, tinyxml2::XMLElement *nodeElement,std::vector<NodeType*> possibleNodeTypes);
+    static Node *deserialize(const std::string &fileName,
+                             tinyxml2::XMLElement *nodeElement,
+                             std::vector<NodeType*> possibleNodeTypes,
+                             std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> &lateDeserializeInputs,
+                             std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> &lateDeserializeOutputs);
 
+    void lateDeserialize(const std::unordered_map<Connection*, std::vector<LateDeserializeInformation>>& lateDeserializeInputs,
+                         const std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> &lateDeserializeOutputs,
+                         std::vector<Node *> allNodes);
 };
 
 

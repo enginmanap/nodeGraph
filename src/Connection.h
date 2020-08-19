@@ -61,6 +61,12 @@ struct ConnectionDesc {
     }
     };
 
+struct LateDeserializeInformation {
+    uint32_t nodeID;
+    uint32_t connectionID;
+    std::string connectionName;
+};
+
 class Connection {
 public:
     enum class Directions {INPUT, OUTPUT};
@@ -156,8 +162,11 @@ public:
 
     void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement);
     static Connection* deserialize(const std::string &fileName,
-                                               tinyxml2::XMLElement *connectionElement, Node* parentNode);
+                                   tinyxml2::XMLElement *connectionElement, Node* parentNode,
+                                   std::vector<LateDeserializeInformation>& inputs,
+                                   std::vector<LateDeserializeInformation>& outputs);
 
+    void lateSerialize(const std::vector<LateDeserializeInformation> &lateDeserializeList, std::vector<Node *> allNodes);
 };
 
 #endif //NODEGRAPH_CONNECTION_H

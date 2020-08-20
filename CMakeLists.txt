@@ -26,7 +26,7 @@ set(nodeGraph_HEADERS
         "src/NodeGraph.h"
         "src/NodeExtension.h"
         "src/EditorExtension.h"
-        )
+        src/NodeType.cpp src/NodeType.h)
 
 INCLUDE(FindPkgConfig)
 

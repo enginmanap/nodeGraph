@@ -15,10 +15,12 @@
 struct NodeType {
     std::string name;
     bool editable;
-    NodeExtension* nodeExtension = nullptr;
+    std::string extensionName;
+    NodeExtension*(*nodeExtensionConstructor)() = []() -> NodeExtension* {return nullptr;};
     std::vector<ConnectionDesc> inputConnections;
     std::vector<ConnectionDesc> outputConnections;
     bool combineInputs;
+
 
     void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement);
 

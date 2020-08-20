@@ -522,7 +522,7 @@ int main(int, char **) {
     NodeType* textureNodeType = new NodeType();
     textureNodeType->combineInputs = true;
     textureNodeType->editable = true;
-    textureNodeType->nodeExtension = nullptr;
+    //textureNodeType->nodeExtension = nullptr;
     textureNodeType->name = "Texture";
     textureNodeType->inputConnections.emplace_back(ConnectionDesc{"Write", "Texture"});
     textureNodeType->outputConnections.emplace_back(ConnectionDesc{"Read", "Texture"});
@@ -531,7 +531,7 @@ int main(int, char **) {
     NodeType* combineAllNodeType = new NodeType();
     combineAllNodeType->combineInputs = true;
     combineAllNodeType->editable = false;
-    combineAllNodeType->nodeExtension = nullptr;
+    //combineAllNodeType->nodeExtension = nullptr;
     combineAllNodeType->name = "Combine All";
     combineAllNodeType->inputConnections.emplace_back(ConnectionDesc{"diffuseSpecularLighted", "Texture"});
     combineAllNodeType->inputConnections.emplace_back(ConnectionDesc{"depthMap", "Texture"});
@@ -541,7 +541,7 @@ int main(int, char **) {
     NodeType* combineAllSSAONodeType = new NodeType();
     combineAllSSAONodeType->combineInputs = true;
     combineAllSSAONodeType->editable = false;
-    combineAllSSAONodeType->nodeExtension = nullptr;
+    //combineAllSSAONodeType->nodeExtension = nullptr;
     combineAllSSAONodeType->name = "Combine All SSAO";
     combineAllSSAONodeType->inputConnections.emplace_back(ConnectionDesc{"diffuseSpecularLighted", "Texture"});
     combineAllSSAONodeType->inputConnections.emplace_back(ConnectionDesc{"ambient", "Texture"});
@@ -553,7 +553,7 @@ int main(int, char **) {
     NodeType* guiNodeType = new NodeType();
     guiNodeType->combineInputs = false;
     guiNodeType->editable = false;
-    guiNodeType->nodeExtension = &se;
+    guiNodeType->nodeExtensionConstructor = []() -> NodeExtension* { return new SampleExtension();};
     guiNodeType->name = "GUI";
     guiNodeType->inputConnections.emplace_back(ConnectionDesc{"GUISampler", "Texture"});
     guiNodeType->outputConnections.emplace_back(ConnectionDesc{"GUI", "Texture"});
@@ -562,7 +562,7 @@ int main(int, char **) {
     NodeType* depthPrePassNodeType = new NodeType();
     depthPrePassNodeType->combineInputs = false;
     depthPrePassNodeType->editable = false;
-    depthPrePassNodeType->nodeExtension = &se;
+    depthPrePassNodeType->nodeExtensionConstructor = []() -> NodeExtension* { return new SampleExtension();};
     depthPrePassNodeType->name = "depthPrePass";
     depthPrePassNodeType->outputConnections.emplace_back(ConnectionDesc{"depthMap", "Texture"});
     nodeTypeVector.emplace_back(depthPrePassNodeType);

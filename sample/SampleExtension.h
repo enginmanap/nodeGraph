@@ -12,7 +12,7 @@
 
 class SampleExtension : public NodeExtension {
     enum class PossibleTypes { NONE, INT, FLOAT, LONG, STRING };
-    PossibleTypes type;
+    PossibleTypes type = PossibleTypes::NONE;
 
     std::string getNameOfType(PossibleTypes processingType) {
         switch (processingType) {

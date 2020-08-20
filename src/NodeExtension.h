@@ -31,8 +31,8 @@ public:
         nodeTypeElement->InsertEndChild(nameElement);
     }
 
-    virtual void deserialize(const std::string &fileName,
-                             tinyxml2::XMLElement *nodeExtensionElement) {
+    virtual void deserialize(const std::string &fileName [[gnu::unused]],
+                             tinyxml2::XMLElement *nodeExtensionElement [[gnu::unused]]) {
         //intentionally empty
     }
 };

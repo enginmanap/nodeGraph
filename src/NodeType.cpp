@@ -33,13 +33,13 @@ void NodeType::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *
     }
     nodeTypeElement->InsertEndChild(outputConnectionsElement);
 
-    if(nodeExtension != nullptr) {
-        nodeExtension->serialize(document, nodeTypeElement);
-    } else {
-        tinyxml2::XMLElement * nodeExtensionElement = document.NewElement("NodeExtension");
+    tinyxml2::XMLElement * nodeExtensionElement = document.NewElement("NodeExtension");
+    if(extensionName.empty() ) {
         nodeExtensionElement->SetText("PlaceHolderExtension");
-        nodeTypeElement->InsertEndChild(nodeExtensionElement);
+    } else {
+        nodeExtensionElement->SetText(extensionName.c_str());
     }
+    nodeTypeElement->InsertEndChild(nodeExtensionElement);
 }
 
 NodeType *NodeType::deserialize(const std::string &fileName,
@@ -64,24 +64,19 @@ NodeType *NodeType::deserialize(const std::string &fileName,
     if (extensionElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Extension of NodeType is not found!" << std::endl;
     } else {
-        if(extensionElement->GetText() != nullptr && std::string(extensionElement->GetText()) == "PlaceHolderExtension") {
-            //no need to try to load the extension
+        if(extensionElement->GetText() == nullptr) {
+            std::cerr << "NodeType extension information not found, this should not have happened." << std::endl;
         } else {
-            tinyxml2::XMLElement *extensionNameElement = extensionElement->FirstChildElement("Name");
-            if (extensionNameElement == nullptr) {
-                std::cerr << "Error loading XML " << fileName << ": Extension name of NodeType is not found!" << std::endl;
+            std::string nodeExtensionName = std::string(extensionElement->GetText());
+            if(nodeExtensionName  == "PlaceHolderExtension") {
+                //no need to try to load;
             } else {
-                if (extensionNameElement->GetText() == nullptr) {
-                    std::cerr << "Error loading XML " << fileName << ": Extension name of NodeType has no text!" << std::endl;
+                if (possibleNodeExtension.find(nodeExtensionName) != possibleNodeExtension.end()) {
+                    newNodeType->extensionName = nodeExtensionName;
+                    newNodeType->nodeExtensionConstructor = possibleNodeExtension[nodeExtensionName];
                 } else {
-
-                    if (possibleNodeExtension.find(extensionNameElement->GetText()) != possibleNodeExtension.end()) {
-                        newNodeType->nodeExtension = possibleNodeExtension[extensionNameElement->GetText()]();
-                        newNodeType->nodeExtension->deserialize(fileName, extensionElement);
-                    } else {
-                        std::cerr << "Error loading XML " << fileName << ": Extension of NodeType(" << extensionNameElement->GetText() << ") is not found, setting Null!"
-                                  << std::endl;
-                    }
+                    std::cerr << "Error loading XML " << fileName << ": Extension of NodeType(" << nodeExtensionName << ") is not found, setting Null!"
+                              << std::endl;
                 }
             }
         }

@@ -80,8 +80,8 @@ public:
     void serialize(const std::string& fileName);
 
     static NodeGraph * deserialize(const std::string& fileName,
-            std::unordered_map<std::string, EditorExtension*> possibleEditorExtensions,
-            std::unordered_map<std::string, NodeExtension*> possibleNodeExtensions);
+            std::unordered_map<std::string, EditorExtension*(*)()> possibleEditorExtensions,
+            std::unordered_map<std::string, NodeExtension*(*)()> possibleNodeExtensions);
 };
 
 

@@ -571,10 +571,10 @@ int main(int, char **) {
     SampleEditorExtension sampleEditorExtension;
     //NodeGraph* nodeGraph = new NodeGraph(nodeTypeVector, false, &sampleEditorExtension);
 
-    std::unordered_map<std::string, EditorExtension*> possibleEditorExtensions;
-    possibleEditorExtensions[sampleEditorExtension.getName()] = &sampleEditorExtension;
-    std::unordered_map<std::string, NodeExtension*> possibleNodeExtensions;
-    possibleNodeExtensions[se.getName()] = &se;
+    std::unordered_map<std::string, EditorExtension*(*)()> possibleEditorExtensions;
+    possibleEditorExtensions[sampleEditorExtension.getName()] = []() -> EditorExtension* {return new SampleEditorExtension();};
+    std::unordered_map<std::string, NodeExtension*(*)()> possibleNodeExtensions;
+    possibleNodeExtensions[se.getName()] = []() -> NodeExtension* {return new SampleExtension();};
 
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();

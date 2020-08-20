@@ -66,7 +66,7 @@ struct NodeType {
 
     static NodeType *deserialize(const std::string &fileName,
             tinyxml2::XMLElement *nodeTypeElement,
-            std::unordered_map<std::string, NodeExtension *> possibleNodeExtension) {
+            std::unordered_map<std::string, NodeExtension*(*)()> possibleNodeExtension) {
         NodeType* newNodeType = new NodeType();
 
         tinyxml2::XMLElement* nameElement =  nodeTypeElement->FirstChildElement("Name");
@@ -98,7 +98,8 @@ struct NodeType {
                     } else {
 
                         if (possibleNodeExtension.find(extensionNameElement->GetText()) != possibleNodeExtension.end()) {
-                            newNodeType->nodeExtension = possibleNodeExtension[extensionNameElement->GetText()];
+                            newNodeType->nodeExtension = possibleNodeExtension[extensionNameElement->GetText()]();
+                            newNodeType->nodeExtension->deserialize(fileName, extensionElement);
                         } else {
                             std::cerr << "Error loading XML " << fileName << ": Extension of NodeType(" << extensionNameElement->GetText() << ") is not found, setting Null!"
                                       << std::endl;

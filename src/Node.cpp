@@ -394,6 +394,9 @@ void Node::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *pare
         outputConnections[i]->serialize(document, outputsElement);
     }
     nodeElement->InsertEndChild(outputsElement);
+    if(nodeExtension != nullptr) {
+        nodeExtension->serialize(document, nodeElement);
+    }
 }
 
 Node *Node::deserialize(const std::string &fileName,
@@ -500,6 +503,19 @@ Node *Node::deserialize(const std::string &fileName,
             lateDeserializeOutputs[connection] = outputLateDeserializeInfo;
             newNode->outputConnections.emplace_back(connection);
             outputElement = outputElement->NextSiblingElement("Connection");
+        }
+    }
+
+    tinyxml2::XMLElement* extensionElement =  nodeElement->FirstChildElement("NodeExtension");
+    if (extensionElement == nullptr) {
+        if(newNode->getExtension() != nullptr) {
+            std::cerr << "ERROR loading XML " << fileName << ": Node " << newNode->getName() << " has no extension info, using defaults." << std::endl;
+        }//no need to log if no extension required, and none found
+    } else {
+        if(newNode->nodeExtension == nullptr) {
+            std::cerr << "ERROR loading XML " << fileName << ": Node " << newNode->getName() << " has no extension, but one was serialized." << std::endl;
+        } else {
+            newNode->nodeExtension->deserialize(fileName, extensionElement);
         }
     }
 

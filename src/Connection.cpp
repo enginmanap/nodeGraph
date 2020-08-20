@@ -363,7 +363,6 @@ void Connection::lateSerialize(const std::vector<LateDeserializeInformation> &la
                         if((*otherConnection)->getId() == lateDeserializeInfo->connectionID &&
                                 (*otherConnection)->getName() == lateDeserializeInfo->connectionName) {
                             this->addInputConnection(const_cast<Connection*>(*otherConnection));
-                            std::cerr << "added connection from " << (*otherConnection)->getName() << " to " << this->getName() << std::endl;
                         }
                     }
                 }

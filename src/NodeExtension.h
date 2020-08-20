@@ -7,6 +7,7 @@
 
 #include <string>
 #include <tinyxml2.h>
+#include <functional>
 
 class Node;
 class Connection;
@@ -28,6 +29,11 @@ public:
         tinyxml2::XMLElement *nameElement = document.NewElement("Name");
         nameElement->SetText(getName().c_str());
         nodeTypeElement->InsertEndChild(nameElement);
+    }
+
+    virtual void deserialize(const std::string &fileName,
+                             tinyxml2::XMLElement *nodeExtensionElement) {
+        //intentionally empty
     }
 };
 

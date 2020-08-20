@@ -515,8 +515,8 @@ void NodeGraph::serialize(const std::string& fileName) {
 }
 
 NodeGraph * NodeGraph::deserialize(const std::string& fileName,
-        std::unordered_map<std::string, EditorExtension*> possibleEditorExtensions,
-        std::unordered_map<std::string, NodeExtension*> possibleNodeExtensions) {
+        std::unordered_map<std::string, EditorExtension*(*)()> possibleEditorExtensions,
+        std::unordered_map<std::string, NodeExtension*(*)()> possibleNodeExtensions) {
     tinyxml2::XMLDocument xmlDoc;
     tinyxml2::XMLError eResult = xmlDoc.LoadFile(fileName.c_str());
     if (eResult != tinyxml2::XML_SUCCESS) {
@@ -539,7 +539,7 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
             std::cerr << "Error loading XML "<< fileName << ": EditorExtension has no text!" << std::endl;
         } else {
             if(possibleEditorExtensions.find(editorExtensionElement->GetText()) != possibleEditorExtensions.end()) {
-                usedEditorExtension = possibleEditorExtensions[editorExtensionElement->GetText()];
+                usedEditorExtension = possibleEditorExtensions[editorExtensionElement->GetText()]();
             }
         }
     }

@@ -7,4 +7,6 @@
 
 void SampleEditorExtension::drawDetailPane(const std::vector<const Node *>& nodes, const Node* selectedNode) {
     ImGui::Text("Graph Detail Extension");
+
+    ImGui::InputText("custom input:", inputBuffer, sizeof(inputBuffer), ImGuiInputTextFlags_CharsNoBlank);
 }

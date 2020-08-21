@@ -27,6 +27,11 @@ public:
         nodeTypeElement->InsertEndChild(nameElement);
     }
 
+    virtual void deserialize(const std::string &fileName [[gnu::unused]],
+                             tinyxml2::XMLElement *editorExtensionElement [[gnu::unused]]) {
+        //intentionally empty
+    }
+
 };
 
 

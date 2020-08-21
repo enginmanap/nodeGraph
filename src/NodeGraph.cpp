@@ -533,15 +533,22 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
     EditorExtension* usedEditorExtension = nullptr;
     tinyxml2::XMLElement* editorExtensionElement =  rootNode->FirstChildElement("EditorExtension");
     if (editorExtensionElement == nullptr) {
-        std::cerr << "Error loading XML " << fileName << ": EditorExtension are not found!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": EditorExtension is not found!" << std::endl;
     } else {
-        if(editorExtensionElement->GetText() == nullptr) {
-            std::cerr << "Error loading XML "<< fileName << ": EditorExtension has no text!" << std::endl;
+        tinyxml2::XMLElement* editorExtensionNameElement =  editorExtensionElement->FirstChildElement("Name");
+        if (editorExtensionNameElement == nullptr) {
+            std::cerr << "Error loading XML " << fileName << ": EditorExtension has no name!" << std::endl;
         } else {
-            if(possibleEditorExtensions.find(editorExtensionElement->GetText()) != possibleEditorExtensions.end()) {
-                usedEditorExtension = possibleEditorExtensions[editorExtensionElement->GetText()]();
+            if(editorExtensionNameElement->GetText() == nullptr) {
+                std::cerr << "Error loading XML "<< fileName << ": EditorExtension name has no text!" << std::endl;
+            } else {
+                if(possibleEditorExtensions.find(editorExtensionNameElement->GetText()) != possibleEditorExtensions.end()) {
+                    usedEditorExtension = possibleEditorExtensions[editorExtensionNameElement->GetText()]();
+                    usedEditorExtension->deserialize(fileName, editorExtensionElement);
+                }
             }
         }
+
     }
 
     tinyxml2::XMLElement* nodeTypesElement =  rootNode->FirstChildElement("NodeTypes");

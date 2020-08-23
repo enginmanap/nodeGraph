@@ -571,9 +571,9 @@ int main(int, char **) {
     SampleEditorExtension sampleEditorExtension;
     //NodeGraph* nodeGraph = new NodeGraph(nodeTypeVector, false, &sampleEditorExtension);
 
-    std::unordered_map<std::string, EditorExtension*(*)()> possibleEditorExtensions;
+    std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions;
     possibleEditorExtensions[sampleEditorExtension.getName()] = []() -> EditorExtension* {return new SampleEditorExtension();};
-    std::unordered_map<std::string, NodeExtension*(*)()> possibleNodeExtensions;
+    std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtensions;
     possibleNodeExtensions[se.getName()] = []() -> NodeExtension* {return new SampleExtension();};
 
     // Start the Dear ImGui frame

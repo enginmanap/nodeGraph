@@ -16,7 +16,7 @@ struct NodeType {
     std::string name;
     bool editable;
     std::string extensionName;
-    NodeExtension*(*nodeExtensionConstructor)() = []() -> NodeExtension* {return nullptr;};
+    std::function<NodeExtension*()> nodeExtensionConstructor = []() -> NodeExtension* {return nullptr;};
     std::vector<ConnectionDesc> inputConnections;
     std::vector<ConnectionDesc> outputConnections;
     bool combineInputs;
@@ -26,7 +26,7 @@ struct NodeType {
 
     static NodeType *deserialize(const std::string &fileName,
                                  tinyxml2::XMLElement *nodeTypeElement,
-                                 std::unordered_map<std::string, NodeExtension*(*)()> possibleNodeExtension);
+                                 std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtension);
 
 };
 

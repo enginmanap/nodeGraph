@@ -44,7 +44,7 @@ void NodeType::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *
 
 NodeType *NodeType::deserialize(const std::string &fileName,
                              tinyxml2::XMLElement *nodeTypeElement,
-                             std::unordered_map<std::string, NodeExtension*(*)()> possibleNodeExtension) {
+                             std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtension) {
     NodeType* newNodeType = new NodeType();
 
     tinyxml2::XMLElement* nameElement =  nodeTypeElement->FirstChildElement("Name");

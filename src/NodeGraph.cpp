@@ -481,7 +481,12 @@ void NodeGraph::drawDetailsPane(Node* selectedNode) {
         }
     }
     if (ImGui::Button("Save Nodes")) {
-        this->serialize("Nodes.xml");
+        if(!this->getSerializeFileName().empty()) {
+            this->serialize(getSerializeFileName());
+            this->errorGenerated = true;
+            errorGenerationTime = ImGui::GetTime();
+            this->errorMessage = "Save done.";
+        }
     }
 }
 
@@ -595,4 +600,12 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
         node->lateDeserialize(lateSerializeInputsPerNode[node], lateSerializeOutputsPerNode[node], newNodeGraph->nodes);
     }
     return newNodeGraph;
+}
+
+const std::string &NodeGraph::getSerializeFileName() const {
+    return serializeFileName;
+}
+
+void NodeGraph::setSerializeFileName(const std::string &serializeFileName) {
+    NodeGraph::serializeFileName = serializeFileName;
 }

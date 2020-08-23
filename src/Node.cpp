@@ -25,7 +25,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->pos = pos;
     this->name = nodeType->name;
     this->editable = nodeType->editable;
-    if(this->nodeExtension != nullptr) {
+    if(nodeType->nodeExtensionConstructor != nullptr) {
         this->nodeExtension = nodeType->nodeExtensionConstructor();
     } else {
         if(!nodeType->extensionName.empty()) {
@@ -104,7 +104,7 @@ void Node::setupConnections(std::vector<Connection *> &connections, const std::v
 }
 
 void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, bool isThisNodeSelected) {
-    int node_hovered_in_scene = -1;
+    uint32_t node_hovered_in_scene = -1;
     bool open_context_menu = false;
 
     ImGui::PushID(id);

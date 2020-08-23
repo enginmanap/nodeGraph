@@ -25,7 +25,13 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->pos = pos;
     this->name = nodeType->name;
     this->editable = nodeType->editable;
-    this->nodeExtension = nodeType->nodeExtensionConstructor();
+    if(this->nodeExtension != nullptr) {
+        this->nodeExtension = nodeType->nodeExtensionConstructor();
+    } else {
+        if(!nodeType->extensionName.empty()) {
+            std::cerr << "Node type has extension name but no constructor, no extension created!" << std::endl;
+        }
+    }
     this->combineInputs = nodeType->combineInputs;
     this->nextConnectionId = 0;
 

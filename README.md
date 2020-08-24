@@ -1,6 +1,6 @@
 # nodeGraph
 
-![SampleScreenShot](https://github.com/enginmanap/nodeGraph/tree/master/Docs/NodeGraph-ss1.png)
+![SampleScreenShot](https://github.com/enginmanap/nodeGraph/blob/master/Docs/NodeGraph-ss1.png?raw=true)
 
 This is a project for cleaning up sample node editors of ImGUI to a more usable and extensible one. It will be used by Limon Engine when I am satisfied with it.
 

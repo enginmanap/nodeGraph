@@ -55,26 +55,43 @@ void NodeGraph::display() {
         (*it)->display(draw_list, scrolling, dragNode.con != 0, (*it) == this->selectedNode);
     }
 
-    if(!updateDragging(scrolling, errorMessage)) {
-        errorGenerated = true;
-        errorGenerationTime = ImGui::GetTime();
-    }
-    if(errorGenerated) {
+    updateDragging(scrolling);//might fail
+    if(!messageList.empty()) {
         ImVec2 position = ImGui::GetWindowPos() + ImVec2(15,15);
         ImVec2 padding = ImVec2(10,10);
-        ImVec2 textSize = ImGui::CalcTextSize(errorMessage.c_str());
-        draw_list->AddRectFilled(position - padding, position + textSize + padding, ImColor(200, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.25, 0.25, 0.25, 1));
-        ImGui::SetCursorScreenPos(position);
-        ImGui::Text(errorMessage.c_str());
-        ImGui::PopStyleColor();
+        ImU32 color;
+        for (auto messageIt = messageList.begin(); messageIt != messageList.end(); ++messageIt) {
+            Message message = *messageIt;
+            ImVec2 textSize = ImGui::CalcTextSize(message.text.c_str());
+
+            switch (message.type) {
+                case MessageTypes::INFO:
+                    color = ImColor(0, 200, 0);
+                    break;
+                case MessageTypes::WARNING:
+                    color = ImColor(200, 200, 0);
+                    break;
+                case MessageTypes::ERROR:
+                    color = ImColor(200, 0, 0);
+                    break;
+            }
+            draw_list->AddRectFilled(position - padding, position + textSize + padding, color);
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.25, 0.25, 0.25, 1));
+            ImGui::SetCursorScreenPos(position);
+            ImGui::Text("%s", message.text.c_str());
+            ImGui::PopStyleColor();
+            position.y +=32;
+            //now try to clean up.
+            if((ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1))&& ( ImGui::GetTime() - message.time > 3.0))  {
+                messageIt = messageList.erase(messageIt);
+                messageIt--;
+            }
+        }
+
     }
     renderLines(draw_list, scrolling);
 
     draw_list->ChannelsMerge();
-    if((ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1))&& ( ImGui::GetTime() - errorGenerationTime > 3.0))  {
-            errorGenerated = false;
-    }
 
     if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(0)) {
         setSelectedNodeAndConnection(scrolling);
@@ -305,7 +322,7 @@ Connection *NodeGraph::getHoverCon(ImVec2 offset, ImVec2 *pos) {
     return result;//return null or found node
 }
 
-bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
+bool NodeGraph::updateDragging(ImVec2 offset) {
     switch (dragState) {
         case DragState_Default: {
             ImVec2 pos;
@@ -339,7 +356,7 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                         dragState = DragState_Draging;
                     } else {
                         dragNode.con = 0;
-                        errorMessage = "This Connection is not draggable.";
+                        addError("This Connection is not draggable.");
                         return false;
                     }
                 } else {
@@ -387,14 +404,14 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                     (con->getDirection() == Connection::Directions::OUTPUT && dragNode.con->getDirection() == Connection::Directions::OUTPUT)) {
                     dragNode.con = 0;
                     dragState = DragState_Default;
-                    errorMessage = "Dragged to same direction. Match input with output";
+                    addError("Dragged to same direction. Match input with output");
                     return false;
                 }
 
                 if(con->getDataType() != dragNode.con->getDataType()) {
                     dragNode.con = 0;
                     dragState = DragState_Default;
-                    errorMessage = "Dragged to different data types";
+                    addError("Dragged to different data types");
                     return false;
                 }
 
@@ -420,7 +437,7 @@ bool NodeGraph::updateDragging(ImVec2 offset, std::string &errorMessage) {
                             inputSide->addInputConnection(conn);
                         }
                     }
-                    errorMessage = "There is a cycle";
+                    addError("There is a cycle");
                     return false;
                 }
             }

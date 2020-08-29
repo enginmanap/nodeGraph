@@ -6,6 +6,7 @@
 #define NODEGRAPH_NODEGRAPH_H
 
 
+#include <list>
 #include "Node.h"
 #include "EditorExtension.h"
 
@@ -31,6 +32,14 @@ class NodeGraph {
         Connection *con;
     };
 
+    enum class MessageTypes {INFO, WARNING, ERROR};
+
+    struct Message {
+        std::string text;
+        MessageTypes type;
+        double time;
+    };
+
     std::vector<NodeType*> nodeTypes;
     std::set<std::string> connectionDataTypes;
     std::vector<Node *> nodes;//first node is rendered last, and it is at the top.
@@ -41,11 +50,11 @@ class NodeGraph {
     EditorExtension* editorExtension = nullptr;
     char nodeName[128] = {0};
     char connectionName[128] = {0};
-    std::string errorMessage;
+
+    std::list<Message> messageList;
+
     DragState dragState = DragState_Default;
     DragNode dragNode;
-    bool errorGenerated = false;
-    double errorGenerationTime = 0;
 
     void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
     bool depthFirstSearch(Node *root, Node *search, std::set<Node *> visitedNodes, bool &cycle);
@@ -57,9 +66,12 @@ class NodeGraph {
     void renderLines(ImDrawList *drawList, ImVec2 offset);
     void setSelectedNodeAndConnection(const ImVec2 &scrolling);
 
+    Connection *getHoverCon(ImVec2 offset, ImVec2 *pos);
+
+    bool updateDragging(ImVec2 offset);
+    bool isCyclic();
+
 public:
-
-
 
     explicit NodeGraph(std::vector<NodeType*> nodeTypes, bool cycleAllowed = true, EditorExtension* editorExtension = nullptr) : nodeTypes(nodeTypes), cycleAllowed(cycleAllowed),
     editorExtension(editorExtension) {
@@ -74,16 +86,27 @@ public:
     };
     void display();
 
-    Connection *getHoverCon(ImVec2 offset, ImVec2 *pos);
-
-    bool updateDragging(ImVec2 offset, std::string &errorMessage);
-    bool isCyclic();
-
     static NodeGraph * deserialize(const std::string& fileName,
             std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions,
             std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtensions);
 
     void serialize(const std::string& fileName);
+
+    void addMessage(const std::string& text) {
+        Message newMessage;
+        newMessage.text = text;
+        newMessage.type = MessageTypes::INFO;
+        newMessage.time = ImGui::GetTime();
+        messageList.emplace_back(newMessage);
+    }
+
+    void addError(const std::string& text) {
+        Message newMessage;
+        newMessage.text = text;
+        newMessage.type = MessageTypes::ERROR;
+        newMessage.time = ImGui::GetTime();
+        messageList.emplace_back(newMessage);
+    }
 };
 
 

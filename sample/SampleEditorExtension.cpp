@@ -12,12 +12,21 @@ void SampleEditorExtension::drawDetailPane(NodeGraph* nodeGraph, const std::vect
 
     ImGui::InputText("custom input:", inputBuffer, sizeof(inputBuffer), ImGuiInputTextFlags_CharsNoBlank);
 
+    if (ImGui::Button("Add Message")) {
+        nodeGraph->addMessage("Some Message");
+    }
+
+    if (ImGui::Button("Add Error")) {
+        nodeGraph->addError("Some Error");
+    }
+
+
     if (ImGui::Button("Save Nodes")) {
         if(std::strlen(this->inputBuffer) > 0) {
             nodeGraph->serialize(std::string(this->inputBuffer));
-            //this->errorGenerated = true;
-            //errorGenerationTime = ImGui::GetTime();
-            //this->errorMessage = "Save done.";
+            nodeGraph->addMessage("Save done.");
+        } else {
+            nodeGraph->addError("Not saved because name is empty.");
         }
     }
 }

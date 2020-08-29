@@ -20,6 +20,8 @@ void SampleExtension::drawDetailPane(Node *node) {
         }
         ImGui::EndCombo();
     }
+
+
 }
 
 bool SampleExtension::isConnectionActive(Connection* connection) {

@@ -13,7 +13,7 @@
 class SampleEditorExtension : public EditorExtension {
     char inputBuffer[256];
 public:
-    void drawDetailPane(const std::vector<const Node *>& nodes, const Node* selectedNode = nullptr) override;
+    void drawDetailPane(NodeGraph* nodeGraph, const std::vector<const Node *>& nodes, const Node* selectedNode = nullptr) override;
 
     std::string getName() {
         return "SampleEditorExtension";

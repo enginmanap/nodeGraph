@@ -472,20 +472,12 @@ void NodeGraph::drawDetailsPane(Node* selectedNode) {
             for (size_t i = 0; i < this->nodes.size(); ++i) {
                 tempVector.push_back(nodes[i]);
             }
-            editorExtension->drawDetailPane(tempVector, this->selectedNode);
+            editorExtension->drawDetailPane(this, tempVector, this->selectedNode);
         }
     }
     if(selectedNode != nullptr && selectedNode->getExtension() != nullptr){
         if(ImGui::CollapsingHeader("Node Details", ImGuiTreeNodeFlags_DefaultOpen)) {
             selectedNode->getExtension()->drawDetailPane(selectedNode);
-        }
-    }
-    if (ImGui::Button("Save Nodes")) {
-        if(!this->getSerializeFileName().empty()) {
-            this->serialize(getSerializeFileName());
-            this->errorGenerated = true;
-            errorGenerationTime = ImGui::GetTime();
-            this->errorMessage = "Save done.";
         }
     }
 }
@@ -600,12 +592,4 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
         node->lateDeserialize(lateSerializeInputsPerNode[node], lateSerializeOutputsPerNode[node], newNodeGraph->nodes);
     }
     return newNodeGraph;
-}
-
-const std::string &NodeGraph::getSerializeFileName() const {
-    return serializeFileName;
-}
-
-void NodeGraph::setSerializeFileName(const std::string &serializeFileName) {
-    NodeGraph::serializeFileName = serializeFileName;
 }

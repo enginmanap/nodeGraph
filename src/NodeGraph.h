@@ -47,8 +47,6 @@ class NodeGraph {
     bool errorGenerated = false;
     double errorGenerationTime = 0;
 
-    std::string serializeFileName = "nodes.xml";
-
     void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
     bool depthFirstSearch(Node *root, Node *search, std::set<Node *> visitedNodes, bool &cycle);
     void drawContextMenu(Node *selectedNode, const ImVec2 &offset);
@@ -81,15 +79,11 @@ public:
     bool updateDragging(ImVec2 offset, std::string &errorMessage);
     bool isCyclic();
 
-    const std::string &getSerializeFileName() const;
-
-    void setSerializeFileName(const std::string &serializeFileName);
-
-    void serialize(const std::string& fileName);
-
     static NodeGraph * deserialize(const std::string& fileName,
             std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions,
             std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtensions);
+
+    void serialize(const std::string& fileName);
 };
 
 

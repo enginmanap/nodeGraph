@@ -9,12 +9,13 @@
 #include <tinyxml2.h>
 
 class Node;
+class NodeGraph;
 
 class EditorExtension {
 public:
     virtual ~EditorExtension() {}
 
-    virtual void drawDetailPane(const std::vector<const Node *>& nodes, const Node* selectedNode = nullptr) = 0;
+    virtual void drawDetailPane(NodeGraph* nodeGraph, const std::vector<const Node *>& nodes, const Node* selectedNode = nullptr) = 0;
 
     virtual std::string getName() = 0;
 

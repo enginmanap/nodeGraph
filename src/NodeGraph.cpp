@@ -25,8 +25,11 @@ void NodeGraph::drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEP
 
 void NodeGraph::display() {
     // 4/5 of window width is main, rest is detail by default
-    ImGui::Columns(2, "NodeGraph Main", false);
-    ImGui::SetColumnWidth(-1, ImGui::GetWindowWidth() - 200);
+    ImGui::Columns(2, "NodeGraph Main", true);
+    if(!isColoumnSizeSet) {
+        ImGui::SetColumnWidth(-1, ImGui::GetWindowWidth() - 200);
+        isColoumnSizeSet = true;
+    }
     ImGui::BeginGroup();
     static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
 

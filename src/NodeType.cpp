@@ -28,8 +28,8 @@ void NodeType::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *
     nodeTypeElement->InsertEndChild(inputConnectionsElement);
 
     tinyxml2::XMLElement * outputConnectionsElement = document.NewElement("Outputs");
-    for (size_t i = 0; i < inputConnections.size(); ++i) {
-        inputConnections[i].serialize(document, outputConnectionsElement);
+    for (size_t i = 0; i < outputConnections.size(); ++i) {
+        outputConnections[i].serialize(document, outputConnectionsElement);
     }
     nodeTypeElement->InsertEndChild(outputConnectionsElement);
 

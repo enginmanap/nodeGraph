@@ -33,31 +33,32 @@ struct ConnectionDesc {
         connectionDescElement->InsertEndChild(typeElement);
     }
 
-    static void deserialize(const std::string& fileName, tinyxml2::XMLElement *connectionDescElement, ConnectionDesc& elementToFill) {
+    static bool deserialize(const std::string& fileName, tinyxml2::XMLElement *connectionDescElement, ConnectionDesc& elementToFill) {
 
         tinyxml2::XMLElement *nameElement = connectionDescElement->FirstChildElement("Name");
         if (nameElement == nullptr) {
             std::cerr << "Error loading XML " << fileName << ": Name of ConnectionDesc is not found!" << std::endl;
-            exit(-1);
+            return false;
         }
 
         if (nameElement->GetText() == nullptr) {
             std::cerr << "Error loading XML " << fileName << ": Name of ConnectionDesc has no text!" << std::endl;
-            exit(-1);
+            return false;
         }
         elementToFill.name = nameElement->GetText();
 
         tinyxml2::XMLElement *typeElement = connectionDescElement->FirstChildElement("Type");
         if (typeElement == nullptr) {
             std::cerr << "Error loading XML " << fileName << ": Type of ConnectionDesc is not found!" << std::endl;
-            exit(-1);
+            return false;
         }
 
         if (typeElement->GetText() == nullptr) {
             std::cerr << "Error loading XML " << fileName << ": Type of ConnectionDesc has no text!" << std::endl;
-            exit(-1);
+            return false;
         }
         elementToFill.type = typeElement->GetText();
+        return true;
     }
     };
 
@@ -133,7 +134,7 @@ public:
     }
 
     void display(ImDrawList *drawList, const ImVec2 node_rect_min, ImVec2 &offset, ImVec2 &textSize);
-    void displayDataTooltip();
+    void displayDataTooltip() const;
 
     ImVec2 getTextSize() {
         return ImGui::CalcTextSize(desc.name.c_str());

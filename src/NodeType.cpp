@@ -50,12 +50,12 @@ NodeType *NodeType::deserialize(const std::string &fileName,
     tinyxml2::XMLElement* nameElement =  nodeTypeElement->FirstChildElement("Name");
     if (nameElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Name of NodeType is not found!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
 
     if(nameElement->GetText() == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Name of NodeType has no text!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     newNodeType->name = nameElement->GetText();
 
@@ -84,7 +84,7 @@ NodeType *NodeType::deserialize(const std::string &fileName,
     tinyxml2::XMLElement* editableElement =  nodeTypeElement->FirstChildElement("Editable");
     if (editableElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Editable of NodeType is not found!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     if(editableElement->GetText() == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Editable of NodeType has no text! assuming false" << std::endl;
@@ -103,7 +103,7 @@ NodeType *NodeType::deserialize(const std::string &fileName,
     tinyxml2::XMLElement* combineInputsElement =  nodeTypeElement->FirstChildElement("CombineInputs");
     if (combineInputsElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Combine inputs of NodeType is not found!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     if(combineInputsElement->GetText() == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Combine inputs of NodeType has no text! assuming false" << std::endl;
@@ -126,7 +126,9 @@ NodeType *NodeType::deserialize(const std::string &fileName,
         tinyxml2::XMLElement *inputElement = inputsElement->FirstChildElement("ConnectionDesc");
         while (inputElement != nullptr) {
             ConnectionDesc inputDesc;
-            ConnectionDesc::deserialize(fileName, inputElement, inputDesc);
+            if(!ConnectionDesc::deserialize(fileName, inputElement, inputDesc)) {
+                return nullptr;
+            }
             newNodeType->inputConnections.emplace_back(inputDesc);
             inputElement = inputElement->NextSiblingElement("ConnectionDesc");
         }
@@ -138,7 +140,9 @@ NodeType *NodeType::deserialize(const std::string &fileName,
         tinyxml2::XMLElement *outputElement = outputsElement->FirstChildElement("ConnectionDesc");
         while (outputElement != nullptr) {
             ConnectionDesc outputDesc;
-            ConnectionDesc::deserialize(fileName, outputElement, outputDesc);
+            if(!ConnectionDesc::deserialize(fileName, outputElement, outputDesc)) {
+                return nullptr;
+            }
             newNodeType->outputConnections.emplace_back(outputDesc);
             outputElement = outputElement->NextSiblingElement("ConnectionDesc");
         }

@@ -414,24 +414,24 @@ Node *Node::deserialize(const std::string &fileName,
     tinyxml2::XMLElement* idElement =  nodeElement->FirstChildElement("ID");
     if (idElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": ID of Node is not found!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
 
     if(idElement->GetText() == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": ID of Node has no text!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     uint32_t nodeID = std::stoul(idElement->GetText());
 
     tinyxml2::XMLElement* nameElement =  nodeElement->FirstChildElement("Name");
     if (nameElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Name of Node is not found!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
 
     if(nameElement->GetText() == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Name of Node has no text!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     std::string nodeName = nameElement->GetText();
 
@@ -439,30 +439,30 @@ Node *Node::deserialize(const std::string &fileName,
     tinyxml2::XMLElement* positionElement =  nodeElement->FirstChildElement("Position");
     if (positionElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Position of Node is not found!" << std::endl;
-        exit(-1);
+        return nullptr;
     } else {
 
         tinyxml2::XMLElement* posXElement =  positionElement->FirstChildElement("X");
         if (posXElement == nullptr) {
             std::cerr << "Error loading XML "<< fileName << ": X position of Node is not found!" << std::endl;
-            exit(-1);
+            return nullptr;
         }
 
         if(posXElement->GetText() == nullptr) {
             std::cerr << "Error loading XML "<< fileName << ": X position of Node has no text!" << std::endl;
-            exit(-1);
+            return nullptr;
         }
         position.x = std::stof(posXElement->GetText());
 
         tinyxml2::XMLElement* posYElement =  positionElement->FirstChildElement("Y");
         if (posYElement == nullptr) {
             std::cerr << "Error loading XML "<< fileName << ": Y position of Node is not found!" << std::endl;
-            exit(-1);
+            return nullptr;
         }
 
         if(posYElement->GetText() == nullptr) {
             std::cerr << "Error loading XML "<< fileName << ": Y position of Node has no text!" << std::endl;
-            exit(-1);
+            return nullptr;
         }
         position.y = std::stof(posYElement->GetText());
     }
@@ -471,7 +471,7 @@ Node *Node::deserialize(const std::string &fileName,
     Node* newNode = new Node(nodeID, position, possibleNodeTypes, nodeName.c_str(), error);
     if(error != 0) {
         std::cerr << "Error loading XML "<< fileName << ": Node creation failed!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     //now try to deserialize the connections
     tinyxml2::XMLElement* inputsElement =  nodeElement->FirstChildElement("Inputs");
@@ -486,6 +486,9 @@ Node *Node::deserialize(const std::string &fileName,
             std::vector<LateDeserializeInformation> inputLateDeserializeInfo;
             std::vector<LateDeserializeInformation> outputLateDeserializeInfo;
             Connection* connection = Connection::deserialize(fileName, inputElement, newNode, inputLateDeserializeInfo, outputLateDeserializeInfo);
+            if(connection == nullptr) {
+                return nullptr;
+            }
             lateDeserializeInputs[connection] = inputLateDeserializeInfo;
             lateDeserializeOutputs[connection] = outputLateDeserializeInfo;
             newNode->inputConnections.emplace_back(connection);
@@ -505,6 +508,9 @@ Node *Node::deserialize(const std::string &fileName,
             std::vector<LateDeserializeInformation> inputLateDeserializeInfo;
             std::vector<LateDeserializeInformation> outputLateDeserializeInfo;
             Connection* connection = Connection::deserialize(fileName, outputElement, newNode, inputLateDeserializeInfo, outputLateDeserializeInfo);
+            if(connection == nullptr) {
+                return nullptr;
+            }
             lateDeserializeInputs[connection] = inputLateDeserializeInfo;
             lateDeserializeOutputs[connection] = outputLateDeserializeInfo;
             newNode->outputConnections.emplace_back(connection);

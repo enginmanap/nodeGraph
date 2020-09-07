@@ -538,7 +538,7 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
     tinyxml2::XMLError eResult = xmlDoc.LoadFile(fileName.c_str());
     if (eResult != tinyxml2::XML_SUCCESS) {
         std::cerr << "Error loading XML "<< fileName << ": " <<  xmlDoc.ErrorName() << std::endl;
-        exit(-1);
+        return nullptr;
     }
 
     tinyxml2::XMLNode * rootNode = xmlDoc.FirstChild();
@@ -571,17 +571,20 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
     tinyxml2::XMLElement* nodeTypesElement =  rootNode->FirstChildElement("NodeTypes");
     if (nodeTypesElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": NodeTypes are not found!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     tinyxml2::XMLElement* nodeTypeElement =  nodeTypesElement->FirstChildElement("NodeType");
     if (nodeTypeElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Not even one NodeType found!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     std::vector<NodeType*> nodeTypes;
 
     while(nodeTypeElement != nullptr) {
         NodeType* nodeType = NodeType::deserialize(fileName, nodeTypeElement, possibleNodeExtensions);
+        if(nodeType == nullptr) {
+            return nullptr;
+        }
         nodeTypes.emplace_back(nodeType);
         nodeTypeElement = nodeTypeElement->NextSiblingElement("NodeType");
 
@@ -590,7 +593,7 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
     tinyxml2::XMLElement* nodesElement =  rootNode->FirstChildElement("Nodes");
     if (nodesElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": No Nodes found!" << std::endl;
-        exit(-1);
+        return nullptr;
     }
     NodeGraph* newNodeGraph = new NodeGraph(nodeTypes, false, usedEditorExtension);
     tinyxml2::XMLElement* nodeElement =  nodesElement->FirstChildElement("Node");
@@ -600,6 +603,9 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
         std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> lateDeserializeInputs;
         std::unordered_map<Connection*, std::vector<LateDeserializeInformation>> lateDeserializeOutputs;
         Node* node = Node::deserialize(fileName, nodeElement, nodeTypes, lateDeserializeInputs, lateDeserializeOutputs);
+        if(node == nullptr) {
+            return nullptr;
+        }
         lateSerializeInputsPerNode[node] = lateDeserializeInputs;
         lateSerializeOutputsPerNode[node] = lateDeserializeOutputs;
         newNodeGraph->nodes.emplace_back(node);

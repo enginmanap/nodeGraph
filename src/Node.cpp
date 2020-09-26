@@ -560,4 +560,6 @@ void Node::lateDeserialize(const std::unordered_map<Connection*, std::vector<Lat
             (*output)->lateSerialize(lateDeserializeOutputs.at((*output)), allNodes);
         }
     }
+
+    this->calculateAndSetDrawInformation();
 }

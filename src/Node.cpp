@@ -24,6 +24,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->id = id;
     this->pos = pos;
     this->name = nodeType->name;
+    this->displayName = this->name;
     this->editable = nodeType->editable;
     if(nodeType->nodeExtensionConstructor != nullptr) {
         this->nodeExtension = nodeType->nodeExtensionConstructor();
@@ -44,7 +45,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
 void Node::calculateAndSetDrawInformation() {
     // Calculate the size needed for the whole box
 
-    ImVec2 titleSize = ImGui::CalcTextSize(name.c_str());
+    ImVec2 titleSize = ImGui::CalcTextSize(displayName.c_str());
 
     titleSize.y *= 3;
     titleSize.x += 5;
@@ -115,7 +116,7 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, 
 
     // Draw title in center
 
-    ImVec2 textSize = ImGui::CalcTextSize(name.c_str());
+    ImVec2 textSize = ImGui::CalcTextSize(displayName.c_str());
 
     ImVec2 pos = node_rect_min + NODE_WINDOW_PADDING;
     pos.x = node_rect_min.x + (size.x / 2) - textSize.x / 2;
@@ -162,7 +163,7 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, 
 
     ImGui::SetCursorScreenPos(pos);
     //ImGui::BeginGroup(); // Lock horizontal position
-    ImGui::Text("%s", name.c_str());
+    ImGui::Text("%s", displayName.c_str());
 
     for (Connection *con : inputConnections) {
         con->display(drawList, node_rect_min, offset, textSize);
@@ -362,6 +363,10 @@ void Node::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *pare
     nameElement->SetText(name.c_str());
     nodeElement->InsertEndChild(nameElement);
 
+    tinyxml2::XMLElement *displayNameElement = document.NewElement("DisplayName");
+    displayNameElement->SetText(displayName.c_str());
+    nodeElement->InsertEndChild(displayNameElement);
+
     tinyxml2::XMLElement *editableElement = document.NewElement("Editable");
     editableElement->SetText(editable ? "True" : "False");
     nodeElement->InsertEndChild(editableElement);
@@ -428,7 +433,6 @@ Node *Node::deserialize(const std::string &fileName,
         std::cerr << "Error loading XML "<< fileName << ": Name of Node is not found!" << std::endl;
         return nullptr;
     }
-
     if(nameElement->GetText() == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Name of Node has no text!" << std::endl;
         return nullptr;
@@ -473,6 +477,14 @@ Node *Node::deserialize(const std::string &fileName,
         std::cerr << "Error loading XML "<< fileName << ": Node creation failed!" << std::endl;
         return nullptr;
     }
+
+    tinyxml2::XMLElement* displayNameElement =  nodeElement->FirstChildElement("DisplayName");
+    if (displayNameElement == nullptr || displayNameElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML "<< fileName << ": DisplayName of Node is not found! defaulting to node name." << std::endl;
+    } else {
+        newNode->setDisplayName(displayNameElement->GetText());
+    }
+
     //now try to deserialize the connections
     tinyxml2::XMLElement* inputsElement =  nodeElement->FirstChildElement("Inputs");
     if (inputsElement == nullptr) {

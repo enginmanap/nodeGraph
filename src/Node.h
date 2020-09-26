@@ -26,6 +26,7 @@ class Node {
     uint32_t id;
     uint32_t nextConnectionId;
     std::string name;
+    std::string displayName;
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;
     bool editable;
@@ -63,12 +64,16 @@ public:
         return name;
     }
 
+    const std::string& getDisplayName() const {
+        return displayName;
+    }
+
     uint32_t getId() const {
         return id;
     }
 
-    void setName(const std::string& name) {
-        this->name = name;
+    void setDisplayName(const std::string& name) {
+        this->displayName = name;
         calculateAndSetDrawInformation();
     }
 

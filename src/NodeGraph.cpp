@@ -183,7 +183,7 @@ void NodeGraph::drawContextMenu(Node *selectedNode, const ImVec2 &offset) {
             // Selected Node is not null
             if (ImGui::MenuItem("Change Name")) {
                 state = DisplayStates::RENAME_NODE_REQUEST;
-                strncpy(nodeName, selectedNode->getName().c_str(), sizeof(nodeName)-1);
+                strncpy(nodeName, selectedNode->getDisplayName().c_str(), sizeof(nodeName)-1);
             }
             if(ImGui::MenuItem("Remove Node")) {
                 auto it = std::find(nodes.begin(), nodes.end(), selectedNode);
@@ -241,7 +241,7 @@ void NodeGraph::drawRenameMenu(Node *selectedNode) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (selectedNode != nullptr && state == DisplayStates::RENAME_NODE && ImGui::BeginPopup("changeNameMenu")) {
         if(ImGui::InputText("New name", nodeName, sizeof(nodeName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Apply")) {
-            selectedNode->setName(std::string(nodeName));
+            selectedNode->setDisplayName(std::string(nodeName));
             state = DisplayStates::NODE_GRAPH;
             ImGui::CloseCurrentPopup();
         }

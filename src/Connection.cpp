@@ -158,22 +158,25 @@ void Connection::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement
     posYElement->SetText(std::to_string(pos.y).c_str());
     positionElement->InsertEndChild(posYElement);
 
-    tinyxml2::XMLElement *inputsElement = document.NewElement("Inputs");
+    tinyxml2::XMLElement *allInputsElement = document.NewElement("Inputs");
     for (auto & i : inputList) {
-        inputsElement->SetText(i->getName().c_str());
-        inputsElement->SetAttribute("NodeId", i->getParent()->getId());
-        inputsElement->SetAttribute("ConnectionID", i->getId());
-
+        tinyxml2::XMLElement *inputElement = document.NewElement("Input");
+        inputElement->SetText(i->getName().c_str());
+        inputElement->SetAttribute("NodeId", i->getParent()->getId());
+        inputElement->SetAttribute("ConnectionID", i->getId());
+        allInputsElement->InsertEndChild(inputElement);
     }
-    connectionElement->InsertEndChild(inputsElement);
+    connectionElement->InsertEndChild(allInputsElement);
 
-    tinyxml2::XMLElement *outputsElement = document.NewElement("Outputs");
+    tinyxml2::XMLElement *allOutputsElement = document.NewElement("Outputs");
     for (auto & i : outputList) {
-        outputsElement->SetText(i->getName().c_str());
-        outputsElement->SetAttribute("NodeId", i->getParent()->getId());
-        outputsElement->SetAttribute("ConnectionID", i->getId());
+        tinyxml2::XMLElement *outputElement = document.NewElement("Output");
+        outputElement->SetText(i->getName().c_str());
+        outputElement->SetAttribute("NodeId", i->getParent()->getId());
+        outputElement->SetAttribute("ConnectionID", i->getId());
+        allOutputsElement->InsertEndChild(outputElement);
     }
-    connectionElement->InsertEndChild(outputsElement);
+    connectionElement->InsertEndChild(allOutputsElement);
 
 }
 
@@ -181,96 +184,96 @@ Connection* Connection::deserialize(const std::string &fileName,
         tinyxml2::XMLElement *connectionElement, Node* parentNode,
         std::vector<LateDeserializeInformation>& inputs,
         std::vector<LateDeserializeInformation>& outputs) {
-    tinyxml2::XMLElement* idElement =  connectionElement->FirstChildElement("ID");
+    tinyxml2::XMLElement *idElement = connectionElement->FirstChildElement("ID");
     if (idElement == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": ID of Connection is not found!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": ID of Connection is not found!" << std::endl;
         return nullptr;
     }
 
-    if(idElement->GetText() == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": ID of Connection has no text!" << std::endl;
+    if (idElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML " << fileName << ": ID of Connection has no text!" << std::endl;
         return nullptr;
     }
     uint32_t connectionID = std::stoul(idElement->GetText());
 
-    tinyxml2::XMLElement* nameElement =  connectionElement->FirstChildElement("Name");
+    tinyxml2::XMLElement *nameElement = connectionElement->FirstChildElement("Name");
     if (nameElement == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Name of Connection is not found!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": Name of Connection is not found!" << std::endl;
         return nullptr;
     }
 
-    if(nameElement->GetText() == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Name of Connection has no text!" << std::endl;
+    if (nameElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML " << fileName << ": Name of Connection has no text!" << std::endl;
         return nullptr;
     }
     std::string connectionName = nameElement->GetText();
 
-    tinyxml2::XMLElement* typeElement =  connectionElement->FirstChildElement("Type");
+    tinyxml2::XMLElement *typeElement = connectionElement->FirstChildElement("Type");
     if (typeElement == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Type of Connection is not found!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": Type of Connection is not found!" << std::endl;
         return nullptr;
     }
 
-    if(typeElement->GetText() == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Type of Connection has no text!" << std::endl;
+    if (typeElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML " << fileName << ": Type of Connection has no text!" << std::endl;
         return nullptr;
     }
     std::string type = typeElement->GetText();
 
-    tinyxml2::XMLElement* combineInputsElement =  connectionElement->FirstChildElement("CombineInputs");
+    tinyxml2::XMLElement *combineInputsElement = connectionElement->FirstChildElement("CombineInputs");
     if (combineInputsElement == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Type of Connection is not found!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": Type of Connection is not found!" << std::endl;
         return nullptr;
     }
 
-    if(combineInputsElement->GetText() == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Type of Connection has no text!" << std::endl;
+    if (combineInputsElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML " << fileName << ": Type of Connection has no text!" << std::endl;
         return nullptr;
     }
 
     bool combineInputs;
-    if("True" == std::string(combineInputsElement->GetText())) {
+    if ("True" == std::string(combineInputsElement->GetText())) {
         combineInputs = true;
-    } else if("False" == std::string(combineInputsElement->GetText())) {
+    } else if ("False" == std::string(combineInputsElement->GetText())) {
         combineInputs = false;
     } else {
-        std::cerr << "Error loading XML "<< fileName << ": CombineInputs of Connection ("<< combineInputsElement->GetText()<<") is unknown, failing!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": CombineInputs of Connection (" << combineInputsElement->GetText() << ") is unknown, failing!" << std::endl;
         return nullptr;
     }
 
-    tinyxml2::XMLElement* directionElement =  connectionElement->FirstChildElement("Direction");
+    tinyxml2::XMLElement *directionElement = connectionElement->FirstChildElement("Direction");
     if (directionElement == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Direction of Connection is not found!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": Direction of Connection is not found!" << std::endl;
         return nullptr;
     }
 
-    if(directionElement->GetText() == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Direction of Connection has no text!" << std::endl;
+    if (directionElement->GetText() == nullptr) {
+        std::cerr << "Error loading XML " << fileName << ": Direction of Connection has no text!" << std::endl;
         return nullptr;
     }
     std::string directionString = directionElement->GetText();
 
     Directions newDirection;
-    if(directionString == "Input") {
+    if (directionString == "Input") {
         newDirection = Directions::INPUT;
-    } else if(directionString == "Output") {
+    } else if (directionString == "Output") {
         newDirection = Directions::OUTPUT;
     } else {
-        std::cerr << "Error loading XML "<< fileName << ": Direction of Connection ("<< directionString<<") is unknown, failing!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": Direction of Connection (" << directionString << ") is unknown, failing!" << std::endl;
         return nullptr;
     }
 
     ConnectionDesc tempDescription;
 
-    Connection* newConnection = new Connection(parentNode, connectionID, tempDescription, newDirection, combineInputs);
+    Connection *newConnection = new Connection(parentNode, connectionID, tempDescription, newDirection, combineInputs);
 
     newConnection->desc.name = connectionName;
     newConnection->desc.type = type;
 
     ImVec2 position;
-    tinyxml2::XMLElement* positionElement =  connectionElement->FirstChildElement("Position");
+    tinyxml2::XMLElement *positionElement = connectionElement->FirstChildElement("Position");
     if (positionElement == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Position of Node is not found!" << std::endl;
+        std::cerr << "Error loading XML " << fileName << ": Position of Node is not found!" << std::endl;
         return nullptr;
     } else {
 
@@ -299,57 +302,70 @@ Connection* Connection::deserialize(const std::string &fileName,
         position.y = std::stof(posYElement->GetText());
     }
 
-    LateDeserializeInformation inputLateDeserializeInformation;
-    tinyxml2::XMLElement* inputsElement =  connectionElement->FirstChildElement("Inputs");
-    if (inputsElement == nullptr) {
-        std::cerr << "Error loading XML "<< fileName << ": Inputs of Connection is not found!" << std::endl;
+    tinyxml2::XMLElement *allInputsElement = connectionElement->FirstChildElement("Inputs");
+    if (allInputsElement == nullptr) {
+        std::cerr << "Error loading XML " << fileName << ": Inputs of Connection is not found!" << std::endl;
         return nullptr;
     }
 
-    if(inputsElement->GetText() == nullptr) {
-        std::cout << "Error loading XML "<< fileName << ": Inputs of Connection has no text!" << std::endl;
-    } else {
-        inputLateDeserializeInformation.connectionName = inputsElement->GetText();
+    tinyxml2::XMLElement *inputElement = allInputsElement->FirstChildElement("Input");
+    while (inputElement != nullptr) {
+        LateDeserializeInformation inputLateDeserializeInformation;
+        if (inputElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML " << fileName << ": Name of Connection input is not found!" << std::endl;
+            return nullptr;
+        } else {
+            inputLateDeserializeInformation.connectionName = inputElement->GetText();
+        }
 
-        if (inputsElement->Attribute("NodeId") == nullptr) {
+        if (inputElement->Attribute("NodeId") == nullptr) {
             std::cerr << "Error loading XML " << fileName << ": NodeId of Connection input is not found!" << std::endl;
             return nullptr;
         }
-        inputLateDeserializeInformation.nodeID = std::stoul(inputsElement->Attribute("NodeId"));
+        inputLateDeserializeInformation.nodeID = std::stoul(inputElement->Attribute("NodeId"));
 
-        if (inputsElement->Attribute("ConnectionID") == nullptr) {
+        if (inputElement->Attribute("ConnectionID") == nullptr) {
             std::cerr << "Error loading XML " << fileName << ": ConnectionID of Connection input is not found!" << std::endl;
             return nullptr;
         }
-        inputLateDeserializeInformation.connectionID = std::stoul(inputsElement->Attribute("ConnectionID"));
+        inputLateDeserializeInformation.connectionID = std::stoul(inputElement->Attribute("ConnectionID"));
         inputs.emplace_back(inputLateDeserializeInformation);
+
+        inputElement = inputElement->NextSiblingElement("Input");
     }
-    LateDeserializeInformation outputLateDeserializeInformation;
-    tinyxml2::XMLElement* outputsElement =  connectionElement->FirstChildElement("Outputs");
-    if (outputsElement == nullptr) {
+
+    tinyxml2::XMLElement* AllOutputsElement =  connectionElement->FirstChildElement("Outputs");
+    if (AllOutputsElement == nullptr) {
         std::cerr << "Error loading XML "<< fileName << ": Outputs of Connection is not found!" << std::endl;
         return nullptr;
     }
+    tinyxml2::XMLElement *outputElement = allInputsElement->FirstChildElement("Output");
+    while (outputElement != nullptr) {
+        LateDeserializeInformation outputLateDeserializeInformation;
+        if (outputElement->GetText() == nullptr) {
+            std::cerr << "Error loading XML " << fileName << ": Name of Connection output is not found!" << std::endl;
+            return nullptr;
+        } else {
+            outputLateDeserializeInformation.connectionName = outputElement->GetText();
+        }
 
-    if(outputsElement->GetText() == nullptr) {
-        std::cout << "Error loading XML "<< fileName << ": Outputs of Connection has no text!" << std::endl;
-    } else {
-        outputLateDeserializeInformation.connectionName = outputsElement->GetText();
-
-        if (outputsElement->Attribute("NodeId") == nullptr) {
+        if (outputElement->Attribute("NodeId") == nullptr) {
             std::cerr << "Error loading XML " << fileName << ": NodeId of Connection output is not found!" << std::endl;
             return nullptr;
         }
-        outputLateDeserializeInformation.nodeID = std::stoul(outputsElement->Attribute("NodeId"));
+        outputLateDeserializeInformation.nodeID = std::stoul(outputElement->Attribute("NodeId"));
 
-        if (outputsElement->Attribute("ConnectionID") == nullptr) {
-            std::cerr << "Error loading XML " << fileName << ": For connection ("<< parentNode->getName() << "|" << newConnection->getName() << ") ConnectionId of Connection output is not found!" << std::endl;
+        if (outputElement->Attribute("ConnectionID") == nullptr) {
+            std::cerr << "Error loading XML " << fileName << ": For connection (" << parentNode->getName() << "|" << newConnection->getName()
+                      << ") ConnectionId of Connection output is not found!" << std::endl;
             return nullptr;
         }
-        outputLateDeserializeInformation.connectionName = std::stoul(outputsElement->Attribute("ConnectionID"));
+        //outputLateDeserializeInformation.connectionName = std::stoul(outputsElement->Attribute("ConnectionID"));
         outputs.emplace_back(outputLateDeserializeInformation);
+
+        outputElement = outputElement->NextSiblingElement("Output");
     }
-    newConnection->pos =position;
+    newConnection->pos = position;
     return newConnection;
 }
 

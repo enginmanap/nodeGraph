@@ -97,6 +97,11 @@ public:
         return result;
     }
 
+    //this method is not safe, and should be avoided if possible
+    std::vector<Connection *> getNonConstOutputConnections()  {
+        return outputConnections;
+    }
+
     std::vector<const Connection *> getInputConnections() const {
         std::vector<const Connection *> result;
         for (size_t i = 0; i < inputConnections.size(); ++i) {

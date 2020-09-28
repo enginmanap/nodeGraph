@@ -120,12 +120,6 @@ public:
             }
         }
     }
-/*
-    Connection * getInputConnection() const {
-        return this->input;
-    }*/
-
-
 
     ImVec2 getPosition() { return pos;}
 
@@ -147,6 +141,10 @@ public:
 
     const std::string &getDataType() const {
         return desc.type;
+    }
+
+    void setDataType(const std::string& newType) {
+        desc.type = newType;
     }
 
     const std::string &getName() const {

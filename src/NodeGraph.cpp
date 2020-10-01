@@ -455,30 +455,27 @@ bool NodeGraph::updateDragging(ImVec2 offset) {
     return true;
 }
 
-bool NodeGraph::depthFirstSearch(Node *root, Node *search, std::set<Node *> visitedNodes, bool &cycle) {
-    for(Node* child:root->getOutputConnectedNodes()) {
-        if(visitedNodes.find(child) != visitedNodes.end()) {
-            cycle = true;
-            return false;//cycle found.
-        }
-        visitedNodes.insert(child);
-        if(child == search) {
-            return true;
-        } else if(depthFirstSearch(child, search, visitedNodes, cycle)) {
-            return true;
+bool NodeGraph::depthFirstSearch(Node *currentNode, std::set<Node *>& visitedNodes, std::unordered_map<Node*, bool>& recursionStack) {
+    if(visitedNodes.find(currentNode) == visitedNodes.end()) {
+        visitedNodes.insert(currentNode);
+        recursionStack[currentNode] = true;
+        for(Node* child:currentNode->getOutputConnectedNodes()) {
+            if(visitedNodes.find(child) == visitedNodes.end() && depthFirstSearch(child, visitedNodes, recursionStack)) {
+                return true;
+            } else if (recursionStack.find(child) != recursionStack.end() && recursionStack[child]) {
+                return true;
+            }
         }
     }
+    recursionStack[currentNode] = false;
     return false;
 }
 
 bool NodeGraph::isCyclic() {
+    std::set<Node*> visitedNodes;
+    std::unordered_map<Node*, bool> recursionStack;
     for(Node* node:nodes) {
-        std::set<Node*> visitedNodes;
-        bool cyclic = false;
-        if(depthFirstSearch(node, node, visitedNodes, cyclic)) {
-            return true;
-        }
-        if(cyclic) {
+        if(depthFirstSearch(node, visitedNodes, recursionStack)) {
             return true;
         }
     }

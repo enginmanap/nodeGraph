@@ -20,7 +20,7 @@ struct ConnectionDesc {
     std::string name;
     std::string type;
 
-    void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement) {
+    void serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *parentElement) const {
         tinyxml2::XMLElement * connectionDescElement = document.NewElement("ConnectionDesc");
         parentElement->InsertEndChild(connectionDescElement);
 
@@ -156,6 +156,10 @@ public:
     std::vector<Node*> getConnectedNodes() const;
 
     Node* getParent() {
+        return parent;
+    }
+
+    const Node* getParent() const{
         return parent;
     }
 

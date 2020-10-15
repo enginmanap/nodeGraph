@@ -10,12 +10,14 @@
 #include <functional>
 
 class Node;
+class NodeType;
 class Connection;
 
 class NodeExtension {
 public:
     virtual void drawDetailPane(Node* node) = 0;
 
+    NodeExtension(const NodeType* type[[gnu::unused]]) {}//we expect extensions to use NodeType. If sure user can pass null
     virtual ~NodeExtension() {}
 
     virtual bool isConnectionActive(Connection* connection [[gnu::unused]]) { return true;}

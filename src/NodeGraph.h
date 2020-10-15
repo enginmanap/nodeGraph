@@ -89,7 +89,7 @@ public:
 
     static NodeGraph * deserialize(const std::string& fileName,
             std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions,
-            std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtensions);
+            std::unordered_map<std::string, std::function<NodeExtension*(const NodeType*)>> possibleNodeExtensions);
 
     void serialize(const std::string& fileName);
 

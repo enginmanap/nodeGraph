@@ -530,7 +530,7 @@ void NodeGraph::serialize(const std::string& fileName) {
 
 NodeGraph * NodeGraph::deserialize(const std::string& fileName,
         std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions,
-        std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtensions) {
+        std::unordered_map<std::string, std::function<NodeExtension*(const NodeType*)>> possibleNodeExtensions) {
     tinyxml2::XMLDocument xmlDoc;
     tinyxml2::XMLError eResult = xmlDoc.LoadFile(fileName.c_str());
     if (eResult != tinyxml2::XML_SUCCESS) {

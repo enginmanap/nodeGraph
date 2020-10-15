@@ -7,7 +7,7 @@
 #include "../src/NodeGraph.h"
 
 
-void SampleEditorExtension::drawDetailPane(NodeGraph* nodeGraph, const std::vector<const Node *>& nodes, const Node* selectedNode) {
+void SampleEditorExtension::drawDetailPane(NodeGraph* nodeGraph, const std::vector<const Node *>& nodes[[gnu::unused]], const Node* selectedNode[[gnu::unused]]) {
     ImGui::Text("Graph Detail Extension");
 
     ImGui::InputText("custom input:", inputBuffer, sizeof(inputBuffer), ImGuiInputTextFlags_CharsNoBlank);

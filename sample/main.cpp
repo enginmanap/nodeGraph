@@ -155,7 +155,7 @@ static struct NodeType nodeTypes[] =
         };
 */
 
-static SampleExtension se;
+static SampleExtension se(nullptr);
 /*
 static struct NodeType nodeTypes[] =
         {
@@ -553,7 +553,7 @@ int main(int, char **) {
     NodeType* guiNodeType = new NodeType();
     guiNodeType->combineInputs = false;
     guiNodeType->editable = false;
-    guiNodeType->nodeExtensionConstructor = []() -> NodeExtension* { return new SampleExtension();};
+    guiNodeType->nodeExtensionConstructor = [](const NodeType* nodeType) -> NodeExtension* { return new SampleExtension(nodeType);};
     guiNodeType->name = "GUI";
     guiNodeType->inputConnections.emplace_back(ConnectionDesc{"GUISampler", "Texture"});
     guiNodeType->outputConnections.emplace_back(ConnectionDesc{"GUI", "Texture"});
@@ -562,7 +562,7 @@ int main(int, char **) {
     NodeType* depthPrePassNodeType = new NodeType();
     depthPrePassNodeType->combineInputs = false;
     depthPrePassNodeType->editable = false;
-    depthPrePassNodeType->nodeExtensionConstructor = []() -> NodeExtension* { return new SampleExtension();};
+    depthPrePassNodeType->nodeExtensionConstructor = [](const NodeType* nodeType) -> NodeExtension* { return new SampleExtension(nodeType);};
     depthPrePassNodeType->name = "depthPrePass";
     depthPrePassNodeType->outputConnections.emplace_back(ConnectionDesc{"depthMap", "Texture"});
     nodeTypeVector.emplace_back(depthPrePassNodeType);
@@ -573,8 +573,8 @@ int main(int, char **) {
 
     std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions;
     possibleEditorExtensions[sampleEditorExtension.getName()] = []() -> EditorExtension* {return new SampleEditorExtension();};
-    std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtensions;
-    possibleNodeExtensions[se.getName()] = []() -> NodeExtension* {return new SampleExtension();};
+    std::unordered_map<std::string, std::function<NodeExtension*(const NodeType*)>> possibleNodeExtensions;
+    possibleNodeExtensions[se.getName()] = [](const NodeType* nodeType) -> NodeExtension* {return new SampleExtension(nodeType);};
 
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();

@@ -6,7 +6,7 @@
 #include "ImGui/imgui.h"
 #include "../src/Connection.h"
 
-void SampleExtension::drawDetailPane(Node *node) {
+void SampleExtension::drawDetailPane(Node *node[[gnu::unused]]) {
     ImGui::Text("Extension Text");
     if (ImGui::BeginCombo("Dropdown selection", (type == PossibleTypes::NONE ? "No type Selected." : getNameOfType(type).c_str()))) {
         std::vector<PossibleTypes> allPossibleTypes = getAllValidTypes();

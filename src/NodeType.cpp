@@ -40,11 +40,24 @@ void NodeType::serialize(tinyxml2::XMLDocument &document, tinyxml2::XMLElement *
         nodeExtensionElement->SetText(extensionName.c_str());
     }
     nodeTypeElement->InsertEndChild(nodeExtensionElement);
+
+    if(!extraVariables.empty()) {
+        tinyxml2::XMLElement *extraVariablesElement = document.NewElement("ExtraVariables");
+
+        for (auto variable:extraVariables) {
+            tinyxml2::XMLElement *variableElement = document.NewElement("Variable");
+            variableElement->SetText(variable.first.c_str());
+            variableElement->SetAttribute("Value", variable.second.c_str());
+            extraVariablesElement->InsertEndChild(variableElement);
+        }
+
+        nodeTypeElement->InsertEndChild(extraVariablesElement);
+    }
 }
 
 NodeType *NodeType::deserialize(const std::string &fileName,
                              tinyxml2::XMLElement *nodeTypeElement,
-                             std::unordered_map<std::string, std::function<NodeExtension*()>> possibleNodeExtension) {
+                             std::unordered_map<std::string, std::function<NodeExtension*(const NodeType*)>> possibleNodeExtension) {
     NodeType* newNodeType = new NodeType();
 
     tinyxml2::XMLElement* nameElement =  nodeTypeElement->FirstChildElement("Name");
@@ -145,6 +158,22 @@ NodeType *NodeType::deserialize(const std::string &fileName,
             }
             newNodeType->outputConnections.emplace_back(outputDesc);
             outputElement = outputElement->NextSiblingElement("ConnectionDesc");
+        }
+    }
+    tinyxml2::XMLElement* extraVariablesElement =  nodeTypeElement->FirstChildElement("ExtraVariables");
+    if (extraVariablesElement != nullptr) {
+        tinyxml2::XMLElement *variableElement = extraVariablesElement->FirstChildElement("Variable");
+        while (variableElement != nullptr) {
+            if(variableElement->GetText() != nullptr) {
+                if(variableElement->Attribute("Value") != nullptr) {
+                    newNodeType->extraVariables[variableElement->GetText()] = variableElement->Attribute("Value");
+                } else {
+                    std::cerr << "For Node Type " << newNodeType->name << "Extra Parameter " << variableElement->GetText() << " Has No value" << std::endl;
+                }
+            } else {
+                std::cerr << "For Node Type " << newNodeType->name << "Extra Parameter without a name found, check XML." << std::endl;
+            }
+            variableElement = variableElement->NextSiblingElement("Variable");
         }
     }
     return newNodeType;

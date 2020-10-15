@@ -27,7 +27,7 @@ void Node::initialize(uint32_t id, const ImVec2 &pos, const NodeType *nodeType) 
     this->displayName = this->name;
     this->editable = nodeType->editable;
     if(nodeType->nodeExtensionConstructor != nullptr) {
-        this->nodeExtension = nodeType->nodeExtensionConstructor();
+        this->nodeExtension = nodeType->nodeExtensionConstructor(nodeType);
     } else {
         if(!nodeType->extensionName.empty()) {
             std::cerr << "Node type has extension name but no constructor, no extension created!" << std::endl;

@@ -21,6 +21,8 @@ class SampleExtension : public NodeExtension {
             case PossibleTypes::FLOAT: return "Float";
             case PossibleTypes::LONG: return "Long";
             case PossibleTypes::STRING: return "String";
+            default:
+                return "Unknown";
         }
     }
     std::vector<PossibleTypes> getAllValidTypes() {
@@ -29,7 +31,7 @@ class SampleExtension : public NodeExtension {
 
 public:
 
-    SampleExtension() {
+    SampleExtension(const NodeType* type) : NodeExtension(type){
         std::cout << "Construction of Sample Extension" << std::endl;
     }
 

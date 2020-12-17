@@ -7,7 +7,7 @@
 #include <sstream>
 #include <tinyxml2.h>
 
-void NodeGraph::drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS) {
+void NodeGraph::drawHermite(ImDrawList *drawList, LineDrawInformation drawInformation, int STEPS) {
     ImVec2 t1 = ImVec2(+80.0f, 0.0f);
     ImVec2 t2 = ImVec2(+80.0f, 0.0f);
 
@@ -17,10 +17,15 @@ void NodeGraph::drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEP
         float h2 = -2 * t * t * t + 3 * t * t;
         float h3 = t * t * t - 2 * t * t + t;
         float h4 = t * t * t - t * t;
-        drawList->PathLineTo(ImVec2(h1 * p1.x + h2 * p2.x + h3 * t1.x + h4 * t2.x, h1 * p1.y + h2 * p2.y + h3 * t1.y + h4 * t2.y));
+        drawList->PathLineTo(ImVec2(h1 * drawInformation.from.x + h2 * drawInformation.to.x + h3 * t1.x + h4 * t2.x, h1 * drawInformation.from.y + h2 * drawInformation.to.y + h3 * t1.y + h4 * t2.y));
     }
-
-    drawList->PathStroke(ImColor(200, 200, 100), false, 3.0f);
+    if(drawInformation.connectionHover) {
+        drawList->PathStroke(ImColor(100, 100, 100), false, 3.0f);
+    } else if(drawInformation.nodeHover) {
+        drawList->PathStroke(ImColor(150, 150, 150), false, 3.0f);
+    } else {
+        drawList->PathStroke(ImColor(200, 200, 100), false, 2.0f);
+    }
 }
 
 void NodeGraph::display() {
@@ -296,11 +301,10 @@ Node *NodeGraph::findNodeByCon(Connection *findCon) {
 
 void NodeGraph::renderLines(ImDrawList *drawList, ImVec2 offset) {
     for (Node *node : nodes) {
-        std::vector<std::pair<ImVec2, ImVec2>> fromToPairs = node->getLinesToRender();
-        for(std::pair<ImVec2, ImVec2> fromTo: fromToPairs) {
+        std::vector<LineDrawInformation> fromToPairs = node->getLinesToRender(offset);
+        for(auto fromTo: fromToPairs) {
             drawHermite(drawList,
-                        offset + fromTo.first,
-                        offset + fromTo.second,
+                        fromTo,
                         12);
         }
     }
@@ -378,7 +382,9 @@ bool NodeGraph::updateDragging(ImVec2 offset) {
 
             drawList->ChannelsSetCurrent(0); // Background
 
-            drawHermite(drawList, dragNode.pos, ImGui::GetIO().MousePos, 12);
+            LineDrawInformation drawInformation(dragNode.pos, ImGui::GetIO().MousePos, false, false);
+
+            drawHermite(drawList, drawInformation, 12);
 
             if (!ImGui::IsMouseDown(0)) {
                 ImVec2 pos;

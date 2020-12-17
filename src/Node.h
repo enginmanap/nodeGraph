@@ -58,7 +58,7 @@ public:
 
     Connection* getHoverConnection(ImVec2 offset, ImVec2 *pos);
 
-    std::vector<std::pair<ImVec2, ImVec2>> getLinesToRender();
+    std::vector<LineDrawInformation> getLinesToRender(const ImVec2& offset);
 
     const std::string& getName() const {
         return name;

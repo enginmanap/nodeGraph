@@ -57,7 +57,7 @@ class NodeGraph {
     DragNode dragNode;
     bool isColoumnSizeSet = false;
 
-    void drawHermite(ImDrawList *drawList, ImVec2 p1, ImVec2 p2, int STEPS);
+    void drawHermite(ImDrawList *drawList, LineDrawInformation drawInformation, int STEPS);
     bool depthFirstSearch(Node *currentNode, std::set<Node *>& visitedNodes, std::unordered_map<Node*, bool>& recursionStack);
     void drawContextMenu(Node *selectedNode, const ImVec2 &offset);
     void drawRenameMenu(Node *selectedNode);

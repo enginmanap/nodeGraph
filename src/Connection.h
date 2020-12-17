@@ -68,6 +68,16 @@ struct LateDeserializeInformation {
     std::string connectionName;
 };
 
+struct LineDrawInformation {
+    ImVec2 from;
+    ImVec2 to;
+    bool connectionHover;
+    bool nodeHover;
+
+    LineDrawInformation(const ImVec2 &from, const ImVec2 &to, bool connectionHover, bool nodeHover):
+    from(from), to(to), connectionHover(connectionHover), nodeHover(nodeHover) {}
+};
+
 class Connection {
 public:
     enum class Directions {INPUT, OUTPUT};

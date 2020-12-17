@@ -387,4 +387,3 @@ void Connection::lateSerialize(const std::vector<LateDeserializeInformation> &la
 
     }
 }
-

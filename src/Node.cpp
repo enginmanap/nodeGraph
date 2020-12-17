@@ -221,8 +221,9 @@ Connection *Node::getHoverConnection(ImVec2 offset, ImVec2 *pos) {
     return nullptr;
 }
 
-std::vector<std::pair<ImVec2, ImVec2>> Node::getLinesToRender() {
-    std::vector<std::pair<ImVec2, ImVec2>> fromToPairs;
+std::vector<LineDrawInformation> Node::getLinesToRender(const ImVec2& offset) {
+    std::vector<LineDrawInformation> fromToPairs;
+    ImVec2 tempPosition;//not used.
     for (Connection *con : this->inputConnections) {
         std::vector<Connection *> inputConnections = con->getInputConnections();
         if (inputConnections.empty()) {
@@ -233,29 +234,12 @@ std::vector<std::pair<ImVec2, ImVec2>> Node::getLinesToRender() {
             if (!targetConnection) {
                 continue;
             }
-
-            std::pair<ImVec2, ImVec2> fromTo = std::make_pair(
-                    targetConnection->getParent()->pos + targetConnection->getPosition(),
-                    this->pos + con->getPosition()
+            LineDrawInformation drawInformation(targetConnection->getParent()->pos + targetConnection->getPosition() + offset,
+                                                this->pos + con->getPosition() + offset,
+                                                getHoverConnection(offset,&tempPosition),
+                                                isHovered(offset)
             );
-            fromToPairs.push_back(fromTo);
-        /*
-        std::vector<Node*> inputNodes = con->getInputNodes();
-        if (inputNodes.empty()) {
-            continue;
-        }
-
-        for(Node* targetNode:inputNodes) {
-            if (!targetNode) {
-                continue;
-            }
-
-            std::pair<ImVec2, ImVec2> fromTo = std::make_pair(
-                    targetNode->pos + con->getInputConnections()->getPosition(),
-                    this->pos + con->getPosition()
-            );
-            fromToPairs.push_back(fromTo);
-            */
+            fromToPairs.push_back(drawInformation);
         }
     }
     return fromToPairs;

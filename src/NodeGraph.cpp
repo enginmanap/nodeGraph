@@ -42,7 +42,7 @@ void NodeGraph::display() {
     //ImGui::Text("Hold middle mouse button to scroll (%.2f,%.2f)", scrolling.x, scrolling.y);
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImVec4(40, 40, 40, 200));
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(40, 40, 40, 200));
     ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoMove);
 
     ImGui::PushItemWidth(120.0f);
@@ -101,12 +101,12 @@ void NodeGraph::display() {
 
     draw_list->ChannelsMerge();
 
-    if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(0)) {
+    if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0)) {
         setSelectedNodeAndConnection(scrolling);
     }
 
     // Open context menu
-    if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1)) {
+    if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(1)) {
         setSelectedNodeAndConnection(scrolling);
         state = DisplayStates::MENU_REQUEST;
     }

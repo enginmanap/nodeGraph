@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.5.1)
 project(NodeGraph)
 
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/Cmake)
 set(PROJECT_VERSION 0.6)
 
 IF (WIN32)

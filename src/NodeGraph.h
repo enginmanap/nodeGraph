@@ -108,6 +108,51 @@ public:
         newMessage.time = ImGui::GetTime();
         messageList.emplace_back(newMessage);
     }
+
+    std::vector<const NodeType *> getNodeTypes() const {
+        std::vector<const NodeType *> nodeTypesConst;
+        for (NodeType* nodeType:nodeTypes) {
+            nodeTypesConst.emplace_back(nodeType);
+        }
+        return nodeTypesConst;
+    }
+
+    /**
+     * If succeeds, takes over the nodeType ownership. If same named node type exists, fails.
+     * @param nodeType      new Node type to add
+     * @return              if added or not
+     */
+    bool addNodeType(NodeType* nodeType) {
+        for (NodeType* oldNodeType:nodeTypes) {
+            if(oldNodeType->name == nodeType->name) {
+                return false;//Node type with same name exists
+            }
+        }
+        nodeTypes.emplace_back(nodeType);
+        return true;
+    }
+
+    void addOrReplaceNodeType(NodeType* nodeType) {
+        for (size_t i = 0; i < nodeTypes.size(); ++i) {
+            NodeType** oldNodeType = &nodeTypes[i];
+            if((*oldNodeType)->name == nodeType->name) {
+                //replace with new
+                delete *oldNodeType;
+                *oldNodeType = nodeType;
+                return;
+            }
+        }
+        nodeTypes.emplace_back(nodeType);
+    }
+
+    bool isNodeTypeUsed(const std::string& nodeTypeName) const {
+        for(Node* node:nodes) {
+            if(node->getName() == nodeTypeName) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 

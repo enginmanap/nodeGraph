@@ -25,7 +25,7 @@ class Node {
     ImVec2 size;
     uint32_t id;
     uint32_t nextConnectionId;
-    std::string name;
+    std::string name; //NodeType name
     std::string displayName;
     std::vector<Connection *> inputConnections;
     std::vector<Connection *> outputConnections;

@@ -523,7 +523,7 @@ Node *Node::deserialize(const std::string &fileName,
         if(newNode->nodeExtension == nullptr) {
             std::cerr << "ERROR loading XML " << fileName << ": Node " << newNode->getName() << " has no extension, but one was serialized." << std::endl;
         } else {
-            newNode->nodeExtension->deserialize(fileName, extensionElement);
+            newNode->nodeExtension->deserialize(newNode->displayName, extensionElement);
         }
     }
 

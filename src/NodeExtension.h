@@ -10,7 +10,7 @@
 #include <functional>
 
 class Node;
-class NodeType;
+struct NodeType;
 class Connection;
 
 class NodeExtension {

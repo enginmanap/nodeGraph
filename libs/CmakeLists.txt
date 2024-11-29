@@ -1,12 +1,13 @@
-cmake_minimum_required (VERSION 3.5.1)
+cmake_minimum_required (VERSION 3.10)
 
 set(IMGUI_SOURCES
         "libs/ImGui/imgui.cpp"
         "libs/ImGui/imgui_demo.cpp"
         "libs/ImGui/imgui_draw.cpp"
+		"libs/ImGui/imgui_tables.cpp"
 		"libs/ImGui/imgui_widgets.cpp"
-		"libs/ImGui/imgui_impl_glfw.cpp"
-		"libs/ImGui/imgui_impl_opengl3.cpp"
+		"libs/ImGui/Backends/imgui_impl_glfw.cpp"
+		"libs/ImGui/Backends/imgui_impl_opengl3.cpp"
 		)
 
 set(IMGUI_HEADERS
@@ -16,10 +17,11 @@ set(IMGUI_HEADERS
         "libs/ImGui/imstb_rectpack.h"
         "libs/ImGui/imstb_textedit.h"
         "libs/ImGui/imstb_truetype.h"
-		"libs/ImGui/imgui_impl_glfw.h"
-		"libs/ImGui/imgui_impl_opengl3.h"
+		"libs/ImGui/Backends/imgui_impl_glfw.h"
+		"libs/ImGui/Backends/imgui_impl_opengl3.h"
 		)
 
 add_library(ImGui ${IMGUI_SOURCES} ${IMGUI_HEADERS})
 
 include_directories("libs/")
+include_directories("libs/ImGui")

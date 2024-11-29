@@ -154,7 +154,7 @@ void Node::display(ImDrawList *drawList, ImVec2 offset, bool dragNodeConnected, 
     if(isThisNodeSelected) {
         ImU32 node_perimeter_color = ImColor(45, 45, 45);
         float borderSize = 2.0f;
-        drawList->AddRect(node_rect_min - ImVec2(borderSize, borderSize), node_rect_max + ImVec2(borderSize, borderSize), node_perimeter_color, 4.0f, ImDrawCornerFlags_All, 2*borderSize);
+        drawList->AddRect(node_rect_min - ImVec2(borderSize, borderSize), node_rect_max + ImVec2(borderSize, borderSize), node_perimeter_color, 4.0f, ImDrawFlags_RoundCornersAll, 2*borderSize);
     }
 
 

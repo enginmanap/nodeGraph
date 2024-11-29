@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.5.1)
+cmake_minimum_required (VERSION 3.10)
 project(NodeGraph)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/Cmake)
@@ -27,7 +27,8 @@ set(nodeGraph_HEADERS
         "src/NodeGraph.h"
         "src/NodeExtension.h"
         "src/EditorExtension.h"
-        src/NodeType.cpp src/NodeType.h)
+        "src/NodeType.cpp"
+        "src/NodeType.h")
 
 INCLUDE(FindPkgConfig)
 

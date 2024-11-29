@@ -1,16 +1,20 @@
-// imgui_stdlib.cpp
-// Wrappers for C++ standard library (STL) types (std::string, etc.)
+// dear imgui: wrappers for C++ standard library (STL) types (std::string, etc.)
 // This is also an example of how you may wrap your own similar types.
-
-// Compatibility:
-// - std::string support is only guaranteed to work from C++11. 
-//   If you try to use it pre-C++11, please share your findings (w/ info about compiler/architecture)
 
 // Changelog:
 // - v0.10: Initial version. Added InputText() / InputTextMultiline() calls with std::string
 
+// See more C++ related extension (fmt, RAII, syntaxis sugar) on Wiki:
+//   https://github.com/ocornut/imgui/wiki/Useful-Extensions#cness
+
 #include "imgui.h"
 #include "imgui_stdlib.h"
+
+// Clang warnings with -Weverything
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"    // warning: implicit conversion changes signedness
+#endif
 
 struct InputTextCallback_UserData
 {
@@ -63,3 +67,19 @@ bool ImGui::InputTextMultiline(const char* label, std::string* str, const ImVec2
     cb_user_data.ChainCallbackUserData = user_data;
     return InputTextMultiline(label, (char*)str->c_str(), str->capacity() + 1, size, flags, InputTextCallback, &cb_user_data);
 }
+
+bool ImGui::InputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+{
+    IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
+    flags |= ImGuiInputTextFlags_CallbackResize;
+
+    InputTextCallback_UserData cb_user_data;
+    cb_user_data.Str = str;
+    cb_user_data.ChainCallback = callback;
+    cb_user_data.ChainCallbackUserData = user_data;
+    return InputTextWithHint(label, hint, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
+}
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif

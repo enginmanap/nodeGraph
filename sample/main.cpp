@@ -1,8 +1,8 @@
 // ImGui - standalone example application for Glfw + OpenGL 3, using programmable pipeline
 
 #include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_glfw.h"
-#include "ImGui/imgui_impl_opengl3.h"
+#include "ImGui/backends/imgui_impl_glfw.h"
+#include "ImGui/backends/imgui_impl_opengl3.h"
 #include <cstdio>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -403,7 +403,7 @@ static void error_callback(int error, const char *description) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void ShowExampleAppCustomNodeGraph(NodeGraph& nodeGraph, bool *opened) {
-    ImGui::SetNextWindowSize(ImVec2(700, 600), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(700, 600), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin("Example: Custom Node Graph", opened)) {
         ImGui::End();
         return;
@@ -423,8 +423,6 @@ static void ShowExampleAppCustomNodeGraph(NodeGraph& nodeGraph, bool *opened) {
 
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLAD)
 #include <glad/glad.h>  // Initialize with gladLoadGL()
-#else
-#include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
 
 // Include glfw3.h after our OpenGL definitions

@@ -21,7 +21,7 @@ set(IMGUI_HEADERS
 		"libs/ImGui/Backends/imgui_impl_opengl3.h"
 		)
 
-add_library(ImGui ${IMGUI_SOURCES} ${IMGUI_HEADERS})
+add_library(ImGui STATIC ${IMGUI_SOURCES} ${IMGUI_HEADERS})
 
 include_directories("libs/")
 include_directories("libs/ImGui")

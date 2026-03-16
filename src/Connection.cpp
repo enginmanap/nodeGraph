@@ -339,7 +339,7 @@ Connection* Connection::deserialize(const std::string &fileName,
         std::cerr << "Error loading XML "<< fileName << ": Outputs of Connection is not found!" << std::endl;
         return nullptr;
     }
-    tinyxml2::XMLElement *outputElement = allInputsElement->FirstChildElement("Output");
+    tinyxml2::XMLElement *outputElement = AllOutputsElement->FirstChildElement("Output");
     while (outputElement != nullptr) {
         LateDeserializeInformation outputLateDeserializeInformation;
         if (outputElement->GetText() == nullptr) {

@@ -45,9 +45,9 @@ struct NodeType {
             return false;
         }
         //now check the connections
-        for (ConnectionDesc connectionDesc: inputConnections) {
+        for (const ConnectionDesc &connectionDesc: inputConnections) {
             bool matchFound = false;
-            for (ConnectionDesc otherConnectionDesc: other.inputConnections) {
+            for (const ConnectionDesc &otherConnectionDesc: other.inputConnections) {
                 if(connectionDesc.name == otherConnectionDesc.name &&
                     connectionDesc.type == otherConnectionDesc.type
                 ) {
@@ -59,9 +59,9 @@ struct NodeType {
                 return false;
             }
         }
-        for (ConnectionDesc connectionDesc: outputConnections) {
+        for (const ConnectionDesc &connectionDesc: outputConnections) {
             bool matchFound = false;
-            for (ConnectionDesc otherConnectionDesc: other.outputConnections) {
+            for (const ConnectionDesc &otherConnectionDesc: other.outputConnections) {
                 if(connectionDesc.name == otherConnectionDesc.name &&
                    connectionDesc.type == otherConnectionDesc.type
                         ) {

@@ -6,6 +6,7 @@
 #define NODEGRAPH_NODEGRAPH_H
 
 
+#include <algorithm>
 #include <list>
 #include "Node.h"
 #include "EditorExtension.h"
@@ -99,6 +100,20 @@ public:
         newMessage.type = MessageTypes::INFO;
         newMessage.time = ImGui::GetTime();
         messageList.emplace_back(newMessage);
+    }
+
+    bool deleteSelectedNode() {
+        if (selectedNode == nullptr) {
+            return false;
+        }
+        auto it = std::find(nodes.begin(), nodes.end(), selectedNode);
+        if (it == nodes.end()) {
+            return false;
+        }
+        nodes.erase(it);
+        delete selectedNode;
+        selectedNode = nullptr;
+        return true;
     }
 
     void addError(const std::string& text) {

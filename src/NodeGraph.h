@@ -91,8 +91,14 @@ public:
     static NodeGraph * deserialize(const std::string& fileName,
             std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions,
             std::unordered_map<std::string, std::function<NodeExtension*(const NodeType*)>> possibleNodeExtensions);
+    //for a graph stored inside another document, fileName is only used in error messages
+    static NodeGraph * deserialize(const std::string& fileName, tinyxml2::XMLElement* nodeGraphElement,
+            std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions,
+            std::unordered_map<std::string, std::function<NodeExtension*(const NodeType*)>> possibleNodeExtensions);
 
     void serialize(const std::string& fileName);
+    //parentElement nullptr makes the graph the document root
+    void serialize(tinyxml2::XMLDocument& document, tinyxml2::XMLElement* parentElement);
 
     void addMessage(const std::string& text) {
         Message newMessage;

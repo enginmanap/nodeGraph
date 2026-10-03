@@ -507,8 +507,21 @@ void NodeGraph::drawDetailsPane(Node* selectedNode) {
 
 void NodeGraph::serialize(const std::string& fileName) {
     tinyxml2::XMLDocument serializeDocument;
+    serialize(serializeDocument, nullptr);
+
+    tinyxml2::XMLError eResult = serializeDocument.SaveFile(fileName.c_str());
+    if(eResult != tinyxml2::XML_SUCCESS) {
+        std::cerr  << "ERROR " << eResult << std::endl;
+    }
+}
+
+void NodeGraph::serialize(tinyxml2::XMLDocument& serializeDocument, tinyxml2::XMLElement* parentElement) {
     tinyxml2::XMLElement * rootNode = serializeDocument.NewElement("NodeGraph");
-    serializeDocument.InsertFirstChild(rootNode);
+    if(parentElement == nullptr) {
+        serializeDocument.InsertFirstChild(rootNode);
+    } else {
+        parentElement->InsertEndChild(rootNode);
+    }
 
     if(editorExtension != nullptr) {
         this->editorExtension->serialize(serializeDocument, rootNode);
@@ -527,11 +540,6 @@ void NodeGraph::serialize(const std::string& fileName) {
     for (size_t i = 0; i < nodes.size(); ++i) {
         nodes[i]->serialize(serializeDocument, nodesElement);
     }
-
-    tinyxml2::XMLError eResult = serializeDocument.SaveFile(fileName.c_str());
-    if(eResult != tinyxml2::XML_SUCCESS) {
-        std::cerr  << "ERROR " << eResult << std::endl;
-    }
 }
 
 NodeGraph * NodeGraph::deserialize(const std::string& fileName,
@@ -544,11 +552,17 @@ NodeGraph * NodeGraph::deserialize(const std::string& fileName,
         return nullptr;
     }
 
-    tinyxml2::XMLNode * rootNode = xmlDoc.FirstChild();
+    tinyxml2::XMLElement * rootNode = xmlDoc.FirstChildElement("NodeGraph");
     if (rootNode == nullptr) {
-        std::cerr << "World xml is not a valid XML." << std::endl;
+        std::cerr << "Error loading XML "<< fileName << ": NodeGraph is not found!" << std::endl;
         return nullptr;
     }
+    return deserialize(fileName, rootNode, possibleEditorExtensions, possibleNodeExtensions);
+}
+
+NodeGraph * NodeGraph::deserialize(const std::string& fileName, tinyxml2::XMLElement* rootNode,
+        std::unordered_map<std::string, std::function<EditorExtension*()>> possibleEditorExtensions,
+        std::unordered_map<std::string, std::function<NodeExtension*(const NodeType*)>> possibleNodeExtensions) {
 
     EditorExtension* usedEditorExtension = nullptr;
     tinyxml2::XMLElement* editorExtensionElement =  rootNode->FirstChildElement("EditorExtension");
